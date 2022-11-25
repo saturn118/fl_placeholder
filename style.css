@@ -11,7 +11,8 @@
 	color : #ffffff;
 	background-color: #133157;
 	text-align:center;
-
+	font-family: Arial;
+	  letter-spacing: 1px;
 }
 
 .flex
