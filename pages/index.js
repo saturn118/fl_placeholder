@@ -278,32 +278,17 @@ export default function Home({
 }
 
 export async function getStaticProps({ params }) {
-  const res = await fetch(DATA_SERVER_ADDRESS + "api/stats/landing-page");
-  const statsData = await res.json();
+  //const res = await fetch(DATA_SERVER_ADDRESS + "api/stats/landing-page");
+  const statsData = statsCached;
+  const landingData = landingDataCached;
 
-  const landingRequest = await fetch(
-    DATA_SERVER_ADDRESS + "landing-page-content"
-  );
-  const landingData = await landingRequest.json();
+  const featuredData = null;
 
-  const featuredRequest = await fetch(DATA_SERVER_ADDRESS + "events/featured");
-  const featuredData = await featuredRequest.json();
+  const trendingPeopleData = null;
 
-  const trendingPeopleRequest = await fetch(
-    DATA_SERVER_ADDRESS + `popularity/fighter`
-  );
-  const trendingPeopleData = await trendingPeopleRequest.json();
+  const trendingTechniqueData = null;
 
-  const trendingTechniqueRequest = await fetch(
-    DATA_SERVER_ADDRESS + `popularity/technique`
-  );
-  const trendingTechniqueData = await trendingTechniqueRequest.json();
-
-  const favouriteBoutsRequest = await fetch(
-    DATA_SERVER_ADDRESS + "activity/0/community-bout-favourite"
-  );
-  const favouriteBoutsData = await favouriteBoutsRequest.json();
-
+  const favouriteBoutsData = null;
   return {
     props: {
       statsData,
@@ -315,3 +300,111 @@ export async function getStaticProps({ params }) {
     }
   };
 }
+
+const statsCached = {
+  stats: [
+    ["people", "1.11M"],
+    ["events", "725.73K"],
+    ["fights", "3.18M"],
+    ["martial arts", "58"],
+    ["years of records", "122"],
+    ["techniques", "294"]
+  ]
+};
+
+const landingDataCached = {
+  activities: [
+    {
+      id: 38,
+      imageUrl: "martialarts/style_images/vale_tudo.jpg",
+      name: "vale tudo"
+    },
+    {
+      id: 13,
+      imageUrl: "martialarts/style_images/savate.jpg",
+      name: "savate"
+    },
+    {
+      id: 16,
+      imageUrl: "martialarts/style_images/silat.jpg",
+      name: "silat"
+    },
+    {
+      id: 18,
+      imageUrl: "martialarts/style_images/kalari.jpg",
+      name: "kalari"
+    }
+  ],
+  fighters: [
+    {
+      id: 312541,
+      imageUrl:
+        "/www.tapology.com/pages/fighter_images/275_____default_____Jones-Jon-UFCV2-1.jpg",
+      name: "Jon Jones"
+    },
+    {
+      id: 292105,
+      imageUrl:
+        "/www.tapology.com/pages/fighter_images/74841_____default_____Angela-Lee.jpg",
+      name: "Angela Lee"
+    },
+    {
+      id: 292104,
+      imageUrl: null,
+      name: "Shiloh Torres-Umi"
+    },
+    {
+      id: 292109,
+      imageUrl: null,
+      name: "Stu Jones"
+    }
+  ],
+  positions: [
+    {
+      id: 14,
+      imageUrl: "martialarts\\position_images\\technical_mount.jpg",
+      name: "technical mount"
+    },
+    {
+      id: 15,
+      imageUrl: "martialarts\\position_images\\closed_guard.jpg",
+      name: "closed guard"
+    },
+    {
+      id: 16,
+      imageUrl: "martialarts\\position_images\\closed_guard_standing.jpg",
+      name: "closed guard standing"
+    },
+    {
+      id: 17,
+      imageUrl: "martialarts\\position_images\\50-50.jpg",
+      name: "50-50"
+    }
+  ],
+  promoters: [
+    {
+      id: 16,
+      imageUrl:
+        "www.tapology.com\\pages\\promotion_images\\UFC-Ultimate-Fighting-Championship-logo.jpg",
+      name: "Ultimate Fighting Championship"
+    },
+    {
+      id: 127,
+      imageUrl:
+        "www.tapology.com\\pages\\promotion_images\\28279558_1729633990393182_2700289092087194737_n.png",
+      name: "ONE Championship"
+    },
+    {
+      id: 128,
+      imageUrl:
+        "www.tapology.com\\pages\\promotion_images\\Caged_Steel-logo.png",
+      name: "Caged Steel"
+    },
+    {
+      id: 129,
+      imageUrl:
+        "www.tapology.com\\pages\\promotion_images\\Fight-King-MMA-promoter-logo.jpg",
+      name: "Fight King"
+    }
+  ]
+};
