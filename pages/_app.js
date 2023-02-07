@@ -46,9 +46,9 @@ function MyApp({ Component, pageProps }) {
       <div className="min-body-container">
         <Component {...pageProps} />
       </div>
-      <ShareFeedbackButtonComponent />
+      {/* <ShareFeedbackButtonComponent /> */}
       {/* <TornBorderComponent /> */}
-      <RecentlyViewedComponent />
+      {/* <RecentlyViewedComponent /> */}
       <Footer />
     </>
   );
