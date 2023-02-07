@@ -17,6 +17,6 @@ module.exports = {
   images: {
     domains: ["127.0.0.1"]
   },
-  basePath: "/nextjs-pages",
-  assetPrefix: "/nextjs-pages"
+  basePath: "/fightlegacy_placeholder_website",
+  assetPrefix: "/fightlegacy_placeholder_website"
 }; //nextTranslate();
