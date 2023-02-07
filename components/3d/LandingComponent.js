@@ -63,6 +63,16 @@ export default function LandingComponent({
     "Instructors"
   ];
 
+  function TrimFileName(input) {
+    if (input) {
+      const splitString = input.split("/");
+
+      return splitString[splitString.length - 1];
+    } else {
+      return input;
+    }
+  }
+
   useEffect(() => {
     var i = 0;
     setInterval(increment, 3000, i);
@@ -176,7 +186,7 @@ export default function LandingComponent({
             return {
               value: null,
               name: entry.name,
-              img: entry.imageUrl,
+              img: TrimFileName(entry.imageUrl),
               subName: null,
               link: "/martialart/" + entry.id
             };
@@ -262,7 +272,7 @@ export default function LandingComponent({
             return {
               value: null,
               name: entry.name,
-              img: entry.imageUrl,
+              img: TrimFileName(entry.imageUrl),
               subName: null,
               link: "/position/" + entry.id
             };
@@ -277,7 +287,7 @@ export default function LandingComponent({
             return {
               value: null,
               name: entry.name,
-              img: entry.imageUrl,
+              img: TrimFileName(entry.imageUrl),
               subName: null,
               link: "/person/" + entry.id
             };
@@ -292,7 +302,7 @@ export default function LandingComponent({
             return {
               value: null,
               name: null, //entry.name,
-              img: entry.imageUrl,
+              img: TrimFileName(entry.imageUrl),
               subName: null,
               link: "/promotion/" + entry.id
             };
