@@ -161,6 +161,7 @@ export default function LandingComponent({
           <div className="w-6/12 centerdat ">
             <div className="w-full">
               <iframe
+                className="clickupShadow"
                 width="700"
                 height="450"
                 src="https://www.youtube.com/embed/BoJBfSbYNKU"
