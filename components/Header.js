@@ -80,7 +80,7 @@ const Header = () => {
 
               {/* <NotificationPollingComponent /> */}
 
-              <ProfileButtonComponent />
+              {/* <ProfileButtonComponent /> */}
             </div>
           )}
 
