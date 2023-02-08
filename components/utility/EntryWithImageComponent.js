@@ -4,7 +4,7 @@ import { Avatar } from "@mui/material";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import React from "react";
-import { BACKGROUND_ATTR } from "../../config";
+import { BACKGROUND_ATTR, DATA_SERVER_IMAGE_ADDRESS } from "../../config";
 import HeadingComponent from "./HeadingComponent";
 
 export default function EntryWithItemComponent({
@@ -97,7 +97,7 @@ export function EntryWithOverlayComponent({
                 variant="rounded"
                 sx={{ width: width, height: height }}
                 // className=""
-                src={imageUrl}
+                src={DATA_SERVER_IMAGE_ADDRESS + imageUrl}
               />
               <div
                 className="technique-overlay-label 

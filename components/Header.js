@@ -76,11 +76,11 @@ const Header = () => {
         <div className=" w-9/12 mx-5">
           {searchBoxFocused == false && (
             <div className="flex space-x-2 justify-end w-full">
-              {/* <MenuButtonGroup /> */}
+              <MenuButtonGroup />
 
-              {/* <NotificationPollingComponent /> */}
+              <NotificationPollingComponent />
 
-              {/* <ProfileButtonComponent /> */}
+              <ProfileButtonComponent />
             </div>
           )}
 

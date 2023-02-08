@@ -64,10 +64,9 @@ const RecentlyViewedComponent = () => {
           <div>
             <Link href={LOCAL_SERVER_ADDRESS + key}>
               <Avatar
-                // variant="rounded"
+                variant="rounded"
                 src={DATA_SERVER_IMAGE_ADDRESS + currentData.image}
                 sx={{ width: 200, height: 200 }}
-                src={DATA_SERVER_IMAGE_ADDRESS + imageUrl}
               />
 
               {/* <img src={DATA_SERVER_IMAGE_ADDRESS + currentData.image} /> */}
@@ -101,7 +100,7 @@ const RecentlyViewedComponent = () => {
           <div className="flex">
             <li className="recentlyViewedTitle">
               <HeadingComponent textColor="text-white" size={3} showBar={true}>
-                Recently Viewed
+                RECENTLY VIEWED{" "}
               </HeadingComponent>
             </li>
             <li className="recentlyViewedClear flex">

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-export default function FightSearchPreviewTagsComponent() {
+export default function FightSearchPreviewTagsComponent(alternative = false) {
   const [fightSearchTags, setFightSearchTags] = useState([
     "Draw",
     "Split Decision",
@@ -30,7 +30,27 @@ export default function FightSearchPreviewTagsComponent() {
   ]);
 
   useEffect(() => {
-    let newOrder = fightSearchTags.sort(() => 0.5 - Math.random());
+    let data = fightSearchTags;
+
+    if (alternative) {
+      data = [
+        "Longest Win Streak",
+        "Longest Active Win Streak",
+        "Most Wins",
+        "Most Fights",
+        "Fastest Knockout",
+        "Fastest Submission",
+        "Most Draws",
+        "Tallest",
+        "Longest Reach",
+        "Oldest Champions",
+        "Most Decisions",
+        "Most Championship Wins",
+        "Most Losses"
+      ];
+    }
+
+    let newOrder = data.sort(() => 0.5 - Math.random());
     setFightSearchTags(newOrder);
   }, []);
 

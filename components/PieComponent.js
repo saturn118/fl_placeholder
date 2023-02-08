@@ -6,7 +6,7 @@ const data = [
   { name: "Against", value: 9 }
 ];
 // const COLORS = ["#0088FE", "#00C49F"];
-const COLORS = ["#B4B4B4", "#1976D2"];
+const COLORS = ["#AAE02B", "#1976D2"];
 
 const RADIAN = Math.PI / 180;
 const renderCustomizedLabel = ({
@@ -44,8 +44,8 @@ const PieComponent = ({
   let finalData = !!customData ? customData : data;
 
   return (
-    <div className="bg-indigo-50">
-      <PieChart width={400} height={85}>
+    <div>
+      <PieChart width={400} height={90}>
         <Pie
           dataKey="value"
           startAngle={0}
@@ -55,26 +55,20 @@ const PieComponent = ({
           cx="50%"
           cy="100%"
           // outerRadius={50}
-          fill="#8884d8"
+          // fill="#8884d8"
           // label={renderCustomizedLabel}
           legendType={"circle"}
           innerRadius={60}
           outerRadius={80}
-          fill="#8884d8"
+          // fill="#8884d8"
           paddingAngle={5}
         >
-          <text x={0} y={0} fill="black" textAnchor="middle">
-            {"Cheese"}
-          </text>
           {data.map((entry, index) => (
             <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
           ))}
-          <Label value="Pages of my website" offset={90} position="outside" />
         </Pie>
 
-        {showLegend && (
-          <Legend verticalAlign="top" align="center" height={36} />
-        )}
+        {showLegend && <Legend verticalAlign="top" align="right" />}
       </PieChart>
       <p className="text-center font-bold">{label}</p>
       <p className="text-center">{label2}</p>
