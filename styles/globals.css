@@ -229,7 +229,7 @@ a {
   left: calc(50vw + 44px);
   width: 1143px;
   height: 1149px;
-  background: url(../public/home-header-bg.jpg) no-repeat top right/cover;
+  background: url(home-header-bg.jpg) no-repeat top right/cover;
   -webkit-transform: translate(0, -28.5%);
   -ms-transform: translate(0, -28.5%);
   transform: translate(0, -28.5%);
