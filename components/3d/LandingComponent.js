@@ -4,6 +4,7 @@ import {
   MeshReflectorMaterial,
   useCursor
 } from "@react-three/drei";
+
 import { Canvas, useFrame } from "@react-three/fiber";
 import { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
@@ -14,19 +15,20 @@ import HeadingComponent from "@components/utility/HeadingComponent";
 import { Skeleton, TextField, Avatar } from "@mui/material";
 import { useRouter } from "next/router";
 import SummaryStatComponent from "@components/utility/SummaryStatComponent";
-import { COMPANY_NAME } from "config";
+import { COMPANY_NAME, DATA_SERVER_IMAGE_ADDRESS } from "config";
 import FlagComponent from "../FlagComponent";
 
 import { AnimAppear, AnimOnHover } from "@components/utility/AnimationUtility";
 
 //Firebase start
 import { collection, addDoc } from "firebase/firestore/lite";
-import { db } from "firebaseconnector";
+import { db, LogSiteAction } from "firebaseconnector";
 import PieComponent from "@components/PieComponent";
 import ReactPlayer from "react-player";
 import { BACKGROUND_ATTR } from "config";
 import { UserRatingComponent } from "@components/UserRatingPopupComponent";
 import UserStarRatingBreakdownComponent from "@components/UserStarRatingBreakdownComponent";
+import { dev } from "config";
 
 export default function LandingComponent({
   statsData = null,
@@ -39,8 +41,8 @@ export default function LandingComponent({
   function TrimFileName(input) {
     console.log("IMAGE ");
     console.log(input);
-    return input;
-    if (input) {
+
+    if (input && !dev) {
       const splitString = input.split("/");
 
       return splitString[splitString.length - 1];
@@ -281,6 +283,14 @@ export default function LandingComponent({
           </div>
           <div className="w-6/12 centerdat ">
             <div className="w-full">
+              <button
+                className="btn"
+                onClick={() => {
+                  LogSiteAction("testy");
+                }}
+              >
+                tttt
+              </button>
               <ReactPlayer
                 className="clickupShadow"
                 url="https://www.youtube.com/watch?v=BoJBfSbYNKU"
@@ -312,7 +322,7 @@ export default function LandingComponent({
             return {
               value: null,
               name: entry.name,
-              img: TrimFileName(entry.imageUrl),
+              img: DATA_SERVER_IMAGE_ADDRESS + TrimFileName(entry.imageUrl),
               subName: null,
               link: "/martialart/" + entry.id
             };
@@ -327,7 +337,7 @@ export default function LandingComponent({
             return {
               value: null,
               name: entry.name,
-              img: "booty2.jpg", //TrimFileName(entry.imageUrl),
+              img: DATA_SERVER_IMAGE_ADDRESS + TrimFileName(entry.imageUrl),
               subName: null,
               link: "/person/" + entry.id
             };
@@ -382,7 +392,7 @@ export default function LandingComponent({
             return {
               value: null,
               name: entry.name,
-              img: TrimFileName(entry.imageUrl),
+              img: DATA_SERVER_IMAGE_ADDRESS + TrimFileName(entry.imageUrl),
               subName: null,
               link: "/position/" + entry.id
             };
@@ -421,7 +431,7 @@ export default function LandingComponent({
             return {
               value: null,
               name: null, //entry.name,
-              img: TrimFileName(entry.imageUrl),
+              img: DATA_SERVER_IMAGE_ADDRESS + TrimFileName(entry.imageUrl),
               subName: null,
               link: "/promotion/" + entry.id
             };

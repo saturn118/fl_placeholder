@@ -97,7 +97,7 @@ export function EntryWithOverlayComponent({
                 variant="rounded"
                 sx={{ width: width, height: height }}
                 // className=""
-                src={DATA_SERVER_IMAGE_ADDRESS + imageUrl}
+                src={imageUrl}
               />
               <div
                 className="technique-overlay-label 

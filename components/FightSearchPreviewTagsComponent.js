@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 
-export default function FightSearchPreviewTagsComponent(alternative = false) {
+export default function FightSearchPreviewTagsComponent({
+  alternative = false
+}) {
   const [fightSearchTags, setFightSearchTags] = useState([
     "Draw",
     "Split Decision",

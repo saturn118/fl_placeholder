@@ -1,6 +1,8 @@
 import { initializeApp } from "firebase/app";
 import { getFirestore, collection, addDoc } from "firebase/firestore/lite";
 
+import { getAnalytics, logEvent } from "firebase/analytics";
+
 const firebaseConfig = {
   apiKey: "AIzaSyCEpfwQceSdZJIaY6CYS0rLawE9W8UDNf0",
   authDomain: "fightl.firebaseapp.com",
@@ -13,3 +15,12 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 export const db = getFirestore(app);
+export let analytics = null;
+
+if (app.name && typeof window !== "undefined") {
+  analytics = getAnalytics(app);
+}
+
+export function LogSiteAction(name) {
+  logEvent(analytics, name);
+}

@@ -40,7 +40,7 @@ export default function ElementSetSummaryComponent({
                   <EntryWithOverlayComponent
                     width={SIZE}
                     height={SIZE}
-                    imageUrl={""} //DATA_SERVER_IMAGE_ADDRESS + entry.img}
+                    imageUrl={entry.img}
                     label1={entry.name}
                     label2={entry.subName}
                     targetLink={entry.link}
