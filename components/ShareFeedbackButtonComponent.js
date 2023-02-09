@@ -79,7 +79,7 @@ const FeedbackPopupContentComponent = ({ handleClose = null }) => {
             onClick={() => {
               handleClose();
             }}
-            className="btn  w-full customAccentBackground text-white"
+            className="btn  w-full  customAccentBackground text-white"
           >
             Community Feedback
           </button>
@@ -144,12 +144,12 @@ const ShareFeedbackButtonComponent = () => {
     <div>
       <button
         type="button"
-        className="btn customAccentBackground feedback-absolute clickupShadow"
+        className="btn customAccentBackground logoFont feedback-absolute clickupShadow"
         onClick={() => {
           setOpen(true);
         }}
       >
-        <CommentIcon /> Feedback
+        <CommentIcon /> FEEDBACK
       </button>
       <Dialog
         onClose={handleClose}

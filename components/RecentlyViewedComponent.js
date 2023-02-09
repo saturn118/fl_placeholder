@@ -105,13 +105,13 @@ const RecentlyViewedComponent = () => {
             </li>
             <li className="recentlyViewedClear flex">
               <button
-                className="btn btn-primary"
+                className="btn customAccentBackground text-white logoFont"
                 onClick={() => {
                   RecentlyViewedInjectorClearData();
                   setItemsToRender({});
                 }}
               >
-                Clear All
+                Clear
               </button>
             </li>
           </div>

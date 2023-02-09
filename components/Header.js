@@ -742,7 +742,7 @@ function MenuButtonGroup() {
     >
       <Button
         className={
-          " logoFont pt-2  text-base  hover:border-b-8 border-blue-500 transition duration-1000 ease-in-out " +
+          " logoFont pt-2  transition duration-1000 ease-in-out " +
           (activeMenu == index ? " text-blue-500" : " text-white")
         }
         onMouseEnter={() => setActiveMenu(index)}

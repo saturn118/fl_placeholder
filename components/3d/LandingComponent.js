@@ -42,7 +42,7 @@ export default function LandingComponent({
     console.log("IMAGE ");
     console.log(input);
 
-    if (input && !dev) {
+    if (input && !dev && input.includes("/")) {
       const splitString = input.split("/");
 
       return splitString[splitString.length - 1];
@@ -191,6 +191,7 @@ export default function LandingComponent({
   ];
 
   useEffect(() => {
+    LogSiteAction("testy");
     var i = 0;
     setInterval(increment, 3000, i);
     function increment() {
@@ -283,14 +284,6 @@ export default function LandingComponent({
           </div>
           <div className="w-6/12 centerdat ">
             <div className="w-full">
-              <button
-                className="btn"
-                onClick={() => {
-                  LogSiteAction("testy");
-                }}
-              >
-                tttt
-              </button>
               <ReactPlayer
                 className="clickupShadow"
                 url="https://www.youtube.com/watch?v=BoJBfSbYNKU"
