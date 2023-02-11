@@ -124,6 +124,14 @@ a {
   left: 25%;
   transform: translate(-5%, 0);
 }
+.technique-overlay-label-central {
+  position: absolute;
+  /* top: 50%;
+  bottom: 50%;
+  left: 50%;
+  right: 50%; */
+  transform: translate(-5%, 0);
+}
 
 .technique-overlay-label2 {
   position: absolute;
@@ -229,8 +237,7 @@ a {
   left: calc(50vw + 44px);
   width: 1143px;
   height: 1149px;
-  background: url(https://i.ibb.co/61pDQ9m/home-header-bg.jpg) no-repeat top
-    right/cover;
+  background: url(../public/home-header-bg.jpg) no-repeat top right/cover;
   -webkit-transform: translate(0, -28.5%);
   -ms-transform: translate(0, -28.5%);
   transform: translate(0, -28.5%);
@@ -592,5 +599,5 @@ link {
 }
 
 .onTop2 {
-  z-index: 999;
+  z-index: 99999;
 }

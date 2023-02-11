@@ -64,6 +64,57 @@ export default function EntryWithItemComponent({
   );
 }
 
+export function EntryWithCentralOverlayComponent({
+  targetLink = "",
+  width = 150,
+  height = 150,
+  imageUrl,
+  label1,
+  round = false
+}) {
+  let variant = "rounded";
+  if (round) {
+    variant = "";
+  }
+
+  function buttonContent() {
+    return (
+      <div>
+        <a>
+          <motion.button
+            whileHover={{
+              scale: 1.04,
+              transition: { duration: 0.2 }
+              // rotate: 5
+            }}
+            whileTap={{ scale: 0.9 }}
+          >
+            <div className="customShadow relative ">
+              <Avatar
+                className="hover:brightness-90 brightness-50"
+                variant="rounded"
+                sx={{ width: width, height: height }}
+                src={imageUrl}
+              />
+              <div className=" pointer-events-none w-full technique-overlay-label-central inset-y-1/2 flex justify-center ">
+                <HeadingComponent textColor="text-white  text-center" size={6}>
+                  {label1.toUpperCase()}
+                </HeadingComponent>
+              </div>
+            </div>
+          </motion.button>
+        </a>
+      </div>
+    );
+  }
+
+  return (
+    <div>
+      <Link href={targetLink}>{buttonContent()}</Link>
+    </div>
+  );
+}
+
 export function EntryWithOverlayComponent({
   targetLink = "",
   width = 150,

@@ -16,15 +16,22 @@ import "swiper/css/pagination";
 export const SlideshowComponent = ({
   inputData = [],
   timeDelayMs = 5000,
+  discrete = true,
+  perView = 4,
+  loop = false,
+
   direction = "horizontal"
 }) => {
   return (
     <Swiper
+      showsPagination={false}
       direction={direction}
-      slidesPerView={1}
-      grid={{
-        rows: 2
-      }}
+      slidesPerView={perView}
+      loop={loop}
+      freeMode={!discrete}
+      // grid={{
+      //   rows: 2
+      // }}
       pagination={{
         clickable: true
       }}

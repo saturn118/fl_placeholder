@@ -29,6 +29,11 @@ import { BACKGROUND_ATTR } from "config";
 import { UserRatingComponent } from "@components/UserRatingPopupComponent";
 import UserStarRatingBreakdownComponent from "@components/UserStarRatingBreakdownComponent";
 import { dev } from "config";
+import {
+  EntryWithOverlayComponent,
+  EntryWithCentralOverlayComponent
+} from "@components/utility/EntryWithImageComponent";
+import SlideshowComponent from "@components/sections/SlideshowComponent";
 
 export default function LandingComponent({
   statsData = null,
@@ -119,28 +124,32 @@ export default function LandingComponent({
       fb: "Frank Mir",
       art: "MMA",
       year: "2000",
-      rating: 2
+      ratingValue: 2,
+      totalVotes: 35
     },
     {
       fa: "Lenox Lewis",
       fb: "Mike Tyson",
       art: "boxing",
       year: "2000",
-      rating: 2
+      ratingValue: 3.2,
+      totalVotes: 85
     },
     {
       fa: "Royce Gracie",
       fb: "Frank Shamrock",
       art: "mma",
       year: "2000",
-      rating: 2
+      ratingValue: 4.5,
+      totalVotes: 1223
     },
     {
       fa: "Joe Frazier",
       fb: "Muhammed Ali",
       art: "boxing",
       year: "2000",
-      rating: 2
+      ratingValue: 1,
+      totalVotes: 23
     }
   ];
 
@@ -204,6 +213,18 @@ export default function LandingComponent({
       setCurrentIndex(i);
     }
   }, []);
+
+  let tournamentTypes = [];
+  for (const [id, data] of Object.entries(landingData.tournamentTypes)) {
+    let current = {
+      img: "/tournament_types" + data.imageUrl,
+      name: data.name,
+      id: "",
+      link: ""
+    };
+
+    tournamentTypes.push(current);
+  }
 
   let highlightWordElement = (
     <span className="customAccentText">
@@ -277,14 +298,16 @@ export default function LandingComponent({
                 {" of Martial Arts".toUpperCase()}
               </HeadingComponent>
               <HeadingComponent textColor="clickupColor" size={4}>
-                {"THE ALL IN ONE MARTIAL ARTS COMMUNITY".toUpperCase()}
+                {"THE ALL IN ONE MARTIAL ART COMMUNITY".toUpperCase()}
               </HeadingComponent>
               {registerSection()}
             </div>
           </div>
           <div className="w-6/12 centerdat ">
-            <div className="w-full">
+            <div className="w-full player-wrapper">
               <ReactPlayer
+                // width="100%"
+                // height="100%"
                 className="clickupShadow"
                 url="https://www.youtube.com/watch?v=BoJBfSbYNKU"
                 config={{
@@ -308,24 +331,30 @@ export default function LandingComponent({
         </div>
 
         <div className="flex border-t-2 pb-10">{statElements}</div>
-        <ElementSetSummaryComponent
-          title="WORLDWIDE MARTIAL ARTS"
-          description="Covering martial arts from around the world. Popular, niche, old and new"
-          tiles={landingData.activities.map(entry => {
-            return {
-              value: null,
-              name: entry.name,
-              img: DATA_SERVER_IMAGE_ADDRESS + TrimFileName(entry.imageUrl),
-              subName: null,
-              link: "/martialart/" + entry.id
-            };
+
+        <div className="flex space-x-1 -translate-x-1/3">
+          {landingData.activities.map(entry => {
+            return (
+              <EntryWithCentralOverlayComponent
+                width={200}
+                height={200}
+                imageUrl={
+                  DATA_SERVER_IMAGE_ADDRESS + TrimFileName(entry.imageUrl)
+                }
+                label1={entry.name}
+                targetLink={"/martialart/" + entry.id}
+              />
+            );
           })}
-          link={"/"}
-        />
+        </div>
 
         <ElementSetSummaryComponent
           title="FIGHTERS"
           description="Detailed profiles of athletes, judges and referees (professional, amatuer, hobbiest)"
+          // tiles={
+          //   <img src="https://media.gettyimages.com/id/1289775017/vector/people-avatar-round-icon-set-profile-diverse-faces-for-social-network-vector-abstract.jpg?s=1024x1024&w=gi&k=20&c=EPd4UW60wOzpBujo3tJbsNbY9HjB3CRJQtqcqXJ3_vQ="></img>
+          // }
+          // overrideTiles={true}
           tiles={landingData.fighters.map(entry => {
             return {
               value: null,
@@ -335,6 +364,80 @@ export default function LandingComponent({
               link: "/person/" + entry.id
             };
           })}
+          link={"/"}
+        />
+
+        <ElementSetSummaryComponent
+          title="TOURNAMENT CREATOR"
+          description="Create an customize tournaments both privately and open to the wider community"
+          tiles={tournamentTypes}
+          // tiles={
+          //   <SlideshowComponent
+          //     discrete={false}
+          //     perView={4}
+          //     loop={true}
+          //     timeDelayMs={2000}
+          //     inputData={tournamentTypes.map(entry => {
+          //       return (
+          //         <EntryWithOverlayComponent
+          //           width={200}
+          //           height={200}
+          //           imageUrl={entry.img}
+          //           label1={entry.name}
+          //           targetLink={"/martialart/" + entry.id}
+          //         />
+          //       );
+          //     })}
+          //   />
+          // }
+          // overrideTiles={true}
+          link={"/"}
+        />
+
+        {/* <img
+          src={
+            "https://download.smoothcomp.com/features/misc/bracket-illustration@2x.webp"
+          }
+        ></img> */}
+
+        <ElementSetSummaryComponent
+          title="TECHNIQUE LIBRARY"
+          description="Learn how do react, defend and attack from any fight position in the fight technique library"
+          tiles={landingData.positions.map(entry => {
+            return {
+              value: null,
+              name: entry.name,
+              img: DATA_SERVER_IMAGE_ADDRESS + TrimFileName(entry.imageUrl),
+              subName: null,
+              link: "/position/" + entry.id
+            };
+          })}
+          link={"/"}
+        />
+
+        <ElementSetSummaryComponent
+          title="MARTIAL ART RANK DIRECTORY"
+          description="Browse the worldwide verified list of martial art rank holders, past and present"
+          tiles={
+            <div className="space-y-1">
+              {beltData.map(entry => {
+                return (
+                  <div className={BACKGROUND_ATTR + "flex w-full p-2"}>
+                    <div className="w-1/12">
+                      {FlagComponent(entry.flag, 30)}
+                    </div>
+                    <p className="w-3/12 customAccentText">{entry.name}</p>
+                    <p className="w-2/12">{entry.art}</p>
+                    <div className="w-3/12">
+                      {BeltComponent(entry.belt, 80)}
+                    </div>
+                    <p>{entry.year}</p>
+                  </div>
+                );
+              })}
+            </div>
+          }
+          overrideTiles={true}
           link={"/"}
         />
 
@@ -350,7 +453,11 @@ export default function LandingComponent({
                       BACKGROUND_ATTR + "flex w-full space-x-10 px-2 py-1"
                     }
                   >
-                    <UserStarRatingBreakdownComponent goToLink={"/bout/"} />
+                    <UserStarRatingBreakdownComponent
+                      voteData={entry}
+                      initialTotalVotes={43}
+                      goToLink={"/bout/"}
+                    />
                     <UserRatingComponent />
                     <div className="customAccentText link w-4/12">
                       {entry.fa}
@@ -379,45 +486,6 @@ export default function LandingComponent({
         />
 
         <ElementSetSummaryComponent
-          title="TECHNIQUE LIBRARY"
-          description="Learn how do react, defend and attack from any fight position in the fight technique library"
-          tiles={landingData.positions.map(entry => {
-            return {
-              value: null,
-              name: entry.name,
-              img: DATA_SERVER_IMAGE_ADDRESS + TrimFileName(entry.imageUrl),
-              subName: null,
-              link: "/position/" + entry.id
-            };
-          })}
-          link={"/"}
-        />
-
-        <ElementSetSummaryComponent
-          title="MARTIAL ART RANK DIRECTORY"
-          description="A worldwide directory of people that have each martial art rank"
-          tiles={
-            <div className="space-y-1">
-              {beltData.map(entry => {
-                return (
-                  <div className={BACKGROUND_ATTR + "flex w-full p-2"}>
-                    <div className="w-1/12">
-                      {FlagComponent(entry.flag, 30)}
-                    </div>
-                    <p className="w-3/12 customAccentText">{entry.name}</p>
-                    <p className="w-2/12">{entry.art}</p>
-                    <div className="w-3/12">{BeltComponent(entry.belt)}</div>
-                    <p>{entry.year}</p>
-                  </div>
-                );
-              })}
-            </div>
-          }
-          overrideTiles={true}
-          link={"/"}
-        />
-
-        <ElementSetSummaryComponent
           title="FIGHT PROMOTERS"
           description="Detailed Fight Promoters pages from around the world with their own internal rankings, records and ratings"
           tiles={landingData.promoters.map(entry => {
@@ -433,9 +501,18 @@ export default function LandingComponent({
           flip={true}
         />
 
+        <p>N earned a black belt</p>
+        <p>N has a scheduled fight</p>
+        <p>N announced a new event</p>
+        <p>N made a fight prediction</p>
+        <p>N rated Mike tyson vs Cheese</p>
+        <p>N's rankings were updated</p>
+        <p>N created a new tournament</p>
+        <p>A near by open mat was created</p>
+
         <ElementSetSummaryComponent
-          title="PERSONALIZED FEEDS"
-          description="Follow Martial Arts, Fighters, Organizations,Divisions  and other users for your own custom front page"
+          title="FOR YOU FEED"
+          description="Tailor your content by following Fighters,  Promoters and  Martial Arts to create a custom update feed"
           tiles={
             <Avatar
               variant="rounded"
@@ -447,11 +524,20 @@ export default function LandingComponent({
           overrideTiles={true}
           link={"/"}
         />
+
+        <ElementSetSummaryComponent
+          title="WORLDWIDE AND LOCAL RANKINGS"
+          description="Per martial art worldwide, national, division and gender fighter rankings. Track your journey from the 1st fight to world champion"
+          tiles={subSectionSkeletonElement}
+          overrideTiles={true}
+          link={"/"}
+        />
+
         <ElementSetSummaryComponent
           title="JUDGE DECISION TRACKING"
           description="Judge Profiles and ratings based on their scorecards compared against fellow judges and community scoring"
           tiles={
-            <div className="flex w-full  space-x-5">
+            <div className="flex w-full">
               {DecisionChart(
                 "SPLIT DECISIONS",
                 "Majority Vote",
@@ -459,24 +545,16 @@ export default function LandingComponent({
                 "Minority Vote",
                 3
               )}
+              <Avatar
+                className="customShadow"
+                variant="rounded"
+                sx={{ width: 200, height: 100 }}
+                src={"./judge_small.png"}
+              />
 
               {DecisionChart("JUDGE VS COMMUNITY", "AGREE", 50, "DISAGREE", 20)}
             </div>
           }
-          overrideTiles={true}
-          link={"/"}
-        />
-        <ElementSetSummaryComponent
-          title="FIGHT DECISION VOTING"
-          description="Community voting for fights ending in a judge decision. Questionable decision winners are curated into lists"
-          tiles={subSectionSkeletonElement}
-          overrideTiles={true}
-          link={"/"}
-        />
-        <ElementSetSummaryComponent
-          title="WORLDWIDE AND LOCAL RANKINGS"
-          description="Per martial art worldwide, national, division and gender fighter rankings. Track your journey from the 1st fight to world champion"
-          tiles={subSectionSkeletonElement}
           overrideTiles={true}
           link={"/"}
         />
@@ -489,13 +567,13 @@ export default function LandingComponent({
           link={"/"}
         /> */}
 
-        <ElementSetSummaryComponent
+        {/* <ElementSetSummaryComponent
           title="FIGHT RECORDS"
           description="Fight for the top spot in the annual and all time records"
           tiles={<FightSearchPreviewTagsComponent alternative={true} />}
           overrideTiles={true}
           link={"/"}
-        />
+        /> */}
       </div>
     </div>
   );

@@ -1,5 +1,14 @@
 import Link from "next/link";
-import { FACEBOOK_URL, GetLogoElement, INSTAGRAM_URL, REDDIT_URL, TIKTOK_URL, TWITTER_URL, YOUTUBE_URL } from "../config";
+import {
+  FACEBOOK_URL,
+  GetLogoElement,
+  INSTAGRAM_URL,
+  REDDIT_URL,
+  TIKTOK_URL,
+  TWITTER_URL,
+  YOUTUBE_URL,
+  DATA_SERVER_IMAGE_ADDRESS
+} from "../config";
 import LanguageSelectorComponent from "./LanguageSelectorComponent";
 import SocialMediaLinksComponent from "./utility/SocialMediaLinksComponent";
 

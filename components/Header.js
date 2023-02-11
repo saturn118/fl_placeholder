@@ -76,9 +76,9 @@ const Header = () => {
         <div className=" w-9/12 mx-5">
           {searchBoxFocused == false && (
             <div className="flex space-x-2 justify-end w-full">
-              {/* <MenuButtonGroup />
+              <MenuButtonGroup />
 
-              <NotificationPollingComponent /> */}
+              <NotificationPollingComponent />
 
               <ProfileButtonComponent />
             </div>
@@ -742,7 +742,7 @@ function MenuButtonGroup() {
     >
       <Button
         className={
-          " logoFont pt-2  transition duration-1000 ease-in-out " +
+          " logoFont pt-2  text-base  hover:border-b-8 border-blue-500 transition duration-1000 ease-in-out " +
           (activeMenu == index ? " text-blue-500" : " text-white")
         }
         onMouseEnter={() => setActiveMenu(index)}
