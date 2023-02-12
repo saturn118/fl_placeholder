@@ -5,7 +5,12 @@ import Header from "@components/Header";
 import RecentlyViewedComponent from "@components/RecentlyViewedComponent";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
-import { DATA_SERVER_ADDRESS, IsReferralNew, PushReferralId } from "../config";
+import {
+  DATA_SERVER_ADDRESS,
+  IsReferralNew,
+  PushReferralId,
+  dev
+} from "../config";
 import "../styles/globals.css";
 import ShareFeedbackButtonComponent from "@components/ShareFeedbackButtonComponent";
 
@@ -42,14 +47,19 @@ function MyApp({ Component, pageProps }) {
       ></link>
       <LoginPopupComponent />
       <BadgeEarnedPopupComponent />
-      <div className="pt-8"></div>
+
       <div className="min-body-container">
         <Component {...pageProps} />
       </div>
-      {/* <ShareFeedbackButtonComponent /> */}
-      {/* <TornBorderComponent /> */}
-      {/* <RecentlyViewedComponent /> */}
-      <Footer />
+      <ShareFeedbackButtonComponent />
+
+      {dev && (
+        <div>
+          <RecentlyViewedComponent />
+
+          <Footer />
+        </div>
+      )}
     </>
   );
 }

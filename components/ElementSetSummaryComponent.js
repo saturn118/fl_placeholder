@@ -65,7 +65,7 @@ export default function ElementSetSummaryComponent({
 
   let i = 0;
   return (
-    <div className="my-10">
+    <section className="my-20">
       <HeadingComponent showArrow={false} showBar={true} size={2}>
         {title}
       </HeadingComponent>
@@ -73,6 +73,6 @@ export default function ElementSetSummaryComponent({
         {leftSection}
         {rightSection}
       </div>
-    </div>
+    </section>
   );
 }

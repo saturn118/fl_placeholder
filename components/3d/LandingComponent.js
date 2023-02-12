@@ -4,7 +4,8 @@ import {
   MeshReflectorMaterial,
   useCursor
 } from "@react-three/drei";
-
+import YouTubeIcon from "@mui/icons-material/YouTube";
+import InstagramIcon from "@mui/icons-material/Instagram";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
@@ -12,7 +13,13 @@ import BeltComponent from "@components/BeltComponent";
 import ElementSetSummaryComponent from "@components/ElementSetSummaryComponent";
 import FightSearchPreviewTagsComponent from "@components/FightSearchPreviewTagsComponent";
 import HeadingComponent from "@components/utility/HeadingComponent";
-import { Skeleton, TextField, Avatar } from "@mui/material";
+import {
+  Skeleton,
+  TextField,
+  Avatar,
+  CircularProgress,
+  Button
+} from "@mui/material";
 import { useRouter } from "next/router";
 import SummaryStatComponent from "@components/utility/SummaryStatComponent";
 import { COMPANY_NAME, DATA_SERVER_IMAGE_ADDRESS } from "config";
@@ -34,6 +41,8 @@ import {
   EntryWithCentralOverlayComponent
 } from "@components/utility/EntryWithImageComponent";
 import SlideshowComponent from "@components/sections/SlideshowComponent";
+import { YOUTUBE_URL } from "config";
+import { INSTAGRAM_URL } from "config";
 
 export default function LandingComponent({
   statsData = null,
@@ -41,6 +50,9 @@ export default function LandingComponent({
 }) {
   const router = useRouter();
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [registerPending, setRegisterPending] = useState(false);
+  const [registered, setRegistered] = useState(false);
+
   const [email, setEmail] = useState(null);
 
   function TrimFileName(input) {
@@ -255,25 +267,45 @@ export default function LandingComponent({
           scalar={5}
           className="btn w-10/12 mt-3 customAccentBackground clickupShadow logoFont text-xl"
         >
-          <button
-            onClick={() => {
-              console.log("Clicked");
-              console.log(email);
-              if (email.length > 3) {
-                addDoc(collection(db, "user_registrations"), {
-                  email: email,
-                  timestamp: new Date().toISOString()
-                }).then(data => {
-                  setEmail("Sign up successful");
-                  console.log("Sent");
-                });
-              }
-              // router.push("/account/register");
-            }}
-          >
-            REGISTER FOR UPDATES
-          </button>
+          {registerPending && <CircularProgress />}
+
+          {!registerPending && (
+            <button
+              onClick={() => {
+                console.log("Clicked");
+                console.log(email);
+                if (email.length > 3) {
+                  setRegisterPending(true);
+                  addDoc(collection(db, "user_registrations"), {
+                    email: email,
+                    timestamp: new Date().toISOString()
+                  }).then(data => {
+                    setRegisterPending(false);
+                    setRegistered(true);
+                    // setEmail("Sign up successful");
+                    console.log("Sent");
+                  });
+                }
+              }}
+            >
+              {registered ? "SUCCESS" : "JOIN THE WAITLIST"}
+            </button>
+          )}
         </AnimOnHover>
+        <div className="flex space-x-4 justify-center pt-3">
+          <a href={YOUTUBE_URL}>
+            <Button>
+              <YouTubeIcon fontSize="large" />
+              {/* <p>Youtube</p> */}
+            </Button>
+          </a>
+          <a href={INSTAGRAM_URL}>
+            <Button>
+              <InstagramIcon fontSize="large" />
+              {/* <p>Instagram</p> */}
+            </Button>
+          </a>
+        </div>
       </div>
     );
   }
@@ -329,281 +361,309 @@ export default function LandingComponent({
             </div>
           </div>
         </div>
-        <div className="flex border-t-2 pb-10">{statElements}</div>
-        <div className="flex space-x-1 -translate-x-1/3 mt-10">
-          {landingData.activities.map(entry => {
-            return (
-              <EntryWithCentralOverlayComponent
-                width={200}
-                height={200}
-                imageUrl={
-                  DATA_SERVER_IMAGE_ADDRESS + TrimFileName(entry.imageUrl)
-                }
-                label1={entry.name}
-                targetLink={"/martialart/" + entry.id}
-              />
-            );
-          })}
-        </div>
-        <div className="mb-10 flex space-x-1 -translate-x-1/4 ">
-          {landingData.activities.map(entry => {
-            return (
-              <EntryWithCentralOverlayComponent
-                width={200}
-                height={200}
-                imageUrl={
-                  DATA_SERVER_IMAGE_ADDRESS + TrimFileName(entry.imageUrl)
-                }
-                label1={entry.name}
-                targetLink={"/martialart/" + entry.id}
-              />
-            );
-          })}
-        </div>
+        <div className="">
+          <div className="flex border-t-2 pb-10">{statElements}</div>
+          <div className="flex space-x-1 -translate-x-1/3 mt-10">
+            {landingData.activities.map(entry => {
+              return (
+                <EntryWithCentralOverlayComponent
+                  width={200}
+                  height={200}
+                  imageUrl={
+                    DATA_SERVER_IMAGE_ADDRESS + TrimFileName(entry.imageUrl)
+                  }
+                  label1={entry.name}
+                  targetLink={"/martialart/" + entry.id}
+                />
+              );
+            })}
+          </div>
+          <div className="mb-10 flex space-x-1 -translate-x-1/4 ">
+            {landingData.activities.map(entry => {
+              return (
+                <EntryWithCentralOverlayComponent
+                  width={200}
+                  height={200}
+                  imageUrl={
+                    DATA_SERVER_IMAGE_ADDRESS + TrimFileName(entry.imageUrl)
+                  }
+                  label1={entry.name}
+                  targetLink={"/martialart/" + entry.id}
+                />
+              );
+            })}
+          </div>
 
-        <ElementSetSummaryComponent
-          title="DIVERSE PROFILES"
-          description="Detailed profiles from all perspectives in the martial arts community"
-          // tiles={
-          //   <img src="https://media.gettyimages.com/id/1289775017/vector/people-avatar-round-icon-set-profile-diverse-faces-for-social-network-vector-abstract.jpg?s=1024x1024&w=gi&k=20&c=EPd4UW60wOzpBujo3tJbsNbY9HjB3CRJQtqcqXJ3_vQ="></img>
-          // }
-          // overrideTiles={true}
-          // tiles={landingData.fighters.map(entry => {
-          //   return {
-          //     value: null,
-          //     name: entry.name,
-          //     img: DATA_SERVER_IMAGE_ADDRESS + TrimFileName(entry.imageUrl),
-          //     subName: null,
-          //     link: "/person/" + entry.id
-          //   };
-          // })}
+          <ElementSetSummaryComponent
+            title="DIVERSE PROFILES"
+            description="Detailed profiles from all perspectives in the martial arts community"
+            // tiles={
+            //   <img src="https://media.gettyimages.com/id/1289775017/vector/people-avatar-round-icon-set-profile-diverse-faces-for-social-network-vector-abstract.jpg?s=1024x1024&w=gi&k=20&c=EPd4UW60wOzpBujo3tJbsNbY9HjB3CRJQtqcqXJ3_vQ="></img>
+            // }
+            // overrideTiles={true}
+            // tiles={landingData.fighters.map(entry => {
+            //   return {
+            //     value: null,
+            //     name: entry.name,
+            //     img: DATA_SERVER_IMAGE_ADDRESS + TrimFileName(entry.imageUrl),
+            //     subName: null,
+            //     link: "/person/" + entry.id
+            //   };
+            // })}
 
-          tiles={[
-            ["fighter.jpg", "Athletes"],
-            ["referee.jpg", "Referees"],
-            ["judge.jpg", "Judges"],
-            ["instructor.jpg", "Teachers"]
-          ].map(entry => {
-            return {
-              value: null,
-              name: entry[1].toUpperCase(),
-              img: "/" + entry[0],
-              subName: null,
-              link: ""
-            };
-          })}
-          // tiles={
-          //   <div className="gallery-container">
-          //     <div className="gallery-box">
-          //       <span style={{ backgroundColor: "red" }}></span>
-          //     </div>{" "}
-          //     <div className="gallery-box">
-          //       <span style={{ backgroundColor: "green" }}></span>
-          //     </div>
-          //     <div className="gallery-box">
-          //       <span style={{ backgroundColor: "blue" }}></span>
-          //     </div>
-          //   </div>
-          // }
-          // overrideTiles={true}
-          link={"/"}
-        />
-        <ElementSetSummaryComponent
-          title="TOURNAMENT CREATOR"
-          description="Seamless tournament creation. Any fight type, any progression format, any scoring system, fully customizable" // tiles={tournamentTypes}
-          tiles={
-            <SlideshowComponent
-              discrete={false}
-              perView={4}
-              loop={true}
-              timeDelayMs={2000}
-              inputData={tournamentTypes.map(entry => {
-                return (
-                  <EntryWithOverlayComponent
-                    width={200}
-                    height={200}
-                    imageUrl={entry.img}
-                    label1={entry.name}
-                    targetLink={"/martialart/" + entry.id}
-                  />
-                );
-              })}
-            />
-          }
-          overrideTiles={true}
-          link={"/"}
-        />
-        {/* <img
+            tiles={[
+              ["fighter.jpg", "Athletes"],
+              ["referee.jpg", "Referees"],
+              ["judge.jpg", "Judges"],
+              ["instructor.jpg", "Teachers"]
+            ].map(entry => {
+              return {
+                value: null,
+                name: entry[1].toUpperCase(),
+                img: "/" + entry[0],
+                subName: null,
+                link: ""
+              };
+            })}
+            // tiles={
+            //   <div className="gallery-container">
+            //     <div className="gallery-box">
+            //       <span style={{ backgroundColor: "red" }}></span>
+            //     </div>{" "}
+            //     <div className="gallery-box">
+            //       <span style={{ backgroundColor: "green" }}></span>
+            //     </div>
+            //     <div className="gallery-box">
+            //       <span style={{ backgroundColor: "blue" }}></span>
+            //     </div>
+            //   </div>
+            // }
+            // overrideTiles={true}
+            link={"/"}
+          />
+          <ElementSetSummaryComponent
+            flip={true}
+            title="TOURNAMENT CREATOR"
+            description="Seamless tournament creation. Any fight type, any progression format, any scoring system, fully customizable" // tiles={tournamentTypes}
+            tiles={
+              <SlideshowComponent
+                discrete={false}
+                perView={4}
+                loop={true}
+                timeDelayMs={2000}
+                inputData={tournamentTypes.map(entry => {
+                  return (
+                    <EntryWithOverlayComponent
+                      width={200}
+                      height={200}
+                      imageUrl={entry.img}
+                      label1={entry.name}
+                      targetLink={"/martialart/" + entry.id}
+                    />
+                  );
+                })}
+              />
+            }
+            overrideTiles={true}
+            link={"/"}
+          />
+          {/* <img
           src={
             "https://download.smoothcomp.com/features/misc/bracket-illustration@2x.webp"
           }
         ></img> */}
-        <ElementSetSummaryComponent
-          title="TECHNIQUE LIBRARY"
-          description="Learn how do react, defend and attack from any fight position in the fight technique library"
-          tiles={landingData.positions.map(entry => {
-            return {
-              value: null,
-              name: entry.name,
-              img: DATA_SERVER_IMAGE_ADDRESS + TrimFileName(entry.imageUrl),
-              subName: null,
-              link: "/position/" + entry.id
-            };
-          })}
-          link={"/"}
-        />
-        <div className="">
           <ElementSetSummaryComponent
-            title="MARTIAL ART RANK DIRECTORY"
-            description="Browse the worldwide verified list of martial art rank holders, past and present"
-            tiles={
-              <div className="space-y-1">
-                {beltData.map(entry => {
-                  return (
-                    <div className={BACKGROUND_ATTR + "flex w-full p-2"}>
-                      <div className="w-1/12">
-                        {FlagComponent(entry.flag, 30)}
-                      </div>
-                      <p className="w-3/12 customAccentText">{entry.name}</p>
-                      <p className="w-2/12">{entry.art}</p>
-                      <div className="w-3/12">
-                        {BeltComponent(entry.belt, 80)}
-                      </div>
-                      <p>{entry.year}</p>
-                    </div>
-                  );
-                })}
-              </div>
-            }
-            overrideTiles={true}
+            title="TECHNIQUE LIBRARY"
+            description="Learn how do react, defend and attack from any fight position in the fight technique library"
+            tiles={landingData.positions.map(entry => {
+              return {
+                value: null,
+                name: entry.name,
+                img: DATA_SERVER_IMAGE_ADDRESS + TrimFileName(entry.imageUrl),
+                subName: null,
+                link: "/position/" + entry.id
+              };
+            })}
             link={"/"}
           />
-          <ElementSetSummaryComponent
-            title="FIGHT RATINGS"
-            description="Rate, review and vote on fights to decide the best fights of the year, all time and a range of other categories"
-            tiles={
-              <div className="space-y-1">
-                {boutRatingData.map(entry => {
-                  return (
-                    <div
-                      className={
-                        BACKGROUND_ATTR + "flex w-full space-x-10 px-2 py-1"
-                      }
-                    >
-                      <UserStarRatingBreakdownComponent
-                        voteData={entry}
-                        initialTotalVotes={43}
-                        goToLink={"/bout/"}
-                      />
-                      <UserRatingComponent />
-                      <div className="customAccentText link w-4/12">
-                        {entry.fa}
+          <div className="">
+            <ElementSetSummaryComponent
+              flip={true}
+              title="MARTIAL ART RANK DIRECTORY"
+              description="Browse the worldwide verified list of martial art rank holders, past and present"
+              tiles={
+                <div className="space-y-1">
+                  {beltData.map(entry => {
+                    return (
+                      <div className={BACKGROUND_ATTR + "flex w-full p-2"}>
+                        <div className="w-1/12">
+                          {FlagComponent(entry.flag, 30)}
+                        </div>
+                        <p className="w-3/12 customAccentText">{entry.name}</p>
+                        <p className="w-2/12">{entry.art}</p>
+                        <div className="w-3/12">
+                          {BeltComponent(entry.belt, 80)}
+                        </div>
+                        <p>{entry.year}</p>
                       </div>
-                      <p>vs</p>
-                      <div className="customAccentText link w-4/12">
-                        {entry.fb}
-                      </div>
-                      <p className="w-2/12">{entry.art}</p>
-                      <div className="w-3/12">{entry.year}</div>
-                    </div>
-                  );
-                })}
-              </div>
-            }
-            overrideTiles={true}
-            link={"/"}
-          />
-        </div>
-        <ElementSetSummaryComponent
-          title="ADVANCED FIGHT SEARCH"
-          description="Browse fight data like never before with fight labels. Any moment, martial art, country and organization"
-          tiles={<FightSearchPreviewTagsComponent />}
-          overrideTiles={true}
-          link={"/"}
-        />
-        <ElementSetSummaryComponent
-          title="FIGHT PROMOTERS"
-          description="Detailed Fight Promoters pages from around the world with their own internal rankings, records and ratings"
-          tiles={landingData.promoters.map(entry => {
-            return {
-              value: null,
-              name: null, //entry.name,
-              img: DATA_SERVER_IMAGE_ADDRESS + TrimFileName(entry.imageUrl),
-              subName: null,
-              link: "/promotion/" + entry.id
-            };
-          })}
-          link={"/"}
-          flip={true}
-        />
-        <p>N earned a black belt</p>
-        <p>N has a scheduled fight</p>
-        <p>N announced a new event</p>
-        <p>N made a fight prediction</p>
-        <p>N rated Mike tyson vs Cheese</p>
-        <p>N's rankings were updated</p>
-        <p>N created a new tournament</p>
-        <p>A near by open mat was created</p>
-        <ElementSetSummaryComponent
-          title="FOR YOU FEED"
-          description="Tailor your content by following Fighters,  Promoters and  Martial Arts to create a custom update feed"
-          tiles={
-            <Avatar
-              variant="rounded"
-              className={""}
-              src={"./social-graph.jpg"}
-              sx={{ width: 700, height: 400 }}
+                    );
+                  })}
+                </div>
+              }
+              overrideTiles={true}
+              link={"/"}
             />
-          }
-          overrideTiles={true}
-          link={"/"}
-        />
-        <ElementSetSummaryComponent
-          title="WORLDWIDE AND LOCAL RANKINGS"
-          description="Per martial art worldwide, national, division and gender fighter rankings. Track your journey from the 1st fight to world champion"
-          tiles={subSectionSkeletonElement}
-          overrideTiles={true}
-          link={"/"}
-        />
-        <ElementSetSummaryComponent
-          title="JUDGE DECISION TRACKING"
-          description="Judge Profiles and ratings based on their scorecards compared against fellow judges and community scoring"
-          tiles={
-            <div className="flex w-full">
-              {DecisionChart(
-                "SPLIT DECISIONS",
-                "Majority Vote",
-                1,
-                "Minority Vote",
-                3
-              )}
-              <Avatar
-                className="customShadow"
-                variant="rounded"
-                sx={{ width: 200, height: 100 }}
-                src={"./judge_small.png"}
-              />
+            <ElementSetSummaryComponent
+              title="RATINGS, REVIEWS, PREDICTIONS"
+              description="Rate, review and vote on fights to decide the best fights of the year, all time and a range of other categories"
+              tiles={
+                <div className="space-y-1">
+                  {boutRatingData.map(entry => {
+                    return (
+                      <div
+                        className={
+                          BACKGROUND_ATTR + "flex w-full space-x-10 px-2 py-1"
+                        }
+                      >
+                        <UserStarRatingBreakdownComponent
+                          voteData={entry}
+                          initialTotalVotes={43}
+                          goToLink={"/bout/"}
+                        />
+                        <UserRatingComponent />
+                        <div className="customAccentText link w-4/12">
+                          {entry.fa}
+                        </div>
+                        <p>vs</p>
+                        <div className="customAccentText link w-4/12">
+                          {entry.fb}
+                        </div>
+                        <p className="w-2/12">{entry.art}</p>
+                        <div className="w-3/12">{entry.year}</div>
+                      </div>
+                    );
+                  })}
+                </div>
+              }
+              overrideTiles={true}
+              link={"/"}
+            />
+          </div>
+          <ElementSetSummaryComponent
+            title="ADVANCED FIGHT SEARCH"
+            description="Browse fight data like never before with fight labels. Search based on moments, win methods, country, time frame, fight promoter and many more"
+            tiles={<FightSearchPreviewTagsComponent />}
+            overrideTiles={true}
+            flip={true}
+            link={"/"}
+          />
+          <ElementSetSummaryComponent
+            title="FIGHT PROMOTERS"
+            description="Detailed Fight Promoters pages from around the world with their own internal rankings, records and ratings"
+            tiles={landingData.promoters.map(entry => {
+              return {
+                value: null,
+                name: null, //entry.name,
+                img: DATA_SERVER_IMAGE_ADDRESS + TrimFileName(entry.imageUrl),
+                subName: null,
+                link: "/promotion/" + entry.id
+              };
+            })}
+            link={"/"}
+          />
+          {/* <p>N earned a black belt</p>
+          <p>N has a scheduled fight</p>
+          <p>N announced a new event</p>
+          <p>N made a fight prediction</p>
+          <p>N rated Mike tyson vs Cheese</p>
+          <p>N's rankings were updated</p>
+          <p>N created a new tournament</p>
+          <p>A near by open mat was created</p> */}
 
-              {DecisionChart("JUDGE VS COMMUNITY", "AGREE", 50, "DISAGREE", 20)}
+          <ElementSetSummaryComponent
+            title="WORLDWIDE AND LOCAL RANKINGS"
+            description="Per martial art worldwide, national, division and gender fighter rankings. Track your journey from the 1st fight to world champion"
+            tiles={subSectionSkeletonElement}
+            overrideTiles={true}
+            link={"/"}
+            flip={true}
+          />
+
+          <ElementSetSummaryComponent
+            title="FOR YOU FEED"
+            description="Tailor your content by following Fighters,  Promoters and  Martial Arts to create a custom update feed"
+            tiles={
+              <Avatar
+                variant="rounded"
+                className={""}
+                src={"./social-graph.jpg"}
+                sx={{ width: 700, height: 400 }}
+              />
+            }
+            overrideTiles={true}
+            link={"/"}
+          />
+
+          <div className=" centerdat text-center">
+            <div className="w-6/12 space-y-2">
+              <HeadingComponent
+                textColor="text-center w-full justify-center flex "
+                size={2}
+              >
+                START YOUR{" "}
+                <span className="customAccentText pl-4"> LEGACY</span>
+              </HeadingComponent>
+              <div>Follow us to get notified when we launch</div>
+              {registerSection()}
             </div>
-          }
-          overrideTiles={true}
-          link={"/"}
-        />
-        {/* <ElementSetSummaryComponent
+          </div>
+          {/* <ElementSetSummaryComponent
+            flip={true}
+            title="JUDGE DECISION TRACKING"
+            description="Judge Profiles and ratings based on their scorecards compared against fellow judges and community scoring"
+            tiles={
+              <div className="flex w-full">
+                {DecisionChart(
+                  "SPLIT DECISIONS",
+                  "Majority Vote",
+                  1,
+                  "Minority Vote",
+                  3
+                )}
+                <Avatar
+                  className="customShadow"
+                  variant="rounded"
+                  sx={{ width: 200, height: 100 }}
+                  src={"./judge_small.png"}
+                />
+
+                {DecisionChart(
+                  "JUDGE VS COMMUNITY",
+                  "AGREE",
+                  50,
+                  "DISAGREE",
+                  20
+                )}
+              </div>
+            }
+            overrideTiles={true}
+            link={"/"}
+          /> */}
+          {/* <ElementSetSummaryComponent
           title="COMPETE"
           description="Key people involved in the running of the organization"
           tiles={subSectionSkeletonElement}
           overrideTiles={true}
           link={"/"}
         /> */}
-        {/* <ElementSetSummaryComponent
+          {/* <ElementSetSummaryComponent
           title="FIGHT RECORDS"
           description="Fight for the top spot in the annual and all time records"
           tiles={<FightSearchPreviewTagsComponent alternative={true} />}
           overrideTiles={true}
           link={"/"}
         /> */}
+        </div>
       </div>
     </div>
   );

@@ -58,13 +58,13 @@ export default function HeadingComponent({
         setHovering(false);
       }}
     >
-      <h1
+      <p
         className={
           "font-medium leading-tight mt-0 mb-2 " + textColor + " " + sizeId
         }
       >
         {bar} {children}
-      </h1>
+      </p>
       {viewAllElement} {arrowElement}
     </span>
   );

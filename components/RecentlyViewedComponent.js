@@ -116,14 +116,7 @@ const RecentlyViewedComponent = () => {
             </li>
           </div>
           <div className="pt-5">
-            <Swiper
-              // modules={[Navigation]}
-              // navigation
-              // modules={[Zoom, Navigation]}
-
-              spaceBetween={50}
-              slidesPerView={MAX_ELEMENTS - 2}
-            >
+            <Swiper spaceBetween={50} slidesPerView={MAX_ELEMENTS - 2}>
               {outputArray}
             </Swiper>
           </div>
