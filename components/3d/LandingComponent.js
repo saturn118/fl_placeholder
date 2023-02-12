@@ -347,6 +347,21 @@ export default function LandingComponent({
             );
           })}
         </div>
+        <div className="flex space-x-1 -translate-x-1/4">
+          {landingData.activities.map(entry => {
+            return (
+              <EntryWithCentralOverlayComponent
+                width={200}
+                height={200}
+                imageUrl={
+                  DATA_SERVER_IMAGE_ADDRESS + TrimFileName(entry.imageUrl)
+                }
+                label1={entry.name}
+                targetLink={"/martialart/" + entry.id}
+              />
+            );
+          })}
+        </div>
 
         <ElementSetSummaryComponent
           title="FIGHTERS"

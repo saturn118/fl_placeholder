@@ -9,7 +9,8 @@ import {
   TriggerBadgeEarned,
   TriggerLoginPrompt,
   IsLoggedInLoginPrompt,
-  GetUsername
+  GetUsername,
+  dev
 } from "../config";
 import NotificationPollingComponent from "./NotificationPollingComponent";
 import ProfileButtonComponent from "./ProfileButtonComponent";
@@ -76,9 +77,9 @@ const Header = () => {
         <div className=" w-9/12 mx-5">
           {searchBoxFocused == false && (
             <div className="flex space-x-2 justify-end w-full">
-              <MenuButtonGroup />
+              {dev && <MenuButtonGroup />}
 
-              <NotificationPollingComponent />
+              {dev && <NotificationPollingComponent />}
 
               <ProfileButtonComponent />
             </div>
