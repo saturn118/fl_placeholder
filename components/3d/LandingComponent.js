@@ -4,6 +4,7 @@ import {
   MeshReflectorMaterial,
   useCursor
 } from "@react-three/drei";
+import Meta from "@components/Meta";
 import YouTubeIcon from "@mui/icons-material/YouTube";
 import InstagramIcon from "@mui/icons-material/Instagram";
 import { Canvas, useFrame } from "@react-three/fiber";
@@ -312,6 +313,7 @@ export default function LandingComponent({
 
   return (
     <div className="container">
+      <Meta />
       <div className="py-10">
         <div className="clickup z-0"></div>
         <div className="flex min-h-[600px]">

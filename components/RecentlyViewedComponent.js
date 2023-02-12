@@ -14,6 +14,7 @@ import {
 } from "../config";
 import HeadingComponent from "./utility/HeadingComponent";
 import { Avatar } from "@mui/material";
+import { EntryWithCentralOverlayComponent } from "./utility/EntryWithImageComponent";
 
 export function RecentlyViewedInjectorClearData() {
   localStorage.setItem("recent", "{}");
@@ -52,29 +53,13 @@ const RecentlyViewedComponent = () => {
     let currentData = itemsToRender[key];
 
     outputArray.push(
-      <SwiperSlide className="customShadow">
-        <motion.button
-          whileHover={{
-            scale: 1.05,
-            transition: { duration: 0.2 }
-            // rotate: 5
-          }}
-          whileTap={{ scale: 0.9 }}
-        >
-          <div>
-            <Link href={LOCAL_SERVER_ADDRESS + key}>
-              <Avatar
-                variant="rounded"
-                src={DATA_SERVER_IMAGE_ADDRESS + currentData.image}
-                sx={{ width: 200, height: 200 }}
-              />
-
-              {/* <img src={DATA_SERVER_IMAGE_ADDRESS + currentData.image} /> */}
-            </Link>
-            <p className="recentlyviewedname">{currentData.name}</p>
-          </div>
-        </motion.button>
-      </SwiperSlide>
+      <EntryWithCentralOverlayComponent
+        width={120}
+        height={120}
+        imageUrl={DATA_SERVER_IMAGE_ADDRESS + currentData.image}
+        label1={null}
+        targetLink={LOCAL_SERVER_ADDRESS + key}
+      />
     );
     outputCount += 1;
   });
@@ -115,11 +100,7 @@ const RecentlyViewedComponent = () => {
               </button>
             </li>
           </div>
-          <div className="pt-5">
-            <Swiper spaceBetween={50} slidesPerView={MAX_ELEMENTS - 2}>
-              {outputArray}
-            </Swiper>
-          </div>
+          <div className="pt-5 flex space-x-2">{outputArray}</div>
         </div>
       </div>
     </div>

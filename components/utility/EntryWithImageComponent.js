@@ -96,11 +96,17 @@ export function EntryWithCentralOverlayComponent({
                 sx={{ width: width, height: height }}
                 src={imageUrl}
               />
-              <div className=" pointer-events-none w-full technique-overlay-label-central inset-y-1/2 flex justify-center ">
-                <HeadingComponent textColor="text-white  text-center" size={6}>
-                  {label1.toUpperCase()}
-                </HeadingComponent>
-              </div>
+
+              {label1 && (
+                <div className=" pointer-events-none w-full technique-overlay-label-central inset-y-1/2 flex justify-center ">
+                  <HeadingComponent
+                    textColor="text-white  text-center"
+                    size={6}
+                  >
+                    {label1.toUpperCase()}
+                  </HeadingComponent>
+                </div>
+              )}
             </div>
           </motion.button>
         </a>
