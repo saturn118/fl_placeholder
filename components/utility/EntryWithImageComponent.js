@@ -91,7 +91,7 @@ export function EntryWithCentralOverlayComponent({
           >
             <div className="customShadow relative ">
               <Avatar
-                className="hover:brightness-90 brightness-50"
+                className="hover:brightness-90 brightness-50 transition duration-500 ease-in-out"
                 variant="rounded"
                 sx={{ width: width, height: height }}
                 src={imageUrl}

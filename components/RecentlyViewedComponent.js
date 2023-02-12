@@ -121,7 +121,7 @@ const RecentlyViewedComponent = () => {
               // navigation
               // modules={[Zoom, Navigation]}
 
-              spaceBetween={15}
+              spaceBetween={50}
               slidesPerView={MAX_ELEMENTS - 2}
             >
               {outputArray}

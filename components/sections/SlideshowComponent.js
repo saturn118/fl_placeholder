@@ -26,6 +26,7 @@ export const SlideshowComponent = ({
     <Swiper
       showsPagination={false}
       direction={direction}
+      spaceBetween={50}
       slidesPerView={perView}
       loop={loop}
       freeMode={!discrete}
@@ -33,7 +34,8 @@ export const SlideshowComponent = ({
       //   rows: 2
       // }}
       pagination={{
-        clickable: true
+        clickable: true,
+        el: null
       }}
       navigation={false}
       autoplay={{
@@ -41,7 +43,7 @@ export const SlideshowComponent = ({
         disableOnInteraction: false
       }}
       modules={[Navigation, Autoplay, Grid, Pagination]}
-      className="mySwiper"
+      className="mySwiper w-full"
     >
       {inputData.map(entry => {
         return <SwiperSlide>{entry}</SwiperSlide>;
