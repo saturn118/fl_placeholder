@@ -69,11 +69,11 @@ const Header = () => {
   //   }
   // };
 
-  if (dev) {
+  if (!dev) {
     return (
       <div className=" bg-gray-900 w-full ">
         <div className="containerNavBar flex justify-center">
-          <div className="flex w-3/12 mx-5">{GetLogoElement()}</div>
+          {GetLogoElement()}
         </div>
       </div>
     );
