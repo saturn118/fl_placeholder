@@ -439,7 +439,7 @@ export default function LandingComponent({
             //   </div>
             // }
             // overrideTiles={true}
-            link={"/"}
+            link={null}
           />
           <ElementSetSummaryComponent
             flip={true}
@@ -465,7 +465,7 @@ export default function LandingComponent({
               />
             }
             overrideTiles={true}
-            link={"/"}
+            link={null}
           />
           {/* <img
           src={
@@ -484,7 +484,7 @@ export default function LandingComponent({
                 link: "/position/" + entry.id
               };
             })}
-            link={"/"}
+            link={null}
           />
           <div className="">
             <ElementSetSummaryComponent
@@ -511,7 +511,7 @@ export default function LandingComponent({
                 </div>
               }
               overrideTiles={true}
-              link={"/"}
+              link={null}
             />
             <ElementSetSummaryComponent
               title="RATINGS, REVIEWS, PREDICTIONS"
@@ -546,7 +546,7 @@ export default function LandingComponent({
                 </div>
               }
               overrideTiles={true}
-              link={"/"}
+              link={null}
             />
           </div>
           <ElementSetSummaryComponent
@@ -555,7 +555,7 @@ export default function LandingComponent({
             tiles={<FightSearchPreviewTagsComponent />}
             overrideTiles={true}
             flip={true}
-            link={"/"}
+            link={null}
           />
           <ElementSetSummaryComponent
             title="FIGHT PROMOTERS"
@@ -569,7 +569,7 @@ export default function LandingComponent({
                 link: "/promotion/" + entry.id
               };
             })}
-            link={"/"}
+            link={null}
           />
           {/* <p>N earned a black belt</p>
           <p>N has a scheduled fight</p>
@@ -585,7 +585,7 @@ export default function LandingComponent({
             description="Per martial art worldwide, national, division and gender fighter rankings. Track your journey from the 1st fight to world champion"
             tiles={subSectionSkeletonElement}
             overrideTiles={true}
-            link={"/"}
+            link={null}
             flip={true}
           />
 
@@ -601,7 +601,7 @@ export default function LandingComponent({
               />
             }
             overrideTiles={true}
-            link={"/"}
+            link={null}
           />
 
           <div className=" centerdat text-center">
@@ -647,21 +647,21 @@ export default function LandingComponent({
               </div>
             }
             overrideTiles={true}
-            link={"/"}
+            link={null}
           /> */}
           {/* <ElementSetSummaryComponent
           title="COMPETE"
           description="Key people involved in the running of the organization"
           tiles={subSectionSkeletonElement}
           overrideTiles={true}
-          link={"/"}
+          link={null}
         /> */}
           {/* <ElementSetSummaryComponent
           title="FIGHT RECORDS"
           description="Fight for the top spot in the annual and all time records"
           tiles={<FightSearchPreviewTagsComponent alternative={true} />}
           overrideTiles={true}
-          link={"/"}
+          link={null}
         /> */}
         </div>
       </div>

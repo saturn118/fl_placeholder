@@ -9,19 +9,21 @@ export default function ElementSetSummaryComponent({
   title = "TITLE_PLACEHOLDER",
   description = "DESCRIPTION PLACEHOLDER TACO TACO DANNY BOY HELLO",
   flip = false,
-  link = "/",
+  link = null,
   tiles = [],
   overrideTiles = false
 }) {
   const SIZE = 200;
 
   let leftSection = (
-    <div className={"w-4/12  p-5 text-xl space-y-3"}>
+    <div className={"w-4/12  p-5 text-2xl space-y-3"}>
       <p>{description}</p>
       <div>
-        <Link href={link}>
-          <a className="customAccentText link">See All</a>
-        </Link>
+        {link && (
+          <Link href={link}>
+            <a className="customAccentText link">See All</a>
+          </Link>
+        )}
       </div>
     </div>
   );

@@ -69,6 +69,16 @@ const Header = () => {
   //   }
   // };
 
+  if (dev) {
+    return (
+      <div className=" bg-gray-900 w-full ">
+        <div className="containerNavBar flex justify-center">
+          <div className="flex w-3/12 mx-5">{GetLogoElement()}</div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     // fixedTopScreen
     <div className=" bg-gray-900 w-full ">
@@ -77,9 +87,9 @@ const Header = () => {
         <div className=" w-9/12 mx-5">
           {searchBoxFocused == false && (
             <div className="flex space-x-2 justify-end w-full">
-              {dev && <MenuButtonGroup />}
+              <MenuButtonGroup />
 
-              {dev && <NotificationPollingComponent />}
+              <NotificationPollingComponent />
 
               <ProfileButtonComponent />
             </div>
