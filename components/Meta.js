@@ -22,10 +22,11 @@ const Meta = ({ title, keywords, description }) => {
 //These will be used in the event that the component isn't called
 //or fallback values for missing parameters
 Meta.defaultProps = {
-  title: WEBSITE_NAME + " - The Home of Martial Arts Data",
-  keywords: "bjj fight legacy mma boxing fight legacy record martial art",
+  title: COMPANY_NAME + " - The All In One Martial Art Community",
+  keywords:
+    "boxing mma bjj martial art  muay thai fight legacy records reviews predictions",
   description:
-    "Fight record keeping, teaching materials, events and fighter profiles."
+    "The All in one martial art community. Fight Ratings, Reviews, events, fight promoters and techniques"
 };
 
 export default Meta;
