@@ -10,8 +10,10 @@ export const LOCAL_SERVER_ADDRESS = dev
 export const BACKGROUND_ATTR =
   " bg-gray-50 rounded  border-solid border-2 border-gray-300 drop-shadow-md hover:drop-shadow-xl ";
 
-export const DATA_SERVER_ADDRESS = "http://127.0.0.1:5000/";
-export const DATA_SERVER_IMAGE_ADDRESS = DATA_SERVER_ADDRESS + "media/";
+export const DATA_SERVER_ADDRESS = dev ? "http://127.0.0.1:5000/" : "/";
+export const DATA_SERVER_IMAGE_ADDRESS = dev
+  ? DATA_SERVER_ADDRESS + "media/"
+  : "/";
 export const TECHNIQUE_LIBRARY_NAME = "Fight Library";
 export const TECHNIQUE_LIBRARY_URL_PREFIX = "learn/";
 export const COMPANY_NAME = "Fight Legacy";

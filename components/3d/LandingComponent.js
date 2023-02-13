@@ -491,7 +491,7 @@ export default function LandingComponent({
           <div className="">
             <ElementSetSummaryComponent
               flip={true}
-              title="MARTIAL ART RANK DIRECTORY"
+              title="LINEAGE AND RANKS"
               description="Browse the worldwide verified list of martial art rank holders, past and present"
               tiles={
                 <div className="space-y-1">
