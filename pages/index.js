@@ -302,15 +302,33 @@ export async function getStaticProps({ params }) {
 }
 
 const statsCached = {
-  stats: [
-    ["people", "1.11M"],
-    ["events", "725.73K"],
-    ["fights", "3.18M"],
-    ["martial arts", "58"],
-    ["years of records", "122"],
-    ["techniques", "294"]
-  ]
-};
+    "stats": [
+        [
+            "martial arts",
+            "58"
+        ],
+        [
+            "profiles",
+            "1.1M"
+        ],
+        [
+            "fights",
+            "3.2M"
+        ],
+        [
+            "years of records",
+            "122"
+        ],
+        [
+            "events",
+            "725.7K"
+        ],
+        [
+            "techniques",
+            "294"
+        ]
+    ]
+}
 
 const landingDataCached = {
     "activities": [
