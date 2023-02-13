@@ -67,7 +67,7 @@ export default function ElementSetSummaryComponent({
 
   let i = 0;
   return (
-    <section className="my-20">
+    <section className="my-20 fadeY">
       <HeadingComponent showArrow={false} showBar={true} size={2}>
         {title}
       </HeadingComponent>

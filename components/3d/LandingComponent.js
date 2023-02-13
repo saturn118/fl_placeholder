@@ -215,18 +215,39 @@ export default function LandingComponent({
   ];
 
   useEffect(() => {
+    const options = {
+      rootMargin: "-25px",
+      threshold: 0.5 //percentage of the element that must be visible [0,1],
+    };
+
+    const elements = document.querySelectorAll("section");
+    const io = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("fadeX");
+          io.unobserve(entry.target);
+        } else {
+          entry.target.classList.remove("fadeX");
+        }
+      });
+    }, options);
+
+    elements.forEach(entry => {
+      io.observe(entry);
+    });
+
     LogSiteAction("testy");
-    var i = 0;
-    setInterval(increment, 3000, i);
-    function increment() {
-      i = i + 1;
+    // var i = 0;
+    // setInterval(increment, 3000, i);
+    // function increment() {
+    //   i = i + 1;
 
-      if (i === words.length) {
-        i = 0;
-      }
+    //   if (i === words.length) {
+    //     i = 0;
+    //   }
 
-      setCurrentIndex(i);
-    }
+    //   setCurrentIndex(i);
+    // }
   }, []);
 
   let tournamentTypes = [];
@@ -367,35 +388,40 @@ export default function LandingComponent({
         </div>
         <div className="">
           <div className="flex border-t-2 pb-10">{statElements}</div>
-          <div className="flex space-x-1 -translate-x-1/3 mt-10">
-            {landingData.activities.map(entry => {
-              return (
-                <EntryWithCentralOverlayComponent
-                  width={200}
-                  height={200}
-                  imageUrl={
-                    DATA_SERVER_IMAGE_ADDRESS + TrimFileName(entry.imageUrl)
-                  }
-                  label1={entry.name}
-                  targetLink={"/martialart/" + entry.id}
-                />
-              );
-            })}
+          {/* -translate-x-1/3 */}
+          <div className="flex space-x-1  mt-10">
+            {landingData.activities
+              .map(entry => {
+                return (
+                  <EntryWithCentralOverlayComponent
+                    width={200}
+                    height={200}
+                    imageUrl={
+                      DATA_SERVER_IMAGE_ADDRESS + TrimFileName(entry.imageUrl)
+                    }
+                    label1={entry.name}
+                    targetLink={"/martialart/" + entry.id}
+                  />
+                );
+              })
+              .slice(0, 6)}
           </div>
-          <div className="mb-10 flex space-x-1 -translate-x-1/4 ">
-            {landingData.activities.map(entry => {
-              return (
-                <EntryWithCentralOverlayComponent
-                  width={200}
-                  height={200}
-                  imageUrl={
-                    DATA_SERVER_IMAGE_ADDRESS + TrimFileName(entry.imageUrl)
-                  }
-                  label1={entry.name}
-                  targetLink={"/martialart/" + entry.id}
-                />
-              );
-            })}
+          <div className="mb-10 flex space-x-1  ">
+            {landingData.activities
+              .map(entry => {
+                return (
+                  <EntryWithCentralOverlayComponent
+                    width={200}
+                    height={200}
+                    imageUrl={
+                      DATA_SERVER_IMAGE_ADDRESS + TrimFileName(entry.imageUrl)
+                    }
+                    label1={entry.name}
+                    targetLink={"/martialart/" + entry.id}
+                  />
+                );
+              })
+              .slice(0, 6)}
           </div>
 
           <ElementSetSummaryComponent
@@ -608,7 +634,7 @@ export default function LandingComponent({
             link={null}
           />
 
-          <div className=" centerdat text-center">
+          <section className=" centerdat text-center fadeY">
             <div className="w-6/12 space-y-2">
               <HeadingComponent
                 textColor="text-center w-full justify-center flex "
@@ -620,7 +646,7 @@ export default function LandingComponent({
               <div>Follow us to get notified when we launch</div>
               {registerSection()}
             </div>
-          </div>
+          </section>
           {/* <ElementSetSummaryComponent
             flip={true}
             title="JUDGE DECISION TRACKING"

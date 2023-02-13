@@ -45,7 +45,7 @@ html,
   font-family: "Albert Sans", sans-serif;
 }
 body {
-  scroll-behavior: smooth;
+  /* scroll-behavior: smooth; */
 
   font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
     Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
@@ -196,13 +196,18 @@ a {
   font-size: 52px;
 }
 
-.recordLabel {
-}
-
 :root {
   --customBackground: #333740;
   --customAccent: #1976d2;
   --imdbFont: Roboto;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  padding: 0;
+  margin: 0;
+  object-fit: contain;
 }
 
 .fixedTopScreen {
@@ -329,17 +334,30 @@ ul,
 li {
   list-style-type: none;
 }
+.fadeY {
+  opacity: 0;
+  transform: translateY(50%);
+  filter: blur(2px);
+  transition: all 1s;
+}
+
+.fadeX {
+  opacity: 1;
+  transform: translateY(0);
+  filter: blur(0px);
+  transition: all 1s;
+}
 
 .container {
   max-width: 1200px;
-  min-width: 400px;
+  min-width: 1000px;
   margin: 0 auto;
   padding: 0 10px;
 }
 
 .containerNavBar {
   max-width: 1400px;
-  min-width: 400px;
+  min-width: 1000px;
   margin: auto auto;
   padding: auto 20px;
 }
@@ -601,4 +619,32 @@ link {
 
 .onTop2 {
   z-index: 99999;
+}
+.gallery-container {
+  font-size: 0;
+  height: 150px;
+  margin: 0 30px;
+}
+
+.gallery-box {
+  font-size: initial;
+  width: calc(100% / 3);
+  height: 250px;
+  border: 1px solid;
+  box-sizing: border-box;
+  transform: skew(-25deg);
+  position: relative;
+  overflow: hidden;
+  display: inline-block;
+}
+
+.gallery-box span {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: -50%;
+  right: -50%;
+  transform: skew(25deg);
+  background-position: center;
+  background-size: cover;
 }
