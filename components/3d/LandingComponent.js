@@ -60,6 +60,8 @@ export default function LandingComponent({
     console.log("IMAGE ");
     console.log(input);
 
+    input = input.replace(/\\/g, "/");
+
     if (input && !dev && input.includes("/")) {
       const splitString = input.split("/");
 
