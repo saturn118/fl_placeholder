@@ -1,4 +1,72 @@
 import React, { useState, useEffect } from "react";
+import HeadingComponent from "./utility/HeadingComponent";
+import LinkIcon from "@mui/icons-material/Link";
+
+function IndividualTag(entry) {
+  return (
+    <p className="customShadow font-bold px-5 py-2 mt-2 hover:bg-blue-100 hover:text-black customAccentBackground  text-white">
+      {entry.toUpperCase()}
+    </p>
+  );
+}
+
+export function FightSearchPreviewTagsAnimatedComponent({}) {
+  useEffect(() => {
+    const options = {
+      rootMargin: "-25px",
+      threshold: 1 //percentage of the element that must be visible [0,1],
+    };
+
+    const elements = document.querySelectorAll(".animatedtag");
+    const io = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("fadeX");
+          io.unobserve(entry.target);
+        } else {
+          entry.target.classList.remove("fadeX");
+        }
+      });
+    }, options);
+
+    elements.forEach(entry => {
+      io.observe(entry);
+    });
+  }, []);
+
+  let words = ["cat", "dog", "catdog", "Tacos in my butt"];
+
+  return (
+    <div>
+      <HeadingComponent
+        textColor="animatedtag flex w-full justify-center text-center animatedTagDelayLabel fadeY"
+        size={4}
+      >
+        {"Combine tags for more control".toUpperCase()}
+      </HeadingComponent>
+      <div className="w-full animatedtagset space-x-10 flex justify-center">
+        <div className="animatedtag animatedtagDelay fadeY">
+          {IndividualTag(words[0])}
+        </div>
+
+        <div className="animatedtag space-x-5 flex animatedtagDelay2 fadeY ">
+          <LinkIcon fontSize="large" />
+          {IndividualTag(words[1])}
+        </div>
+
+        <div className="animatedtag space-x-5 flex animatedtagDelay3 fadeY">
+          <LinkIcon fontSize="large" />
+          {IndividualTag(words[2])}
+        </div>
+
+        <div className="animatedtag space-x-5 flex animatedtagDelay4 fadeY">
+          <LinkIcon fontSize="large" />
+          {IndividualTag(words[3])}
+        </div>
+      </div>
+    </div>
+  );
+}
 
 export default function FightSearchPreviewTagsComponent({
   alternative = false
@@ -59,11 +127,7 @@ export default function FightSearchPreviewTagsComponent({
   return (
     <div className="flexwrap space-x-2">
       {fightSearchTags.map(entry => {
-        return (
-          <p className="customShadow font-bold px-5 py-2 mt-2 hover:bg-blue-100 hover:text-black customAccentBackground  text-white">
-            {entry.toUpperCase()}
-          </p>
-        );
+        return IndividualTag(entry);
       })}
     </div>
   );

@@ -348,6 +348,27 @@ li {
   transition: all 1s;
 }
 
+.animatedtagset {
+}
+
+.animatedtagDelay {
+  transition-delay: 300ms;
+}
+
+.animatedtagDelay2 {
+  transition-delay: 600ms;
+}
+.animatedtagDelay3 {
+  transition-delay: 900ms;
+}
+.animatedtagDelay4 {
+  transition-delay: 1200ms;
+}
+
+.animatedTagDelayLabel {
+  transition-delay: 1500ms;
+}
+
 .container {
   max-width: 1200px;
   min-width: 1000px;

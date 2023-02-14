@@ -12,7 +12,9 @@ import { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 import BeltComponent from "@components/BeltComponent";
 import ElementSetSummaryComponent from "@components/ElementSetSummaryComponent";
-import FightSearchPreviewTagsComponent from "@components/FightSearchPreviewTagsComponent";
+import FightSearchPreviewTagsComponent, {
+  FightSearchPreviewTagsAnimatedComponent
+} from "@components/FightSearchPreviewTagsComponent";
 import HeadingComponent from "@components/utility/HeadingComponent";
 import {
   Skeleton,
@@ -587,6 +589,9 @@ export default function LandingComponent({
             flip={true}
             link={null}
           />
+
+          <FightSearchPreviewTagsAnimatedComponent />
+
           <ElementSetSummaryComponent
             title="FIGHT PROMOTERS"
             description="Detailed Fight Promoters pages from around the world with their own internal rankings, records and ratings"
