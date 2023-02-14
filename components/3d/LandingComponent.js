@@ -46,6 +46,7 @@ import {
 import SlideshowComponent from "@components/sections/SlideshowComponent";
 import { YOUTUBE_URL } from "config";
 import { INSTAGRAM_URL } from "config";
+import { NewsFeedAnimatedComponent } from "@components/NewsFeedComponent";
 
 export default function LandingComponent({
   statsData = null,
@@ -218,8 +219,8 @@ export default function LandingComponent({
 
   useEffect(() => {
     const options = {
-      rootMargin: "-25px",
-      threshold: 0.5 //percentage of the element that must be visible [0,1],
+      rootMargin: "-40px",
+      threshold: 0.4 //percentage of the element that must be visible [0,1],
     };
 
     const elements = document.querySelectorAll("section");
@@ -390,7 +391,7 @@ export default function LandingComponent({
         </div>
         <div className="">
           <div className="flex border-t-2 pb-10">{statElements}</div>
-          {/* -translate-x-1/3 */}
+
           <div className="flex space-x-1  mt-10">
             {landingData.activities
               .map(entry => {
@@ -504,6 +505,7 @@ export default function LandingComponent({
             "https://download.smoothcomp.com/features/misc/bracket-illustration@2x.webp"
           }
         ></img> */}
+
           <ElementSetSummaryComponent
             title="TECHNIQUE LIBRARY"
             description="Learn how do react, defend and attack from any fight position in the fight technique library"
@@ -627,14 +629,7 @@ export default function LandingComponent({
           <ElementSetSummaryComponent
             title="FOR YOU FEED"
             description="Tailor your content by following Fighters,  Promoters and  Martial Arts to create a custom update feed"
-            tiles={
-              <Avatar
-                variant="rounded"
-                className={""}
-                src={"./social-graph.jpg"}
-                sx={{ width: 700, height: 400 }}
-              />
-            }
+            tiles={<NewsFeedAnimatedComponent />}
             overrideTiles={true}
             link={null}
           />

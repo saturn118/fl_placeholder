@@ -19,12 +19,14 @@ export const SlideshowComponent = ({
   discrete = true,
   perView = 4,
   loop = false,
+  showProgress = true,
+  showArrows = true,
 
   direction = "horizontal"
 }) => {
   return (
     <Swiper
-      showsPagination={false}
+      showsPagination={showProgress}
       direction={direction}
       spaceBetween={50}
       slidesPerView={perView}
@@ -34,10 +36,10 @@ export const SlideshowComponent = ({
       //   rows: 2
       // }}
       pagination={{
-        clickable: true,
-        el: null
+        clickable: true
+        // el: null
       }}
-      navigation={false}
+      navigation={showArrows}
       autoplay={{
         delay: timeDelayMs,
         disableOnInteraction: false
@@ -46,7 +48,7 @@ export const SlideshowComponent = ({
       className="mySwiper w-full"
     >
       {inputData.map(entry => {
-        return <SwiperSlide>{entry}</SwiperSlide>;
+        return <SwiperSlide className="h-[100px]">{entry}</SwiperSlide>;
       })}
     </Swiper>
   );

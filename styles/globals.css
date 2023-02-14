@@ -364,9 +364,12 @@ li {
 .animatedtagDelay4 {
   transition-delay: 1200ms;
 }
+.animatedtagDelay5 {
+  transition-delay: 1500ms;
+}
 
 .animatedTagDelayLabel {
-  transition-delay: 1500ms;
+  transition-delay: 300ms;
 }
 
 .container {

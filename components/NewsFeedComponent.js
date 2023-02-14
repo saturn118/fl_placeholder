@@ -7,13 +7,28 @@ import { Avatar, Button, Chip, Tab, Tabs } from "@mui/material";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
-import { COMPANY_NAME, DATA_SERVER_IMAGE_ADDRESS, GetUsername, IsLoggedIn, IsLoggedInByUser, IsLoggedInLoginPrompt } from "../config";
-import { AddUserFeedPostAction, ConverDateToDaysAgoString, DeleteFeedPostAction, FeedPostLikeAction, GetUserFeedAction, GetUserFeedLikesAction } from "../helpers/api";
+import {
+  COMPANY_NAME,
+  DATA_SERVER_IMAGE_ADDRESS,
+  GetUsername,
+  IsLoggedIn,
+  IsLoggedInByUser,
+  IsLoggedInLoginPrompt,
+  BACKGROUND_ATTR
+} from "../config";
+import {
+  AddUserFeedPostAction,
+  ConverDateToDaysAgoString,
+  DeleteFeedPostAction,
+  FeedPostLikeAction,
+  GetUserFeedAction,
+  GetUserFeedLikesAction
+} from "../helpers/api";
 import OnHoverMenuComponent from "./OnHoverMenuComponent";
 import SpoilerButtonComponent from "./SpoilerButtonComponent";
 import { CommentMenu } from "./UserEntityReviewSectionComponent";
-import { AnimAppear } from "./utility/AnimationUtility";
-
+import { AnimAppear, AnimAppearDirection } from "./utility/AnimationUtility";
+import SlideshowComponent from "./sections/SlideshowComponent";
 
 function NewsFeedEntryComponent({
   entry,
@@ -24,6 +39,7 @@ function NewsFeedEntryComponent({
   setPendingReplyMap,
   setMyReplyText,
   myReplyText,
+
   setMyPostText,
   myPostText,
   showReplies,
@@ -31,8 +47,8 @@ function NewsFeedEntryComponent({
 }) {
   const [displayReplyInput, setDisplayReplyInput] = useState(false);
 
-  let replyInputElement = (
-    <div className="w-12/12 flex border-t-2 border-blue-500 pt-2">
+  let replyInputElement = entry && pendingReplyMap && (
+    <div className={"w-12/12 flex border-t-2 border-blue-500 pt-2"}>
       {/* <Avatar
         // variant="rounded"
         sx={{ width: 60, height: 60 }}
@@ -82,7 +98,7 @@ function NewsFeedEntryComponent({
   );
 
   let likedIcon = <FavoriteBorderIcon />;
-  if (entry.id in likesData) {
+  if (likesData && entry && entry.id in likesData) {
     likedIcon = <FavoriteIcon color="error" />;
   }
 
@@ -116,44 +132,44 @@ function NewsFeedEntryComponent({
   let doesUserOwnPost = entry.originUrl == "/user/" + username;
 
   let outputMainEntry = (
-    <div className="bg-gray-300 w-full p-2 flex rounded border-b-2 border-blue-500">
-      <div className="w-2/12 border-r-2 border-blue-500 px-5 pt-2">
-        <Avatar
-          variant="rounded"
-          sx={{ width: 75, height: 75 }}
-          src={DATA_SERVER_IMAGE_ADDRESS + entry.originImage}
-          width={100}
-        />
-      </div>
-      <div className="pl-5 w-full ">
+    <div className={BACKGROUND_ATTR + " w-full p-3 flex rounded "}>
+      <div className=" w-full">
         <div className="flex ">
           <div className="w-11/12">
-            <OnHoverMenuComponent
-              anchorHorizontalCustom="center"
-              popupContent={
-                <div className="flex p-4 w-12/12">
-                  <Avatar
-                    variant="rounded"
-                    sx={{ width: 200, height: 200 }}
-                    src={DATA_SERVER_IMAGE_ADDRESS + entry.originImage}
-                  />
-                  <div className="p-5">
-                    {" "}
-                    <p>{entry.name}</p>
-                    <Chip label={entry.originEntity} color="primary" />
-                  </div>
-                </div>
-              }
-            >
-              <Link href={entry.originUrl}>
-                <a className="customAccentText font-bold hover:link">
-                  {" "}
-                  {entry.name}
-                </a>
-              </Link>
-            </OnHoverMenuComponent>
-            <p>{ConverDateToDaysAgoString(entry.timestamp)}</p>
-            {/* <p>fffff S{entry.originEntity}</p> */}
+            <div className="flex space-x-5">
+              <Avatar
+                // variant="rounded"
+                sx={{ width: 50, height: 50 }}
+                src={DATA_SERVER_IMAGE_ADDRESS + entry.originImage}
+                width={100}
+              />
+              <div>
+                <OnHoverMenuComponent
+                  anchorHorizontalCustom="center"
+                  popupContent={
+                    <div className="flex p-4 w-12/12">
+                      <Avatar
+                        variant="rounded"
+                        sx={{ width: 200, height: 200 }}
+                        src={DATA_SERVER_IMAGE_ADDRESS + entry.originImage}
+                      />
+                      <div className="p-5">
+                        {" "}
+                        <p>{entry.name}</p>
+                        <Chip label={entry.originEntity} color="primary" />
+                      </div>
+                    </div>
+                  }
+                >
+                  <Link href={entry.originUrl ? entry.originUrl : ""}>
+                    <a className="customAccentText font-bold hover:link">
+                      {entry.name}
+                    </a>
+                  </Link>
+                </OnHoverMenuComponent>
+                <p>{ConverDateToDaysAgoString(entry.timestamp)}</p>
+              </div>
+            </div>
           </div>
 
           <CommentMenu
@@ -174,22 +190,25 @@ function NewsFeedEntryComponent({
           />
         </div>
 
-        <p className="mt-3 pr-10"> {content}</p>
-        {entry.targetUrl && (
-          <Link href={entry.targetUrl}>
-            <Button className="link">View</Button>
-          </Link>
-        )}
+        <div className="px-20">
+          <p className="mt-3 text-base mb-2"> {content}</p>
+          {entry.targetUrl && (
+            <Link href={entry.targetUrl}>
+              <Button className="link">View</Button>
+            </Link>
+          )}
 
-        {entry.imageUrl && (
-          <Avatar
-            variant="rounded"
-            sx={{ width: 300, height: 300 }}
-            src={DATA_SERVER_IMAGE_ADDRESS + entry.imageUrl}
-          />
-        )}
+          {entry.imageUrl && (
+            <Avatar
+              variant="rounded"
+              sx={{ width: 250, height: 250 }}
+              src={entry.imageUrl}
+            />
+          )}
+          {entry.customContentElement}
+        </div>
 
-        <div className="flex w-full space-x-10 mt-3">
+        <div className="flex w-full px-20 space-x-10 mt-3">
           <Button
             className="text-black"
             onClick={e => {
@@ -433,21 +452,80 @@ export default function NewsFeedComponent({
     </div>
   );
 }
-{
-  /* <p className="bg-white rounded">Event Completed</p>
-            <p className="bg-white rounded">New Event</p>
-            <p className="bg-white rounded">Fight Record Change Event</p>
-            <p className="bg-white rounded">New Promotion</p>
-            <p className="bg-white rounded">New Course Video / Course</p>
-            <p className="bg-white rounded">New Position Technique</p>
-            <p className="bg-white rounded">New Position</p>
-            <p className="bg-white rounded">Followed User Created Playlist</p>
-            <p className="bg-white rounded">
-              Followed Fighter New Bout / Result
-            </p>
-            <p className="bg-white rounded">New Local Open Event</p>
-            <p className="bg-white rounded">
-              Followed Promotion New Roster/Roster Change
-            </p>
-            <p className="bg-white rounded">Global Ranking Change</p> */
+
+export function NewsFeedAnimatedComponent({}) {
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  let entryList = [
+    {
+      id: 0,
+      textContent: "Promoted to BJJ Blue Belt by John Smith",
+
+      imageUrl:
+        "http://xcelbjj.com/wp-content/uploads/2013/08/kyle-blue-belt.jpg",
+      name: "Jane Doe",
+      timestamp: new Date()
+    },
+    {
+      id: 0,
+      textContent:
+        "Added a new upcoming boxing event. Open for public registration",
+
+      imageUrl:
+        "https://s3.us-west-2.amazonaws.com/assets.eastidahonews.com/wp-content/uploads/2023/02/the-MMA-poster.jpg",
+      name: "Fierce Fighting Championship",
+      timestamp: new Date()
+    },
+    {
+      id: 0,
+      textContent: "Rated Fight 4 Stars",
+
+      imageUrl:
+        "https://www.watchbjj.com/wp-content/uploads/2016/12/closed-guard-sweep-and-elaborate-1024x576.jpg",
+      name: "Mike Tyson",
+      timestamp: new Date()
+    },
+    {
+      id: 0,
+      textContent: "Added 'Mitch Connors' to its roster",
+
+      imageUrl:
+        "https://judoinside.com/photos/hans/judoka/61870__David_Tekic/David%20Tekic_Belgrade.jpg",
+      name: "MMA Fighting Championship",
+      timestamp: new Date()
+    },
+    {
+      id: 0,
+      textContent: "Technique Added 'Closed Guard Armbar'",
+      imageUrl:
+        "https://www.watchbjj.com/wp-content/uploads/2016/12/closed-guard-sweep-and-elaborate-1024x576.jpg",
+      name: COMPANY_NAME,
+      timestamp: new Date(),
+      customContentElement: null
+    }
+  ];
+
+  return (
+    <div className="w-full">
+      <SlideshowComponent
+        timeDelayMs={3000}
+        discrete={false}
+        perView={1}
+        loop={true}
+        inputData={entryList.map(entry => {
+          return (
+            <div className="pointer-events-none">
+              <NewsFeedEntryComponent
+                hideSpoilers={false}
+                entry={entry}
+                likesData={null}
+                username={null}
+                showReplies={false}
+              />
+            </div>
+          );
+        })}
+      />
+    </div>
+  );
 }

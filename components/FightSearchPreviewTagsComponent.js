@@ -34,7 +34,7 @@ export function FightSearchPreviewTagsAnimatedComponent({}) {
     });
   }, []);
 
-  let words = ["cat", "dog", "catdog", "Tacos in my butt"];
+  let words = ["TITLE FIGHT", "FEMALE", "FIRST ROUND KO", "MUAY THAI", "2011"];
 
   return (
     <div>
@@ -42,26 +42,30 @@ export function FightSearchPreviewTagsAnimatedComponent({}) {
         textColor="animatedtag flex w-full justify-center text-center animatedTagDelayLabel fadeY"
         size={4}
       >
-        {"Combine tags for more control".toUpperCase()}
+        {"Combine tags for extra precision".toUpperCase()}
       </HeadingComponent>
-      <div className="w-full animatedtagset space-x-10 flex justify-center">
+      <div className="w-full animatedtagset  flex justify-center">
         <div className="animatedtag animatedtagDelay fadeY">
           {IndividualTag(words[0])}
         </div>
 
-        <div className="animatedtag space-x-5 flex animatedtagDelay2 fadeY ">
+        <div className="animatedtag  items-center align-center  flex animatedtagDelay2 fadeY ">
           <LinkIcon fontSize="large" />
           {IndividualTag(words[1])}
         </div>
 
-        <div className="animatedtag space-x-5 flex animatedtagDelay3 fadeY">
+        <div className="animatedtag  items-center align-center  flex animatedtagDelay3 fadeY">
           <LinkIcon fontSize="large" />
           {IndividualTag(words[2])}
         </div>
 
-        <div className="animatedtag space-x-5 flex animatedtagDelay4 fadeY">
+        <div className="animatedtag items-center align-center  flex animatedtagDelay4 fadeY">
           <LinkIcon fontSize="large" />
           {IndividualTag(words[3])}
+        </div>
+        <div className="animatedtag items-center align-center  flex animatedtagDelay5 fadeY">
+          <LinkIcon fontSize="large" />
+          {IndividualTag(words[4])}
         </div>
       </div>
     </div>
