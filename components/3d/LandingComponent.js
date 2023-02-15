@@ -172,6 +172,11 @@ export default function LandingComponent({
         "https://assets2.cbsnewsstatic.com/hub/i/r/2011/05/18/320fae01-1c51-11e3-9918-005056850598/thumbnail/620x465/881d2cfa82cd4121164e9bc4d5798aa1/taekwondofinal1.jpg"
     },
     {
+      name: "Fencing",
+      imageUrl:
+        "https://kawamorinaoki.jp/wp-content/uploads/2015/08/Romania_v_France_EFS_2013_Fencing_WCH_t163933.jpg"
+    },
+    {
       name: "Sambo",
       imageUrl:
         "https://sambo.sport/upload/iblock/e90/e90078077f050309e6565b0688b30f44.jpg"
@@ -185,11 +190,7 @@ export default function LandingComponent({
       imageUrl:
         "https://photos1.blogger.com/x/blogger/7428/1729/320/827062/01_11_07_Baxter%2520Humby_5218.jpg"
     },
-    {
-      name: "Fencing",
-      imageUrl:
-        "https://kawamorinaoki.jp/wp-content/uploads/2015/08/Romania_v_France_EFS_2013_Fencing_WCH_t163933.jpg"
-    },
+
     {
       name: "HEMA",
       imageUrl:
@@ -334,7 +335,7 @@ export default function LandingComponent({
     </span>
   );
 
-  function registerSection() {
+  function registerSection(showSocials = false) {
     return (
       <div>
         <TextField
@@ -380,20 +381,22 @@ export default function LandingComponent({
             </button>
           )}
         </AnimOnHover>
-        <div className="flex space-x-4 justify-center pt-3">
-          <a href={YOUTUBE_URL}>
-            <Button>
-              <YouTubeIcon fontSize="large" />
-              {/* <p>Youtube</p> */}
-            </Button>
-          </a>
-          <a href={INSTAGRAM_URL}>
-            <Button>
-              <InstagramIcon fontSize="large" />
-              {/* <p>Instagram</p> */}
-            </Button>
-          </a>
-        </div>
+        {showSocials && (
+          <div className="flex space-x-4 justify-center pt-3">
+            <a href={YOUTUBE_URL}>
+              <Button>
+                <YouTubeIcon fontSize="large" />
+                {/* <p>Youtube</p> */}
+              </Button>
+            </a>
+            <a href={INSTAGRAM_URL}>
+              <Button>
+                <InstagramIcon fontSize="large" />
+                {/* <p>Instagram</p> */}
+              </Button>
+            </a>
+          </div>
+        )}
       </div>
     );
   }
@@ -707,7 +710,7 @@ export default function LandingComponent({
                 <span className="customAccentText pl-4"> LEGACY</span>
               </HeadingComponent>
               <div>Follow us to get notified when we launch</div>
-              {registerSection()}
+              {registerSection(true)}
             </div>
           </section>
           {/* <ElementSetSummaryComponent
