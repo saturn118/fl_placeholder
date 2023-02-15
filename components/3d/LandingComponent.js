@@ -302,17 +302,17 @@ export default function LandingComponent({
     });
 
     LogSiteAction("testy");
-    // var i = 0;
-    // setInterval(increment, 3000, i);
-    // function increment() {
-    //   i = i + 1;
+    var i = 0;
+    setInterval(increment, 3000, i);
+    function increment() {
+      i = i + 1;
 
-    //   if (i === words.length) {
-    //     i = 0;
-    //   }
+      if (i === words.length) {
+        i = 0;
+      }
 
-    //   setCurrentIndex(i);
-    // }
+      setCurrentIndex(i);
+    }
   }, []);
 
   let tournamentTypes = [];
