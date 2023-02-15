@@ -136,6 +136,67 @@ export default function LandingComponent({
     );
   }
 
+  let localActivityData = [
+    {
+      name: "Wresting",
+      imageUrl:
+        "https://storage.googleapis.com/afs-prod/media/db5c21bf088d4a429fa84f0aa7cdd10a/1000.jpeg"
+    },
+    {
+      name: "Karate",
+      imageUrl:
+        "https://assets3.cbsnewsstatic.com/hub/i/r/2011/05/18/31f259be-1c51-11e3-9918-005056850598/thumbnail/620x465/20336ecaeb918dbed8d79ed71f46b7b4/karatefinal2.jpg"
+    },
+    {
+      name: "MMA",
+      imageUrl:
+        "http://images.fanpop.com/images/image_uploads/Action---UFC-the-ultimate-fighting-championship-288527_400_300.jpg"
+    },
+    {
+      name: "Jujitsu",
+      imageUrl:
+        "https://jiujitsu-news.com/wp-content/uploads/2020/01/Action-Reaction-in-Jiu-Jitsu-300x200.png"
+    },
+    {
+      name: "Boxing",
+      imageUrl: "http://cdn.ebaumsworld.com/thumbs/picture/2104182/83036449.jpg"
+    },
+    {
+      name: "Judo",
+      imageUrl:
+        "https://i2-prod.chroniclelive.co.uk/incoming/article2509374.ece/ALTERNATES/s615/Judo.jpg"
+    },
+    {
+      name: "Taekwondo",
+      imageUrl:
+        "https://assets2.cbsnewsstatic.com/hub/i/r/2011/05/18/320fae01-1c51-11e3-9918-005056850598/thumbnail/620x465/881d2cfa82cd4121164e9bc4d5798aa1/taekwondofinal1.jpg"
+    },
+    {
+      name: "Sambo",
+      imageUrl:
+        "https://sambo.sport/upload/iblock/e90/e90078077f050309e6565b0688b30f44.jpg"
+    },
+    {
+      name: "Muay Thai",
+      imageUrl: "https://i.ytimg.com/vi/fCSuDz9ix6c/hqdefault.jpg"
+    },
+    {
+      name: "Kickboxing",
+      imageUrl:
+        "https://photos1.blogger.com/x/blogger/7428/1729/320/827062/01_11_07_Baxter%2520Humby_5218.jpg"
+    },
+    {
+      name: "Fencing",
+      imageUrl:
+        "https://kawamorinaoki.jp/wp-content/uploads/2015/08/Romania_v_France_EFS_2013_Fencing_WCH_t163933.jpg"
+    },
+    {
+      name: "HEMA",
+      imageUrl:
+        "https://i0.wp.com/indyfencing.net/wp-content/uploads/2021/01/5g6uefw9jsd31.jpg?resize=863%2C863&ssl=1"
+    }
+  ];
+
   let boutRatingData = [
     {
       fa: "Brock Lesnar",
@@ -393,38 +454,40 @@ export default function LandingComponent({
           <div className="flex border-t-2 pb-10">{statElements}</div>
 
           <div className="flex space-x-1  mt-10">
-            {landingData.activities
+            {localActivityData
               .map(entry => {
                 return (
                   <EntryWithCentralOverlayComponent
                     width={200}
                     height={200}
-                    imageUrl={
-                      DATA_SERVER_IMAGE_ADDRESS + TrimFileName(entry.imageUrl)
-                    }
+                    imageUrl={entry.imageUrl}
+                    // imageUrl={
+                    //   DATA_SERVER_IMAGE_ADDRESS + TrimFileName(entry.imageUrl)
+                    // }
                     label1={entry.name}
-                    targetLink={"/martialart/" + entry.id}
+                    targetLink={"/martialart/"}
                   />
                 );
               })
               .slice(0, 6)}
           </div>
           <div className="mb-10 flex space-x-1  ">
-            {landingData.activities
+            {localActivityData
               .map(entry => {
                 return (
                   <EntryWithCentralOverlayComponent
                     width={200}
                     height={200}
-                    imageUrl={
-                      DATA_SERVER_IMAGE_ADDRESS + TrimFileName(entry.imageUrl)
-                    }
+                    imageUrl={entry.imageUrl}
+                    // imageUrl={
+                    //   DATA_SERVER_IMAGE_ADDRESS + TrimFileName(entry.imageUrl)
+                    // }
                     label1={entry.name}
-                    targetLink={"/martialart/" + entry.id}
+                    targetLink={"/martialart/"}
                   />
                 );
               })
-              .slice(0, 6)}
+              .slice(6, 12)}
           </div>
 
           <ElementSetSummaryComponent

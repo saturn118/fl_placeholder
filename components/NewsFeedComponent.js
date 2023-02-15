@@ -464,7 +464,7 @@ export function NewsFeedAnimatedComponent({}) {
       imageUrl:
         "http://xcelbjj.com/wp-content/uploads/2013/08/kyle-blue-belt.jpg",
       name: "Jane Doe",
-      timestamp: new Date()
+      timestamp: new Date("2022-03-25")
     },
     {
       id: 0,
@@ -474,7 +474,7 @@ export function NewsFeedAnimatedComponent({}) {
       imageUrl:
         "https://s3.us-west-2.amazonaws.com/assets.eastidahonews.com/wp-content/uploads/2023/02/the-MMA-poster.jpg",
       name: "Fierce Fighting Championship",
-      timestamp: new Date()
+      timestamp: new Date("2023-03-25")
     },
     {
       id: 0,
@@ -492,7 +492,7 @@ export function NewsFeedAnimatedComponent({}) {
       imageUrl:
         "https://judoinside.com/photos/hans/judoka/61870__David_Tekic/David%20Tekic_Belgrade.jpg",
       name: "MMA Fighting Championship",
-      timestamp: new Date()
+      timestamp: new Date("2023-01-25")
     },
     {
       id: 0,
@@ -500,7 +500,7 @@ export function NewsFeedAnimatedComponent({}) {
       imageUrl:
         "https://www.watchbjj.com/wp-content/uploads/2016/12/closed-guard-sweep-and-elaborate-1024x576.jpg",
       name: COMPANY_NAME,
-      timestamp: new Date(),
+      timestamp: new Date("2020-03-25"),
       customContentElement: null
     }
   ];
