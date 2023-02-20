@@ -13,7 +13,7 @@ const Meta = ({ title, keywords, description }) => {
       <meta charSet="utf-8" />
 
       <title>
-        {title} | {COMPANY_NAME}
+        {title} - {COMPANY_NAME}
       </title>
     </Head>
   );
@@ -22,7 +22,7 @@ const Meta = ({ title, keywords, description }) => {
 //These will be used in the event that the component isn't called
 //or fallback values for missing parameters
 Meta.defaultProps = {
-  title: COMPANY_NAME + " - The All In One Martial Art Community",
+  title: "The All In One Martial Art Community",
   keywords:
     "boxing mma bjj martial art  muay thai fight legacy records reviews predictions",
   description:
