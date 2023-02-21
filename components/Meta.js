@@ -2,18 +2,57 @@
 //Any page can include this component will override the optional default paramters
 
 import Head from "next/head";
-import { COMPANY_NAME, WEBSITE_NAME } from "../config/index";
+import {
+  COMPANY_NAME,
+  WEBSITE_NAME,
+  TWITTER_URL,
+  TWITTER_USERNAME,
+  WEBSITE_NAME_CANNONICAL
+} from "../config/index";
+import { useRouter } from "next/router";
 
-const Meta = ({ title, keywords, description }) => {
+const Meta = ({ title, keywords, description, imageUrl }) => {
+  const router = useRouter();
+
   return (
     <Head>
       <meta name="viewport" content="width=device-width, initial-scale=1" />
       <meta name="keywords" content={keywords} />
       <meta name="description" content={description} />
       <meta charSet="utf-8" />
+      <link rel="shortcut icon" href="/favicon.ico" />
+      <meta property="og:title" content={COMPANY_NAME + "-" + title} />
+      <meta
+        property="og:url"
+        content={WEBSITE_NAME_CANNONICAL + router.pathname}
+      />
+      <meta property="og:site_name" content={COMPANY_NAME} />
+      <meta property="og:description" content={description} />
+      <meta property="og:type" content="website" />
+      {imageUrl && (
+        <meta
+          property="og:image"
+          content="https://ia.media-imdb.com/images/rock.jpg"
+        />
+      )}
+
+      <meta name="twitter:card" content="summary_large_image" />
+      <meta name="twitter:title" content={title} />
+      <meta name="twitter:description" content={description} />
+      <meta
+        name="twitter:site"
+        content={WEBSITE_NAME_CANNONICAL + router.pathname}
+      />
+      {(
+        <meta
+          name="twitter:image"
+          content="http://www.yoursite.com/yourimage.jpg"
+        />
+      ) && imageUrl}
+      <meta name="twitter:creator" content={TWITTER_USERNAME} />
 
       <title>
-        {title} - {COMPANY_NAME}
+        {COMPANY_NAME} - {title}
       </title>
     </Head>
   );
@@ -26,7 +65,8 @@ Meta.defaultProps = {
   keywords:
     "boxing mma bjj martial art  muay thai fight legacy records reviews predictions",
   description:
-    "The All in one martial art community. Fight Ratings, Reviews, events, fight promoters and techniques"
+    "The All in one martial art community. Fight Ratings, Reviews, events, fight promoters and techniques",
+  imageUrl: null
 };
 
 export default Meta;
