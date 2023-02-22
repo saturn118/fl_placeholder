@@ -1,6 +1,6 @@
 import CommentIcon from "@mui/icons-material/Comment";
 import Link from "next/link";
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import CloseIcon from "@mui/icons-material/Close";
 import { Dialog, DialogContent, Grow } from "@mui/material";
 import {
@@ -139,6 +139,14 @@ const ShareFeedbackButtonComponent = () => {
   const handleClose = () => {
     setOpen(false);
   };
+
+  useEffect(() => {
+    window.addEventListener("feedback_prompt", event => {
+      if (open == false) {
+        setOpen(true);
+      }
+    });
+  }, []);
 
   return (
     <div>

@@ -23,11 +23,11 @@ export function AnimOnHover({
   );
 }
 
-export function AnimAppear({ className, children }) {
+export function AnimAppear({ className, children, delay = 0 }) {
   return (
     <motion.div
-      initial={{ x: 0, opacity: 0, duration: 1000 }}
-      animate={{ x: 0, opacity: 1, duration: 1000 }}
+      initial={{ x: 0, opacity: 0, duration: 1000, delay: delay }}
+      animate={{ x: 0, opacity: 1, duration: 1000, delay: delay }}
       className={className}
     >
       {children}

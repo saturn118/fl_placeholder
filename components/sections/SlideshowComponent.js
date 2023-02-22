@@ -21,6 +21,7 @@ export const SlideshowComponent = ({
   loop = false,
   showProgress = true,
   showArrows = true,
+  spaceBetween = 50,
 
   direction = "horizontal"
 }) => {
@@ -28,7 +29,7 @@ export const SlideshowComponent = ({
     <Swiper
       showsPagination={showProgress}
       direction={direction}
-      spaceBetween={50}
+      spaceBetween={spaceBetween}
       slidesPerView={perView}
       loop={loop}
       freeMode={!discrete}

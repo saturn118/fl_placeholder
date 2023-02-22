@@ -6,6 +6,7 @@ import Link from "next/link";
 import React from "react";
 import { BACKGROUND_ATTR, DATA_SERVER_IMAGE_ADDRESS } from "../../config";
 import HeadingComponent from "./HeadingComponent";
+import { AnimOnHover } from "./AnimationUtility";
 
 export default function EntryWithItemComponent({
   targetLink = "/fdsfs",
@@ -81,14 +82,7 @@ export function EntryWithCentralOverlayComponent({
     return (
       <div>
         <a>
-          <motion.button
-            whileHover={{
-              scale: 1.04,
-              transition: { duration: 0.2 }
-              // rotate: 5
-            }}
-            whileTap={{ scale: 0.9 }}
-          >
+          <AnimOnHover translate={true} speed={0.3} scalar={5}>
             <div className="customShadow relative ">
               <Avatar
                 className="hover:brightness-90 brightness-50 transition duration-500 ease-in-out"
@@ -108,7 +102,7 @@ export function EntryWithCentralOverlayComponent({
                 </div>
               )}
             </div>
-          </motion.button>
+          </AnimOnHover>
         </a>
       </div>
     );
@@ -141,14 +135,7 @@ export function EntryWithOverlayComponent({
       <div>
         <a>
           {" "}
-          <motion.button
-            whileHover={{
-              scale: 1.08,
-              transition: { duration: 0.2 }
-              // rotate: 5
-            }}
-            whileTap={{ scale: 0.9 }}
-          >
+          <AnimOnHover translate={true} speed={0.3} scalar={5}>
             <div className="relative customShadow">
               <Avatar
                 variant="rounded"
@@ -175,7 +162,7 @@ export function EntryWithOverlayComponent({
                 </div>
               </div>
             </div>
-          </motion.button>
+          </AnimOnHover>
         </a>
       </div>
     );

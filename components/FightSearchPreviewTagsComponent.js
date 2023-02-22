@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from "react";
 import HeadingComponent from "./utility/HeadingComponent";
 import LinkIcon from "@mui/icons-material/Link";
+import { AnimOnHover } from "./utility/AnimationUtility";
 
 function IndividualTag(entry) {
   return (
-    <p className="customShadow font-bold px-5 py-2 mt-2 hover:bg-blue-100 hover:text-black customAccentBackground  text-white">
-      {entry.toUpperCase()}
-    </p>
+    <AnimOnHover translate={true} speed={0.3} scalar={3} className=" ">
+      <p className="customShadow font-bold px-5 py-2 mt-2 hover:bg-blue-100 hover:text-black customAccentBackground  text-white">
+        {entry.toUpperCase()}
+      </p>
+    </AnimOnHover>
   );
 }
 

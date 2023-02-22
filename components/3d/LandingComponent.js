@@ -80,10 +80,12 @@ export default function LandingComponent({
     </div>
   );
 
+  let ii = 0;
   let statElements = statsData
     ? statsData.stats.map(entry => {
+        ii += 1;
         return (
-          <div className="w-2/12 pt-5 pb-5">
+          <div className={"w-2/12 pt-5 pb-5"}>
             <SummaryStatComponent
               label={entry[0]}
               mainLabel={entry[1]}
@@ -430,8 +432,6 @@ export default function LandingComponent({
           <div className="w-6/12 centerdat ">
             <div className="w-full player-wrapper">
               <ReactPlayer
-                // width="100%"
-                // height="100%"
                 className="clickupShadow"
                 url="https://www.youtube.com/watch?v=BoJBfSbYNKU"
                 config={{
@@ -454,7 +454,9 @@ export default function LandingComponent({
           </div>
         </div>
         <div className="">
-          <div className="flex border-t-2 pb-10">{statElements}</div>
+          <AnimAppear delay={1000}>
+            <div className="flex border-t-2 pb-10">{statElements}</div>
+          </AnimAppear>
 
           <div className="flex space-x-1  mt-10">
             {localActivityData
