@@ -496,7 +496,7 @@ export default function LandingComponent({
           </div>
 
           <ElementSetSummaryComponent
-            title="DIVERSE PROFILES"
+            title="WORLDWIDE PROFILES"
             description="Detailed profiles from all perspectives in the martial arts community"
             // tiles={
             //   <img src="https://media.gettyimages.com/id/1289775017/vector/people-avatar-round-icon-set-profile-diverse-faces-for-social-network-vector-abstract.jpg?s=1024x1024&w=gi&k=20&c=EPd4UW60wOzpBujo3tJbsNbY9HjB3CRJQtqcqXJ3_vQ="></img>
@@ -544,7 +544,7 @@ export default function LandingComponent({
           />
           <ElementSetSummaryComponent
             flip={true}
-            title="TOURNAMENT CREATOR"
+            title={"FIND AND CREATE TOURNAMENTS".toUpperCase()}
             description="Seamless tournament creation. Any fight type, any progression format, any scoring system, fully customizable" // tiles={tournamentTypes}
             tiles={
               <SlideshowComponent
@@ -575,7 +575,7 @@ export default function LandingComponent({
         ></img> */}
 
           <ElementSetSummaryComponent
-            title="TECHNIQUE LIBRARY"
+            title={"IMPROVE YOUR TECHNIQUE".toUpperCase()}
             description="Learn how do react, defend and attack from any fight position in the fight technique library"
             tiles={landingData.positions.map(entry => {
               return {
@@ -616,7 +616,7 @@ export default function LandingComponent({
               link={null}
             />
             <ElementSetSummaryComponent
-              title="RATINGS, REVIEWS, PREDICTIONS"
+              title="RATINGS, REVIEWS, PREDICTIONS, DECISIONS"
               description="Rate, review and vote on fights to decide the best fights of the year, all time and a range of other categories"
               tiles={
                 <div className="space-y-1">
@@ -628,6 +628,7 @@ export default function LandingComponent({
                         }
                       >
                         <UserStarRatingBreakdownComponent
+                          entityType="bout"
                           voteData={entry}
                           initialTotalVotes={43}
                           goToLink={"/bout/"}
@@ -695,7 +696,7 @@ export default function LandingComponent({
           />
 
           <ElementSetSummaryComponent
-            title="FOR YOU FEED"
+            title="PERSONALIZE YOUR FEED"
             description="Tailor your content by following Fighters,  Promoters and  Martial Arts to create a custom update feed"
             tiles={<NewsFeedAnimatedComponent />}
             overrideTiles={true}

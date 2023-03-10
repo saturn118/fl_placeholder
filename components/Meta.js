@@ -48,6 +48,13 @@ const Meta = ({ title, keywords, description, imageUrl }) => {
       <title>
         {COMPANY_NAME} - {title}
       </title>
+
+      {/* Adsense */}
+      <script
+        async
+        src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4076500004971704"
+        crossorigin="anonymous"
+      ></script>
     </Head>
   );
 };
