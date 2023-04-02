@@ -292,7 +292,7 @@ const Header = () => {
             </div>
 
             <div className="flex  items-center pl-5">
-              <Link href="/">
+              <Link href="/l">
                 <a>{GetLogoElement()}</a>
               </Link>
             </div>

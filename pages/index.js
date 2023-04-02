@@ -272,7 +272,7 @@ export default function Home({
                     ["Techniques", "/library", <SportsKabaddiIcon />],
                     ["Trending", "/trending/fighter", <WhatshotIcon />],
                     ["Rankings", "/rankings", <LeaderboardIcon />],
-                    ["Martial Arts", "/", <SportsMartialArtsIcon />]
+                    ["Martial Arts", "/l", <SportsMartialArtsIcon />]
                   ].map(entry => {
                     return (
                       <Link href={entry[1]}>
