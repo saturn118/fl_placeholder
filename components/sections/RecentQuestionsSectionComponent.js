@@ -7,9 +7,8 @@ import { ConverDateToDaysAgoString } from "../../helpers/api";
 import AdvertComponent from "../AdvertComponent";
 import OnHoverMenuComponent from "../OnHoverMenuComponent";
 import HeadingComponent from "../utility/HeadingComponent";
-
-
-
+import { BodyColumnResponsiveBottomComponent } from "./BodyHeaderSectionComponent";
+import HeadingPairComponent from "@components/utility/HeadingPairComponent";
 
 export const RecentQuestionsSectionComponent = ({
   questionData,
@@ -20,16 +19,17 @@ export const RecentQuestionsSectionComponent = ({
 
   let questionElements = questionData.questions.map(entry => {
     return (
-      <div className={"flex my-4  py-3 pl-5 " + BACKGROUND_ATTR}>
+      <div className={"flex p-1" + BACKGROUND_ATTR}>
         <Avatar
+          className="hide_on_small "
           // variant="rounded"
           sx={{ width: 50, height: 50 }}
           src={DATA_SERVER_IMAGE_ADDRESS + "fdsf.jpg"}
           width={100}
         />
 
-        <div className="pl-5">
-          <div className="flex space-x-10">
+        <div className="">
+          <div className="flex ">
             <OnHoverMenuComponent
               anchorHorizontalCustom="center"
               popupContent={
@@ -58,10 +58,10 @@ export const RecentQuestionsSectionComponent = ({
                 <a className="customAccentText  hover:link">{entry.username}</a>
               </Link>
             </OnHoverMenuComponent>
-            <p>{ConverDateToDaysAgoString(entry.timestamp)}</p>
+            <p className="pl-2">{ConverDateToDaysAgoString(entry.timestamp)}</p>
           </div>
           <div className="flex space-x-1">
-            <p>Posted in</p>
+            <p className="hide_on_small">Posted in</p>
             <Link href={"/technique/" + entry.origin.id}>
               <a className="customAccentText  hover:link">
                 {entry.origin.name}
@@ -69,7 +69,7 @@ export const RecentQuestionsSectionComponent = ({
             </Link>
             {displayOriginPosition && (
               <span className="flex space-x-1">
-                <p>from </p>
+                <p> - </p>
 
                 <OnHoverMenuComponent
                   anchorHorizontalCustom="center"
@@ -100,12 +100,14 @@ export const RecentQuestionsSectionComponent = ({
     );
   });
 
-  let title = positionData ? positionData.position.name : "Techniques";
+  let title = positionData
+    ? positionData.position.name.toUpperCase()
+    : "Techniques";
 
   return (
-    <div className="">
-      <div className=" flex">
-        <div className="w-3/12 px-5 py-3 bg-gray-300 px-10">
+    <BodyColumnResponsiveBottomComponent
+      sideContent={
+        <div className="pl-5 py-3 bg-gray-300 px-10">
           <HeadingComponent size={2}>{title.toUpperCase()}</HeadingComponent>
 
           {positionData && (
@@ -118,70 +120,73 @@ export const RecentQuestionsSectionComponent = ({
             <Avatar
               className=""
               variant="rounded"
-              sx={{ width: 250, height: 250 }}
+              // sx={{ width: 250, height: 250 }}
+              className="imgR"
               src={
                 DATA_SERVER_IMAGE_ADDRESS + positionData.position.imagePreviewId
               }
             />
           )}
-          <p className="border-gray-400 border-b-2 pt-3">
-            <HeadingComponent size={3}>Give a great answer</HeadingComponent>
-          </p>
-          <p>Be a guide</p>
-          <p>
-            We're teaching each other – so don't just answer "Yes" or "No",
-            share your answer the way your favorite teacher would.
-          </p>
-          <p>Vote, don't echo</p>
-          <p>
-            If someone has already answered the question well, don't repeat
-            their answer – vote it up instead.{" "}
-          </p>
-          <p className="border-gray-400 border-b-2 pt-3">
-            <HeadingComponent size={3}>
-              Flag inappropriate posts
-            </HeadingComponent>
-          </p>
 
-          <p>
-            Here are posts to avoid making. If you do encounter them, flag them
-            for attention from our Guardians.
-          </p>
-          <p>abuse</p>
-          <ul>
-            <li>disrespectful or offensive</li>
-            <li> an advertisement</li>
-          </ul>
-          <p>not helpful</p>
-          <ul>
-            <li>low quality not about the video topic </li>
-            <li> contentious posts about politics, religion/atheism</li>
-            <li>soliciting votes or seeking badges</li>
-            <li>a duplicate answer</li> repeatedly
-            <li>making the same post</li>
-          </ul>
-        </div>
+          <div className="hide_on_small">
+            <p className="border-gray-400 border-b-2 pt-3">
+              <HeadingComponent size={3}>Give a great answer</HeadingComponent>
+            </p>
+            <p>Be a guide</p>
+            <p>
+              We're teaching each other – so don't just answer "Yes" or "No",
+              share your answer the way your favorite teacher would.
+            </p>
+            <p>Vote, don't echo</p>
+            <p>
+              If someone has already answered the question well, don't repeat
+              their answer – vote it up instead.{" "}
+            </p>
+            <p className="border-gray-400 border-b-2 pt-3">
+              <HeadingComponent size={3}>
+                Flag inappropriate posts
+              </HeadingComponent>
+            </p>
 
-        <div className="w-6/12 pt-5 pl-10">
-          <div className="w-full flex pb-1 mb-5 border-b-2 border-gray-300">
-            <div className="w-7/12">
-              <HeadingComponent size={3}>Recent Questions</HeadingComponent>
-            </div>
-            <p>Visit a technique video or article to ask a question.</p>
+            <p>
+              Here are posts to avoid making. If you do encounter them, flag
+              them for attention from our Guardians.
+            </p>
+            <p>abuse</p>
+            <ul>
+              <li>disrespectful or offensive</li>
+              <li> an advertisement</li>
+            </ul>
+            <p>not helpful</p>
+            <ul>
+              <li>low quality not about the video topic </li>
+              <li> contentious posts about politics, religion/atheism</li>
+              <li>soliciting votes or seeking badges</li>
+              <li>a duplicate answer</li> repeatedly
+              <li>making the same post</li>
+            </ul>
           </div>
-          {questionElements}
-          <button className="btn w-full customAccentBackground">
-            More Questions
-          </button>
         </div>
-        <div className="w-3/12 space-y-10 p-10">
-          <AdvertComponent />
-          <AdvertComponent />
-          <AdvertComponent />
-          <AdvertComponent />
+      }
+      mainContent={
+        <div>
+          <div className="flex_full_on_big px-2 pt-2">
+            <div className="">
+              <HeadingComponent size={3} showBar={true}>
+                QUESTIONS
+              </HeadingComponent>
+            </div>
+            <p>Visit a technique page to ask a question.</p>
+          </div>
+          <div className="space-y-1 mt-3">
+            {questionElements}
+            <button className="btn mt-2 clickupShadow w-full customAccentBackground">
+              More Questions
+            </button>
+          </div>
         </div>
-      </div>
-    </div>
+      }
+    />
   );
 };
 

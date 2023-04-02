@@ -1,7 +1,8 @@
-import { Avatar, Tooltip } from "@mui/material";
+import { Avatar, Tooltip, Button } from "@mui/material";
 import Link from "next/link";
 import React from "react";
 import { DATA_SERVER_IMAGE_ADDRESS } from "../../config";
+import ListIcon from "@mui/icons-material/List";
 import CountryPresenceWidgetComponent from "../CountryPresenceComponent";
 import FlagComponent from "../FlagComponent";
 import FollowComponent from "../FollowComponent";
@@ -13,6 +14,7 @@ import SummaryStatComponent, {
   SummaryStatCustomComponent
 } from "../utility/SummaryStatComponent";
 import BodyHeaderSectionComponent from "./BodyHeaderSectionComponent";
+import DrawerComponent from "@components/DrawerComponent";
 
 export const PromotionHeaderNavigationComponent = ({
   promotionData,
@@ -104,7 +106,7 @@ export const PromotionHeaderNavigationComponent = ({
   for (const [label, d] of Object.entries(statMap)) {
     if (d.custom) {
       statElements.push(
-        <div className="w-6/12">
+        <div className="w-6/12 pt-5">
           <SummaryStatCustomComponent label={d.label}>
             {d.value}
           </SummaryStatCustomComponent>
@@ -112,7 +114,7 @@ export const PromotionHeaderNavigationComponent = ({
       );
     } else {
       statElements.push(
-        <div className="w-6/12">
+        <div className="w-6/12 pt-5">
           <SummaryStatComponent label={d.label} mainLabel={"" + d.value} />
         </div>
       );
@@ -134,7 +136,9 @@ export const PromotionHeaderNavigationComponent = ({
     ["Best Fights", "/favourite", "Highest Rated Fights"],
     ["decisions", "/decision", "Most Controversial Decisions"],
     ["Champions", "/champions", "Champions Past and Present"],
-    ["Media", "/media", "Images "]
+    ["Newcomers", "/newcomer", "Newcomers within the last 12 months"],
+    ["Media", "/media", "Images "],
+    ["Grades", "/grades", "Grades"]
   ];
   if (pageId == "summary") {
     navData = [];
@@ -154,17 +158,11 @@ export const PromotionHeaderNavigationComponent = ({
     }
 
     return (
-      <div className="w-1/12 ">
-        <Tooltip title={tooltipContent} enterDelay={500} leaveDelay={200}>
-          <Link href={"/promotion/" + promotionData.id + buttonLinkId}>
-            <a>
-              <button className={"btn w-full  " + currentHighlight}>
-                {buttonLabel}
-              </button>
-            </a>
-          </Link>
-        </Tooltip>
-      </div>
+      <Link href={"/promotion/" + promotionData.id + buttonLinkId}>
+        <a>
+          <Button className="w-full">{buttonLabel}</Button>
+        </a>
+      </Link>
     );
   });
 
@@ -173,7 +171,7 @@ export const PromotionHeaderNavigationComponent = ({
       <BodyHeaderSectionComponent>
         <Link href={"/promotion/" + promotionData.id}>
           <a>
-            <div className="flex">
+            <div className="hide_on_small">
               <div className="w-1/12 mr-4">
                 <Avatar
                   variant="rounded"
@@ -182,12 +180,6 @@ export const PromotionHeaderNavigationComponent = ({
                   sx={{ width: 100, height: 100 }}
                 ></Avatar>
               </div>
-              {/* <HeadingPairComponent
-            label1={subTitle.toUpperCase()}
-            label2={promotionData.name.toUpperCase()}
-            targetLink={"/promotion/" + promotionData.id}
-          ></HeadingPairComponent> */}
-
               <div className="">
                 <HeadingComponent size={2} textColor={"text-white"}>
                   {subTitle.toUpperCase()}
@@ -197,79 +189,130 @@ export const PromotionHeaderNavigationComponent = ({
                 </HeadingComponent>
               </div>
             </div>
+
+            <div className="hide_on_big w-full centerdat">
+              <HeadingComponent size={3} textColor={"text-white"}>
+                {subTitle.toUpperCase()}
+              </HeadingComponent>
+              <HeadingComponent size={5} textColor={"customAccentText"}>
+                {promotionData.name.toUpperCase()}
+              </HeadingComponent>
+            </div>
           </a>
         </Link>
 
-        <div className="mt-5 flexwrap space-x-8 justify-center">
-          {/* {navigationButtonElements} */}
-          {/* {nav2elements} */}
-        </div>
+        <Button
+          className="w-full"
+          onClick={() => {
+            window.dispatchEvent(new Event("drawer_open_sub_menu"));
+          }}
+        >
+          <ListIcon fontSize="large" />
+        </Button>
+        <DrawerComponent
+          listerName="drawer_open_sub_menu"
+          anchorName="left"
+          displayDone={false}
+          titleContent={
+            <div className="flex w-full">
+              <HeadingComponent size={3} textColor="text-white">
+                {promotionData.name.toUpperCase()}
+              </HeadingComponent>
+            </div>
+          }
+        >
+          {nav2elements}
+        </DrawerComponent>
       </BodyHeaderSectionComponent>
     );
   }
+  let userButtonElements = [
+    <FollowComponent
+      followType="promo"
+      followId={promotionData.id}
+      isFollowingInitial={false}
+    />,
 
+    <PlaylistWidgetComponent
+      entityId={promotionData.id}
+      entityType="promotion"
+    />,
+    <PopularityComponent
+      rankData={promotionData.rankData}
+      entityType="promotion"
+      entityId={promotionData.id}
+    />
+  ];
   return (
     <BodyHeaderSectionComponent>
-      <div className=" flex">
-        <div className="w-7/12">
-          {/* <HeadingComponent size={3} showBar={true} textColor={"text-white"}>
-        {promotionData.name.toUpperCase()}
-      </HeadingComponent>
-      <div>{tagElements}</div> */}
+      <div className="hide_on_big space-y-3">
+        <div className="centerdat space-y-3">
+          <HeadingComponent size={4} textColor="text-white">
+            {promotionData.name.toUpperCase()}
+          </HeadingComponent>
 
-          <HeadingPairCustomComponent label1={promotionData.name.toUpperCase()}>
-            <div className="flex space-x-2 ">{tagElements}</div>
-          </HeadingPairCustomComponent>
+          <div className="w-6/12">
+            <Avatar
+              variant="rounded"
+              className="customShadow rounded-xl imgR"
+              src={DATA_SERVER_IMAGE_ADDRESS + promotionData.imageUrl}
+            ></Avatar>
+          </div>
+          <div className="spaceEven ">{tagElements}</div>
         </div>
 
-        <div className="flex w-5/12 justify-end  space-x-6">
-          {/* <Link href={promotionData.id + "/bout"}>
-            <button className="btn btn-primary">
-              <div>Fight Search</div> <SearchIcon />
-            </button>
-          </Link> */}
-          <FollowComponent
-            followType="promo"
-            followId={promotionData.id}
-            isFollowingInitial={false}
-          />
-
-          <PlaylistWidgetComponent
-            entityId={promotionData.id}
-            entityType="promotion"
-          />
-
-          <PopularityComponent
-            rankData={promotionData.rankData}
-            entityType="promotion"
-            entityId={promotionData.id}
-          />
-        </div>
-      </div>
-
-      <div className="flex pt-5">
-        <div className="w-3/12">
-          {/* Poster */}
-
-          <Avatar
-            variant="rounded"
-            className="customShadow rounded-xl PageHeaderMainImage"
-            src={DATA_SERVER_IMAGE_ADDRESS + promotionData.imageUrl}
-          ></Avatar>
-        </div>
-        <div className="flexwrap w-5/12 pt-4 pb-4">
+        <div className="spaceEven">{userButtonElements}</div>
+        <div className="flexwrap ">
           {/* Middle Section */}
 
           {statElements}
         </div>
-
-        <div className="w-4/12 bg-red-500">
-          ADVERT HERE
-          {/* Avert here */}
-        </div>
       </div>
-      <div className="mt-10 flexwrap space-x-3  justify-center">
+
+      <div className="hide_on_small">
+        <div className=" flex">
+          <div className="w-7/12">
+            {/* <HeadingComponent size={3} showBar={true} textColor={"text-white"}>
+        {promotionData.name.toUpperCase()}
+      </HeadingComponent>
+      <div>{tagElements}</div> */}
+
+            <HeadingPairCustomComponent
+              label1={promotionData.name.toUpperCase()}
+            >
+              <div className="flex space-x-2 ">{tagElements}</div>
+            </HeadingPairCustomComponent>
+          </div>
+
+          <div className="flex w-5/12 justify-end  space-x-6">
+            {userButtonElements}
+          </div>
+        </div>
+
+        <div className="flex pt-5">
+          <div className="w-3/12">
+            {/* Poster */}
+
+            <Avatar
+              variant="rounded"
+              className="customShadow rounded-xl PageHeaderMainImage"
+              src={DATA_SERVER_IMAGE_ADDRESS + promotionData.imageUrl}
+            ></Avatar>
+          </div>
+          <div className="flexwrap w-5/12 pt-4 pb-4">
+            {/* Middle Section */}
+
+            {statElements}
+          </div>
+
+          <div className="w-4/12 bg-red-500">
+            ADVERT HERE
+            {/* Avert here */}
+          </div>
+        </div>
+        {/* <div className="mt-10 flexwrap space-x-3  justify-center">
         {nav2elements}
+      </div> */}
       </div>
     </BodyHeaderSectionComponent>
   );

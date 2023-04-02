@@ -7,19 +7,93 @@ import {
   Slide
 } from "@mui/material";
 import Dialog from "@mui/material/Dialog";
+import CloseIcon from "@mui/icons-material/Close";
 import { useFormik } from "formik";
 import { useRouter } from "next/router";
 import React, { useEffect, useRef, useState } from "react";
-import { IsLoggedIn, IsLoggedInLoginPrompt } from "../config";
+import { IsLoggedIn, IsLoggedInLoginPrompt, IsSmallScreen } from "../config";
 import {
   GetUserVoteForEntityAction,
   UserVoteForEntityAction
 } from "../helpers/api";
 import HeadingComponent from "./utility/HeadingComponent";
+import DrawerComponent from "./DrawerComponent";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
+
+export function PopupDrawerConditionalComponent({
+  title = "",
+  eventName = "combo_drawer_open",
+  content = null
+}) {
+  const [open, setOpen] = useState(false);
+  const handleClose = () => {
+    setOpen(false);
+  };
+  var nEventName = eventName + "_p";
+
+  var smallscreen = IsSmallScreen();
+  useEffect(() => {
+    window.addEventListener(eventName, event => {
+      if (smallscreen) {
+        window.dispatchEvent(new Event(eventName + "_p"));
+      } else {
+        setOpen(true);
+      }
+    });
+  }, []);
+
+  return (
+    <div>
+      {!IsSmallScreen() && (
+        <div className="hide_on_small">
+          <Dialog
+            onClose={handleClose}
+            open={open}
+            fullWidth={true}
+            // TransitionComponent={Grow}
+          >
+            <DialogContent
+              className=" centerdat "
+              style={{ alignItems: "center" }}
+            >
+              <div className="w-12/12 space-y-4">
+                <button
+                  onClick={handleClose}
+                  className="absolute top-2 right-2 "
+                >
+                  <CloseIcon fontSize="large" />
+                </button>
+                {content}
+              </div>
+            </DialogContent>
+          </Dialog>
+        </div>
+      )}
+
+      {IsSmallScreen() && (
+        <div className="hide_on_big">
+          <DrawerComponent
+            widthValue={"100vw"}
+            anchorName="right"
+            displayDone={false}
+            listerName={eventName + "_p"}
+            onCloseLogic={handleClose}
+            titleContent={
+              <HeadingComponent size={3} textColor="text-white ">
+                {title}
+              </HeadingComponent>
+            }
+          >
+            <div className="pr-5">{content}</div>
+          </DrawerComponent>
+        </div>
+      )}
+    </div>
+  );
+}
 
 export function UserRatingComponent({
   label = "No Label Provided",
@@ -50,6 +124,7 @@ export function UserRatingComponent({
         } else {
           setHasLoadedVote(true);
         }
+        setHasLoadedVote(true);
       }
     });
     observer.observe(ref.current);
@@ -80,6 +155,8 @@ export function UserRatingComponent({
       <a
         onClick={e => {
           setOpen(!open);
+          console.log("DANNY NEW CAT EVENT");
+          window.dispatchEvent(new Event("cat"));
         }}
       >
         {displayedRatingString}
@@ -201,42 +278,42 @@ export function UserRatingPopupComponent(props) {
   }
 
   return (
-    <Dialog
-      // TransitionComponent={Transition}
-      onClose={handleClose}
-      open={open}
-      maxWidth="sm"
-      fullWidth={true}
-    >
-      <DialogContent style={{ alignItems: "center" }}>
-        <Grid container className="rating-star">
-          <Grid item xs={12}>
-            <HeadingComponent size={3}>{ratedLabel}</HeadingComponent>
-          </Grid>
-          <Grid item xs={12}>
-            <Rating
-              // style={{ width: "100%" }}
-              name="hover-feedback"
-              size="large"
-              max={5}
-              value={updatedRatingValue}
-              onChange={(event, newValue) => {
-                setUpdatedRatingValue(newValue);
+    <div>
+      <PopupDrawerConditionalComponent
+        title={ratedLabel}
+        eventName="cat"
+        content={
+          <div>
+            <Grid container className="rating-star">
+              <Grid item xs={12}>
+                <HeadingComponent size={3}>{ratedLabel}</HeadingComponent>
+              </Grid>
+              <Grid item xs={12}>
+                <Rating
+                  // style={{ width: "100%" }}
+                  name="hover-feedback"
+                  size="large"
+                  max={5}
+                  value={updatedRatingValue}
+                  onChange={(event, newValue) => {
+                    setUpdatedRatingValue(newValue);
 
-                // if (!LoginRedirectCheck(router)) {
-                //   onVoteChanged_Internal(newValue);
-                // }
-              }}
+                    // if (!LoginRedirectCheck(router)) {
+                    //   onVoteChanged_Internal(newValue);
+                    // }
+                  }}
 
-              // emptyIcon={
-              //   <StarIcon style={{ opacity: 0.55 }} fontSize="inherit" />
-              // }
-            />
-          </Grid>
-        </Grid>
+                  // emptyIcon={
+                  //   <StarIcon style={{ opacity: 0.55 }} fontSize="inherit" />
+                  // }
+                />
+              </Grid>
+            </Grid>
 
-        {ReviewElementGenerator()}
-      </DialogContent>
-    </Dialog>
+            {ReviewElementGenerator()}
+          </div>
+        }
+      />
+    </div>
   );
 }

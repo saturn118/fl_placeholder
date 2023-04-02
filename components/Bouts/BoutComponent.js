@@ -1,6 +1,7 @@
-import { Avatar, Badge, Chip, Tooltip } from "@mui/material";
+import { Avatar, Badge, Chip, Tooltip, Button } from "@mui/material";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import UnfoldMoreIcon from "@mui/icons-material/UnfoldMore";
 import React, { useState } from "react";
 import { DATA_SERVER_IMAGE_ADDRESS } from "../../config/index";
 import LastFiveComponent from "../LastFiveComponent";
@@ -162,31 +163,29 @@ const BoutComponent = ({
       </Tooltip>
     );
 
+  let userHeaderButtonElements = [
+    <UserStarRatingBreakdownComponent
+      entityType="bout"
+      boutId={bout.id}
+      voteData={voteData}
+      // initialUserVote={userVote}
+      // initialTotalVotes={votes}
+      label={ratingLabel}
+      goToLink={"/bout/" + bout.id}
+    />,
+
+    <UserRatingComponent
+      label={ratingLabel}
+      entityId={bout.id}
+      entityType="bout"
+    />,
+
+    decisionVoteElement
+  ];
+
   let sectionRatingElement = (
-    <div className="flexwrap w-2/12  customAccentBackground rounded  mr-2 ...">
-      <div className="w-6/12 ag-red-500 text-white">
-        <UserStarRatingBreakdownComponent
-          boutId={bout.id}
-          voteData={voteData}
-          // initialUserVote={userVote}
-          // initialTotalVotes={votes}
-          label={ratingLabel}
-          goToLink={"/bout/" + bout.id}
-        />
-
-        {/* <UserRefereeRatingWidget entityId={bout.id} entityType="referee" /> */}
-      </div>
-      <div className="w-6/12 ag-blue-500">
-        <UserRatingComponent
-          label={ratingLabel}
-          entityId={bout.id}
-          entityType="bout"
-        />
-
-        <div className="w-6/12 ag-yellow-500 text-white">
-          {decisionVoteElement}
-        </div>
-      </div>
+    <div className="flexwrap spaceEven w-full  customAccentBackground rounded  mr-2 ...">
+      {userHeaderButtonElements}
     </div>
   );
 
@@ -333,26 +332,41 @@ const BoutComponent = ({
   );
 
   let sectionLinksElement = (
-    <div className=" w-1/12 ag-red-500 w-full  align-end">
+    <div className=" centerdat w-1/12 ag-red-500 w-full  align-end">
       <Link href={"/bout/" + bout.id}>
         <a>
-          <button className="btn customAccentBackground  font-bold text-2xl">
-            ...
-          </button>
+          <Button fontSize="large">
+            <UnfoldMoreIcon />
+          </Button>
         </a>
       </Link>
     </div>
   );
 
   return (
-    <div className="flex w-12/12 bg-gray-50 rounded ">
-      {displayRatings && sectionRatingElement}
-      {sectionLeftPersonElement}
-      {sectionMiddleElement}
+    <div className=" w-full bg-gray-50 rounded ">
+      <div className="flex hide_on_small">
+        {sectionLeftPersonElement}
+        {sectionMiddleElement}
 
-      {sectionRightPersonElement}
-      {displayResult && sectionResultElement}
-      {displayBoutLink && sectionLinksElement}
+        {sectionRightPersonElement}
+        {displayResult && sectionResultElement}
+        {displayRatings && sectionRatingElement}
+        {displayBoutLink && sectionLinksElement}
+      </div>
+
+      <div className="hide_on_big">
+        <div className="flex">
+          {sectionLeftPersonElement}
+          {sectionMiddleElement}
+
+          {sectionRightPersonElement}
+          {displayResult && sectionResultElement}
+
+          {displayBoutLink && sectionLinksElement}
+        </div>
+        {displayRatings && sectionRatingElement}
+      </div>
     </div>
   );
 };

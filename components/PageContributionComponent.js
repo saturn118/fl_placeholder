@@ -10,7 +10,13 @@ export default function PageContributionComponent() {
 
   return (
     <div className="grid py-10">
-      <button className="btn center customAccentBackground logoFont">
+      <button
+        className="btn center customAccentBackground logoFont"
+        onClick={() => {
+          const event = new Event("feedback_prompt");
+          window.dispatchEvent(event);
+        }}
+      >
         CONTRIBUTE TO THIS PAGE
       </button>
     </div>

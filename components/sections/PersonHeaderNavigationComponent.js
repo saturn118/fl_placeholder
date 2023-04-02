@@ -1,5 +1,5 @@
 import PublicIcon from "@mui/icons-material/Public";
-import { Chip, Rating, Tab, Tabs } from "@mui/material";
+import { Chip, Rating, Tab, Tabs, Divider } from "@mui/material";
 import Link from "next/link";
 import React from "react";
 import { BACKGROUND_ATTR, DATA_SERVER_IMAGE_ADDRESS } from "../../config";
@@ -13,12 +13,10 @@ import SpoilerButtonComponent from "../SpoilerButtonComponent";
 import HeadingComponent from "../utility/HeadingComponent";
 import { HeadingPairCustomComponent } from "../utility/HeadingPairComponent";
 import BodyHeaderSectionComponent from "./BodyHeaderSectionComponent";
-import { JudgeAlignmentCommunity, JudgeAlignmentOfficial } from "./JudgeSectionComponent";
-
-
-
-
-
+import {
+  JudgeAlignmentCommunity,
+  JudgeAlignmentOfficial
+} from "./JudgeSectionComponent";
 
 export const PersonHeaderNavigationComponent = ({
   fighterData,
@@ -105,11 +103,6 @@ export const PersonHeaderNavigationComponent = ({
         ? fighterData.reach + " / " + fighterData.reachMetric
         : "-"
     }
-    // town: { label: "Hometown", value: fighterData.homeTown },
-    // socials: {
-    //   label: "Social",
-    //   value: <SocialMediaLinksComponent youtube="fdsfs" instagram={"fdsfs"} />
-    // }
   };
 
   let statElements = [];
@@ -310,42 +303,29 @@ export const PersonHeaderNavigationComponent = ({
   });
 
   return (
-    <BodyHeaderSectionComponent>
-      {/* Start of toolbar */}
-      <div className="flex w-full">
-        <div className="w-6/12">
-          <div>
-            <div className="flex items-end">
-              <HeadingPairCustomComponent
-                label1={fighterData.name.toUpperCase()}
-              >
-                <div className="flex space-x-2 ">{tagElements}</div>
-              </HeadingPairCustomComponent>
-
-              {/* <HeadingPairComponent
-                  label1={fighterData.name.toUpperCase()}
-                  label2={"FIGHTER | REFEREE | JUDGE"}
-                  targetLink={"/promotion/"}
-                ></HeadingPairComponent> */}
-
-              <div className="flex items-start">
-                <HeadingComponent
-                  showBar={false}
-                  textColor={"customAccentText pl-3 pb-1 "}
-                  size={5}
-                >
-                  {fighterData.nickname ? (
-                    <p>"{fighterData.nickname}" </p>
-                  ) : null}
-                </HeadingComponent>
-              </div>
-            </div>
-          </div>
+    <div>
+      <div className="hide_on_big primaryBackground pt-3 pb-5 px-3 centerdat space-y-2">
+        <div className="flex">
+          <HeadingComponent size={4} textColor={"text-gray-300 "}>
+            {fighterData.name.toUpperCase()}
+          </HeadingComponent>
+          <HeadingComponent
+            showBar={false}
+            textColor={"customAccentText pl-3 pb-1 "}
+            size={5}
+          >
+            {fighterData.nickname ? <p>"{fighterData.nickname}" </p> : null}
+          </HeadingComponent>
         </div>
-        <div className="flex  w-6/12 justify-end p-3 space-x-8 ">
-          {FlagComponent(fighterData.nationalityCountryCode, 80)}
-          {SpoilerButtonComponent(handSpoilerChanged, hideSpoilers)}
+        <div className="w-6/12 ">
+          <img
+            className="imgR"
+            src={DATA_SERVER_IMAGE_ADDRESS + fighterData.imageUrl}
+          ></img>
+        </div>
 
+        <div className={"spaceEven w-full "}>
+          {SpoilerButtonComponent(handSpoilerChanged, hideSpoilers)}
           <PlaylistWidgetComponent
             entityId={fighterData.id}
             entityType="fighter"
@@ -362,24 +342,9 @@ export const PersonHeaderNavigationComponent = ({
             entityId={fighterData.id}
           />
         </div>
-      </div>
-      {/* End of toolbar */}
+        <div className="centerX flex space-x-2 ">{tagElements}</div>
 
-      {/* Box */}
-      <div className="flex my-2">
-        <div className="w-3/12">
-          {/* Poster */}
-          <img
-            className="customShadow rounded-xl PageHeaderMainImage"
-            src={DATA_SERVER_IMAGE_ADDRESS + fighterData.imageUrl}
-          ></img>
-        </div>
-        <div className="w-5/12">
-          {/* Middle Section */}
-          {statElements}
-        </div>
-
-        <div className={"w-4/12 " + BACKGROUND_ATTR}>
+        <div className={"" + BACKGROUND_ATTR}>
           {isFighter && (
             <div>
               <Tabs
@@ -396,37 +361,124 @@ export const PersonHeaderNavigationComponent = ({
               {recordElements}
             </div>
           )}
-
-          {isReferee && (
-            <div>
-              <p>
-                Referee Bouts:{" "}
-                <span className="recordValue">
-                  {fighterData.refereedata.count}
-                </span>
-              </p>
-              <Rating value={3} max={5} />
-            </div>
-          )}
-          {isJudge && (
-            <div className="pb-1 pt-2 space-y-3">
-              <div>
-                <p className="text-center w-full font-bold">OUTCOME</p>
-                <p className="text-center w-full font-bold text-xl">
-                  AGREEMENT
-                </p>
-              </div>
-              {JudgeAlignmentOfficial(judgeData)}
-
-              {JudgeAlignmentCommunity(judgeData)}
-            </div>
-          )}
         </div>
-      </div>
 
-      {/* Buttons */}
-      <div className="flex space-x-5 mt-10">{nav2elements}</div>
-    </BodyHeaderSectionComponent>
+        <Divider />
+      </div>
+      <div className="hide_on_small">
+        <BodyHeaderSectionComponent>
+          {/* Start of toolbar */}
+          <div className="flex w-full">
+            <div className="w-6/12">
+              <div>
+                <div className="flex items-end">
+                  <HeadingPairCustomComponent
+                    textColor={"text-gray-300 "}
+                    label1={fighterData.name.toUpperCase()}
+                  >
+                    <div className="flex space-x-2 ">{tagElements}</div>
+                  </HeadingPairCustomComponent>
+                  <div className="flex items-start">
+                    <HeadingComponent
+                      showBar={false}
+                      textColor={"customAccentText pl-3 pb-1 "}
+                      size={5}
+                    >
+                      {fighterData.nickname ? (
+                        <p>"{fighterData.nickname}" </p>
+                      ) : null}
+                    </HeadingComponent>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="flex  w-6/12 justify-end p-3 space-x-8 ">
+              {FlagComponent(fighterData.nationalityCountryCode, 80)}
+              {SpoilerButtonComponent(handSpoilerChanged, hideSpoilers)}
+
+              <PlaylistWidgetComponent
+                entityId={fighterData.id}
+                entityType="fighter"
+                entityName={fighterData.name}
+              />
+              <FollowComponent
+                followType="fighter"
+                followId={fighterData.id}
+                isFollowingInitial={false}
+              />
+              <PopularityComponent
+                rankData={fighterData.rankData}
+                entityType="fighter"
+                entityId={fighterData.id}
+              />
+            </div>
+          </div>
+          {/* End of toolbar */}
+
+          {/* Box */}
+          <div className="flex my-2">
+            <div className="w-3/12">
+              {/* Poster */}
+              <img
+                className="customShadow rounded-xl PageHeaderMainImage"
+                src={DATA_SERVER_IMAGE_ADDRESS + fighterData.imageUrl}
+              ></img>
+            </div>
+            <div className="w-5/12 ">
+              {/* Middle Section */}
+              {statElements}
+            </div>
+
+            <div className={"w-4/12 " + BACKGROUND_ATTR}>
+              {isFighter && (
+                <div>
+                  <Tabs
+                    variant="scrollable"
+                    scrollButtons="auto"
+                    aria-label="scrollable auto tabs example"
+                    value={recordSummaryTabValue}
+                    onChange={(event, newValue) => {
+                      setRecordSummaryTabValue(newValue);
+                    }}
+                  >
+                    {recordTabElements}
+                  </Tabs>{" "}
+                  {recordElements}
+                </div>
+              )}
+
+              {isReferee && (
+                <div>
+                  <p>
+                    Referee Bouts:{" "}
+                    <span className="recordValue">
+                      {fighterData.refereedata.count}
+                    </span>
+                  </p>
+                  <Rating value={3} max={5} />
+                </div>
+              )}
+              {isJudge && (
+                <div className="pb-1 pt-2 space-y-3">
+                  <div>
+                    <p className="text-center w-full font-bold">OUTCOME</p>
+                    <p className="text-center w-full font-bold text-xl">
+                      AGREEMENT
+                    </p>
+                  </div>
+                  {JudgeAlignmentOfficial(judgeData)}
+
+                  {JudgeAlignmentCommunity(judgeData)}
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Buttons */}
+          {/* <div className="flex space-x-5 mt-10">{nav2elements}</div> */}
+        </BodyHeaderSectionComponent>
+      </div>
+    </div>
   );
 };
 

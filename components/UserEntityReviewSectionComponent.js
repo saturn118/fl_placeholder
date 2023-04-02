@@ -11,7 +11,12 @@ import Link from "next/link";
 // import * as React from 'react';
 import React, { useEffect, useState } from "react";
 import { DATA_SERVER_IMAGE_ADDRESS, GetUsername, IsLoggedIn } from "../config";
-import { ConverDateToDaysAgoString, ReportEntityAction, UserDeleteEntityRatingAction, UserVoteForEntityAction } from "../helpers/api";
+import {
+  ConverDateToDaysAgoString,
+  ReportEntityAction,
+  UserDeleteEntityRatingAction,
+  UserVoteForEntityAction
+} from "../helpers/api";
 import { DisplayReviewBreakdownElements } from "./UserStarRatingBreakdownComponent";
 import UserVoteComponent from "./UserVoteComponent";
 import { AnimAppear } from "./utility/AnimationUtility";
@@ -336,11 +341,16 @@ export function UserEntityReviewSectionComponent({
   );
 
   return (
-    <div className="w-full">
-      <div className="w-12/12">
+    <div className="w-full flex ">
+      {displayBreakdown == true && (
+        <div className="w-4/12">
+          {DisplayReviewBreakdownElements(breakdownVoteData, label)}
+        </div>
+      )}
+      <div className="w-full ">
         <div className="antialiased">
           <div className="flex w-full">
-            <div className="w-9/12" key={individualElements.length}>
+            <div className="w-8/12" key={individualElements.length}>
               <AnimAppear>
                 <HeadingComponent showBar={true} size={3}>
                   {individualElements.length - 1} Comments
@@ -366,12 +376,6 @@ export function UserEntityReviewSectionComponent({
           )}
         </div>
       </div>
-
-      {displayBreakdown == true && (
-        <div className="w-4/12">
-          {DisplayReviewBreakdownElements(breakdownVoteData, label)}
-        </div>
-      )}
     </div>
   );
 }

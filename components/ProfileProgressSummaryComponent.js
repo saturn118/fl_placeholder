@@ -22,7 +22,7 @@ export default function ProfileProgressSummaryComponent({ summaryData }) {
     return (
       <div className="bg-gray-200 rounded p-2 ">
         <Avatar
-          sx={{ width: 48, height: 48 }}
+          sx={{ width: 20, height: 20 }}
           src={DATA_SERVER_IMAGE_ADDRESS + entry.imageUrl}
         />
 
@@ -33,12 +33,11 @@ export default function ProfileProgressSummaryComponent({ summaryData }) {
 
   return (
     <div>
-      <div className=" border-b-2 mb-10 flex">
-        <HeadingComponent textColor={"customAccentText"} size={4}>
-          Earned Badges
-        </HeadingComponent>{" "}
-        <a href="/badges" className="link link-primary ml-10">
-          view all
+      <div className=" border-b-2  flex">
+        <a href="/badges">
+          <HeadingComponent size={3} showBar={true} showArrow={true}>
+            BADGES
+          </HeadingComponent>
         </a>
       </div>
 
@@ -47,8 +46,10 @@ export default function ProfileProgressSummaryComponent({ summaryData }) {
       </div>
 
       <HeadingComponent size={4}>
-        Energy Points Earned{" "}
-        <button className="btn btn-primary">{summaryData.points}</button>
+        {/* Energy Points Earned{" "} */}
+        <button className="btn customAccentBackground clickupShadow text-white">
+          {summaryData.points} Points
+        </button>
       </HeadingComponent>
     </div>
   );

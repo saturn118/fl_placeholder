@@ -10,7 +10,11 @@ import {
   GetHighestBoutsAction
 } from "../../helpers/api";
 import { UserRatingComponent } from "../UserRatingPopupComponent";
-import { BodyColumnSectionComponent } from "./BodyHeaderSectionComponent";
+import {
+  BodyColumnSectionComponent,
+  BodyColumnResponsiveBottomComponent
+} from "./BodyHeaderSectionComponent";
+import BoutCompactComponent from "@components/Bouts/BoutCompactComponent";
 
 export const TopRatedBoutsSectionComponent = ({
   ratedBoutsData,
@@ -35,7 +39,6 @@ export const TopRatedBoutsSectionComponent = ({
 
   const [activity, setActivity] = useState(null);
   let fighterIdNameMap = {};
-  let mostFighterAppearances = {};
 
   let promotionElements = [];
   let i = 0;
@@ -55,19 +58,9 @@ export const TopRatedBoutsSectionComponent = ({
   let rankIndex = 0;
   let ratedBoutElements = data
     ? data.data.map(entry => {
-        [
-          { name: entry.entry.fighterAName, id: entry.entry.fighterAId },
-          { name: entry.entry.fighterBName, id: entry.entry.fighterBId }
-        ].map(subEntry => {
-          let id = subEntry["id"];
-          if (id in mostFighterAppearances == false) {
-            mostFighterAppearances[id] = 0;
-            fighterIdNameMap[id] = subEntry["name"];
-          }
-          mostFighterAppearances[id] += 1;
-        });
-
         rankIndex += 1;
+
+        return <BoutCompactComponent bout={entry.entry} />;
 
         let attributes =
           dataType == "rating" ? (
@@ -143,8 +136,7 @@ export const TopRatedBoutsSectionComponent = ({
   });
 
   return (
-    <BodyColumnSectionComponent
-      twoSections={false}
+    <BodyColumnResponsiveBottomComponent
       sideContent={
         <div className="p-5">
           <div className="space-y-5">
@@ -284,7 +276,7 @@ export const TopRatedBoutsSectionComponent = ({
         </div>
       }
       mainContent={
-        <div className="px-5">
+        <div className="">
           {dataType == "rating" && (
             <div className="flex mb-1 font-bold mt-5 ">
               <p className="w-7/12 pl-5">Rank and Name</p>
@@ -317,7 +309,7 @@ export const TopRatedBoutsSectionComponent = ({
           </div>
         </div>
       }
-    ></BodyColumnSectionComponent>
+    />
   );
 };
 

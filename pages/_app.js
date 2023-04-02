@@ -4,7 +4,7 @@ import Footer from "@components/Footer";
 import Header from "@components/Header";
 import RecentlyViewedComponent from "@components/RecentlyViewedComponent";
 import { useRouter } from "next/router";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import {
   DATA_SERVER_ADDRESS,
   IsReferralNew,
@@ -13,9 +13,18 @@ import {
 } from "../config";
 import "../styles/globals.css";
 import ShareFeedbackButtonComponent from "@components/ShareFeedbackButtonComponent";
+import LatestUpdatePopupComponent from "@components/LatestUpdatePopupComponent";
 
 function MyApp({ Component, pageProps }) {
   const router = useRouter();
+
+  const [isScrollingDown, setIsScrollingDown] = useState(false);
+
+  useEffect(() => {
+    if ("serviceworker" in navigator) {
+      navigator.serviceWorker.register("/service-worker.js");
+    }
+  }, []);
 
   useEffect(() => {
     let query = router.query;
@@ -31,8 +40,28 @@ function MyApp({ Component, pageProps }) {
     }
   }, [router]);
 
+  useEffect(() => {
+    function handleScroll() {
+      const { scrollTop } = document.documentElement;
+      setIsScrollingDown(scrollTop > 0 && scrollTop > lastScrollTop);
+      lastScrollTop = scrollTop;
+    }
+
+    let lastScrollTop = 0;
+    window.addEventListener("scroll", handleScroll);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+
+  useEffect(() => {
+    document.body.classList.add("hide-toolbar");
+    document.body.classList.add("fixed-nav");
+  }, []);
+
   return (
-    <>
+    <div className="w-full">
       <Header />
       <link
         href="https://api.mapbox.com/mapbox-gl-js/v0.51.0/mapbox-gl.css"
@@ -47,20 +76,22 @@ function MyApp({ Component, pageProps }) {
       ></link>
       <LoginPopupComponent />
       <BadgeEarnedPopupComponent />
+      <LatestUpdatePopupComponent />
 
-      <div className="min-body-container">
+      <div className="w-full min-screen-height bg-white">
         <Component {...pageProps} />
       </div>
-      <ShareFeedbackButtonComponent />
+
+      <div className={"hide_on_small"}>
+        <ShareFeedbackButtonComponent />
+      </div>
 
       {dev && (
         <div>
-          <RecentlyViewedComponent />
-
           <Footer />
         </div>
       )}
-    </>
+    </div>
   );
 }
 

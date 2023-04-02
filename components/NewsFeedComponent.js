@@ -1,6 +1,7 @@
 import CommentIcon from "@mui/icons-material/Comment";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+import Marquee from "react-fast-marquee";
 import InsertLinkIcon from "@mui/icons-material/InsertLink";
 import ReplyIcon from "@mui/icons-material/Reply";
 import { Avatar, Button, Chip, Tab, Tabs } from "@mui/material";
@@ -190,7 +191,7 @@ function NewsFeedEntryComponent({
           />
         </div>
 
-        <div className="px-20">
+        <div className="px-1">
           <p className="mt-3 text-base mb-2"> {content}</p>
           {entry.targetUrl && (
             <Link href={entry.targetUrl}>
@@ -202,15 +203,15 @@ function NewsFeedEntryComponent({
             <Avatar
               variant="rounded"
               sx={{ width: 250, height: 250 }}
-              src={entry.imageUrl}
+              src={DATA_SERVER_IMAGE_ADDRESS + entry.imageUrl}
             />
           )}
           {entry.customContentElement}
         </div>
 
-        <div className="flex w-full px-20 space-x-10 mt-3">
+        <div className="flex w-full  space-x-2 mt-5">
           <Button
-            className="text-black"
+            className="text-black bg-gray-100"
             onClick={e => {
               if (IsLoggedInLoginPrompt("Sign in to like content")) {
                 let temp = likesData;
@@ -241,14 +242,14 @@ function NewsFeedEntryComponent({
               }
             }}
           >
-            {likedIcon} 0 Likes
+            {likedIcon} 0 <span className="hide_on_small"></span>
           </Button>{" "}
-          <Button className="text-black">
+          <Button className="text-black bg-gray-100 space-x-5">
             {" "}
-            <CommentIcon /> View {replyCount} Comments
+            <CommentIcon /> {replyCount}
           </Button>
           <Button
-            className="text-black"
+            className="text-black bg-gray-100"
             onClick={() => {
               setDisplayReplyInput(!displayReplyInput);
             }}
@@ -256,7 +257,7 @@ function NewsFeedEntryComponent({
             <ReplyIcon /> Reply
           </Button>
           <Button
-            className="text-black"
+            className="text-black bg-gray-100"
             onClick={() => {
               router.push("/posts/" + entry.id);
             }}
@@ -367,20 +368,47 @@ export default function NewsFeedComponent({
     ["Announcements", "website"]
   ];
   let filterElements = filterData.map(entry => {
-    return <Tab label={entry[0]} value={entry[1]} />;
+    return (
+      <button
+        onClick={() => {
+          setFilterCategoryValue(entry[1]);
+        }}
+        className={
+          "bg-gray-200 rounded-md mx-2 px-2 py-1 " +
+          (filterCategoryValue == entry[1]
+            ? "customAccentBackground logoFont text-white"
+            : "bg-gray-100")
+        }
+      >
+        {entry[0]}
+      </button>
+    ); //<Tab label={entry[0]} value={entry[1]} />;
   });
 
   return (
-    <div className="space-y-2" key={Object.keys(likesData).length}>
+    <div className="" key={Object.keys(likesData).length}>
+      {displayFilters && (
+        <Tabs
+          variant="scrollable"
+          scrollButtons="auto"
+          aria-label="scrollable auto tabs example"
+          value={filterCategoryValue}
+          onChange={(event, newValue) => {
+            setFilterCategoryValue(newValue);
+          }}
+        >
+          {filterElements}
+        </Tabs>
+      )}
+
       {displayPostElement && (
-        <div className="bg-gray-400 rounded p-2">
+        <div className="customAccentBackground rounded p-2">
           <div className="flex ">
-            <Avatar
+            {/* <Avatar
               // variant="rounded"
-              sx={{ width: 75, height: 75 }}
+              sx={{ width: 50, height: 50 }}
               src={DATA_SERVER_IMAGE_ADDRESS + "dfsf.jpg"}
-              width={100}
-            />
+            /> */}
             <input
               type="text"
               placeholder="Share an update with your followers"
@@ -392,41 +420,28 @@ export default function NewsFeedComponent({
             />{" "}
             {SpoilerButtonComponent(handSpoilerChanged, hideSpoilers)}
           </div>
-          <button
-            disabled={myPostText == ""}
-            onClick={e => {
-              AddUserFeedPostAction(myPostText, false).then(data => {
-                if (data.success == true) {
-                  //Temporary, we shouldn't need to call this again, just append it locally
+          {myPostText && myPostText.length > 1 && (
+            <button
+              disabled={myPostText == ""}
+              onClick={e => {
+                AddUserFeedPostAction(myPostText, false).then(data => {
+                  if (data.success == true) {
+                    //Temporary, we shouldn't need to call this again, just append it locally
 
-                  GetUserFeedAction().then(data => {
-                    console.log("FEED DEBUG");
-                    console.log(data);
-                    setFeedData(data.data.feed);
-                  });
-                  setMyPostText("");
-                }
-              });
-            }}
-            className="btn w-full customAccentBackground"
-          >
-            Post
-          </button>
-        </div>
-      )}
-      {displayFilters && (
-        <div className="">
-          <Tabs
-            variant="scrollable"
-            scrollButtons="auto"
-            aria-label="scrollable auto tabs example"
-            value={filterCategoryValue}
-            onChange={(event, newValue) => {
-              setFilterCategoryValue(newValue);
-            }}
-          >
-            {filterElements}
-          </Tabs>
+                    GetUserFeedAction().then(data => {
+                      console.log("FEED DEBUG");
+                      console.log(data);
+                      setFeedData(data.data.feed);
+                    });
+                    setMyPostText("");
+                  }
+                });
+              }}
+              className="btn w-full customAccentBackground"
+            >
+              Post
+            </button>
+          )}
         </div>
       )}
 
@@ -461,8 +476,8 @@ export function NewsFeedAnimatedComponent({}) {
       id: 0,
       textContent: "Promoted to BJJ Blue Belt by John Smith",
 
-      imageUrl:
-        "http://xcelbjj.com/wp-content/uploads/2013/08/kyle-blue-belt.jpg",
+      imageUrl: null,
+      //"http://xcelbjj.com/wp-content/uploads/2013/08/kyle-blue-belt.jpg",
       name: "Jane Doe",
       timestamp: new Date("2022-03-25")
     },
@@ -471,8 +486,8 @@ export function NewsFeedAnimatedComponent({}) {
       textContent:
         "Added a new upcoming boxing event. Open for public registration",
 
-      imageUrl:
-        "https://s3.us-west-2.amazonaws.com/assets.eastidahonews.com/wp-content/uploads/2023/02/the-MMA-poster.jpg",
+      imageUrl: null,
+      // "https://s3.us-west-2.amazonaws.com/assets.eastidahonews.com/wp-content/uploads/2023/02/the-MMA-poster.jpg",
       name: "Fierce Fighting Championship",
       timestamp: new Date("2023-03-25")
     },
@@ -480,8 +495,8 @@ export function NewsFeedAnimatedComponent({}) {
       id: 0,
       textContent: "Rated Fight 4 Stars",
 
-      imageUrl:
-        "https://www.watchbjj.com/wp-content/uploads/2016/12/closed-guard-sweep-and-elaborate-1024x576.jpg",
+      imageUrl: null,
+      //"https://www.watchbjj.com/wp-content/uploads/2016/12/closed-guard-sweep-and-elaborate-1024x576.jpg",
       name: "Mike Tyson",
       timestamp: new Date()
     },
@@ -489,16 +504,16 @@ export function NewsFeedAnimatedComponent({}) {
       id: 0,
       textContent: "Added 'Mitch Connors' to its roster",
 
-      imageUrl:
-        "https://judoinside.com/photos/hans/judoka/61870__David_Tekic/David%20Tekic_Belgrade.jpg",
+      imageUrl: null,
+      //"https://judoinside.com/photos/hans/judoka/61870__David_Tekic/David%20Tekic_Belgrade.jpg",
       name: "MMA Fighting Championship",
       timestamp: new Date("2023-01-25")
     },
     {
       id: 0,
       textContent: "Technique Added 'Closed Guard Armbar'",
-      imageUrl:
-        "https://www.watchbjj.com/wp-content/uploads/2016/12/closed-guard-sweep-and-elaborate-1024x576.jpg",
+      imageUrl: null,
+      //"https://www.watchbjj.com/wp-content/uploads/2016/12/closed-guard-sweep-and-elaborate-1024x576.jpg",
       name: COMPANY_NAME,
       timestamp: new Date("2020-03-25"),
       customContentElement: null
@@ -506,8 +521,22 @@ export function NewsFeedAnimatedComponent({}) {
   ];
 
   return (
-    <div className="w-full">
-      <SlideshowComponent
+    <div className="w-full ">
+      {entryList.map(entry => {
+        return (
+          <div className="w-full pointer-events-none">
+            <NewsFeedEntryComponent
+              hideSpoilers={false}
+              entry={entry}
+              likesData={null}
+              username={null}
+              showReplies={false}
+            />
+          </div>
+        );
+      })}
+
+      {/* <SlideshowComponent
         timeDelayMs={3000}
         discrete={false}
         perView={1}
@@ -525,7 +554,7 @@ export function NewsFeedAnimatedComponent({}) {
             </div>
           );
         })}
-      />
+      /> */}
     </div>
   );
 }

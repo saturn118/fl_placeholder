@@ -4,7 +4,9 @@ import React, { useState } from "react";
 export default function HeadingComponent({
   size = 1,
   showBar = false,
+  useFont = true,
   showArrow = false,
+  showArrowText = true,
   arrowCount = 0,
   textColor = "text-black",
   children
@@ -15,26 +17,26 @@ export default function HeadingComponent({
   if (showBar) bar = <span style={styled}>| </span>;
 
   let viewAllElement = (
-    <span className="font-bold" style={styled}>
+    <span className="pl-5 link font-bold centerdat" style={styled}>
       View All
     </span>
   );
 
-  if (showArrow == false) viewAllElement = null;
+  if (showArrow == false || showArrowText == false) viewAllElement = null;
 
   let sizeId = " logoFont ";
-  if (size == 1) sizeId = "text-5xl";
-  else if (size == 2) sizeId = "text-4xl";
-  else if (size == 3) sizeId = "text-3xl";
-  else if (size == 4) sizeId = "text-2xl";
-  else if (size == 5) sizeId = "text-xl";
-  else if (size == 6) sizeId = "text-base";
+  if (size == 1) sizeId = "text-2xl  lg:text-5xl md:text-4xl sm:text-3xl";
+  else if (size == 2) sizeId = "text-xl  lg:text-4xl md:text-3xl sm:text-2xl";
+  else if (size == 3) sizeId = "text-base  lg:text-3xl md:text-2xl sm:text-xl";
+  else if (size == 4) sizeId = "lg:text-2xl md:text-xl sm:base";
+  else if (size == 5) sizeId = "lg:text-xl text-base";
+  else if (size == 6) sizeId = "lg:text-base";
 
-  sizeId += " logoFont ";
+  if (useFont) sizeId += " logoFont ";
   let arrowElement = null;
   if (showArrow)
     arrowElement = (
-      <span>
+      <span className="centerdat">
         <motion.button
           whileHover={{
             scale: 1.6,

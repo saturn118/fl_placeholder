@@ -1,12 +1,15 @@
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import ArrowDropUpIcon from "@mui/icons-material/ArrowDropUp";
-import { Avatar } from "@mui/material";
+import { Avatar, Rating } from "@mui/material";
 import { motion } from "framer-motion";
 import Link from "next/link";
+import StarIcon from "@mui/icons-material/Star";
 import React from "react";
 import { BACKGROUND_ATTR, DATA_SERVER_IMAGE_ADDRESS } from "../../config";
 import HeadingComponent from "./HeadingComponent";
 import { AnimOnHover } from "./AnimationUtility";
+import { PopularityRankArrowComponent } from "@components/PopularityComponent";
+import { ConverDateToDaysAgoString } from "helpers/api";
 
 export default function EntryWithItemComponent({
   targetLink = "/fdsfs",
@@ -22,7 +25,7 @@ export default function EntryWithItemComponent({
   }
 
   return (
-    <div className={BACKGROUND_ATTR}>
+    <div className={BACKGROUND_ATTR + " w-full"}>
       <Link href={targetLink}>
         <a>
           <motion.button
@@ -110,7 +113,9 @@ export function EntryWithCentralOverlayComponent({
 
   return (
     <div>
-      <Link href={targetLink}>{buttonContent()}</Link>
+      <Link href={targetLink}>
+        <a>{buttonContent()}</a>
+      </Link>
     </div>
   );
 }
@@ -186,7 +191,8 @@ export function EntryWithRankComponent({
   label2 = "",
   label3 = "",
   round = false,
-  rankIndex = ""
+  rankIndex = "",
+  previousRankIndex = ""
 }) {
   let variant = "rounded";
   if (round) {
@@ -217,13 +223,13 @@ export function EntryWithRankComponent({
                 {label1 && label1.toUpperCase()}
               </p>
               <p>{label2}</p>
-              <p className="text-2xl customAccentText font-bold">
-                {" "}
-                #{rankIndex} <ArrowDropUpIcon color={"error"} />{" "}
-                <ArrowDropDownIcon color={"success"} />
-              </p>
+
+              <PopularityRankArrowComponent
+                rankIndex={Number(rankIndex)}
+                previousRankIndex={Number(previousRankIndex)}
+                textColor="text-black"
+              />
             </div>
-            {/* {label2} views */}
           </motion.button>
         </a>
       </Link>
@@ -261,5 +267,84 @@ export function EntryWithTopFiveComponent({
         </a>
       </Link>
     </div>
+  );
+}
+
+export function EntryItemVerticalComponent({
+  imageUrl = null,
+  labelList = [],
+  targetLink = ""
+}) {
+  return (
+    <AnimOnHover translate={true} speed={0.3} scalar={5} className="w-full p-2">
+      <Link href={targetLink}>
+        <a>
+          <div className={BACKGROUND_ATTR + " clickupShadowSmall w-full p-2"}>
+            <div className="w-full space-y-5 centerdat">
+              <Avatar
+                variant="rounded"
+                src={imageUrl}
+                className="imgR"
+                //sx={{ width: 160, height: 160 }}
+              />
+            </div>
+            <div className="w-full customAccentText centerdat">
+              {labelList.map(entry => {
+                return <p>{entry}</p>;
+              })}
+            </div>
+          </div>
+        </a>
+      </Link>
+    </AnimOnHover>
+  );
+}
+
+export function EntryDiscussionComponent({
+  title = null,
+  username = null,
+  content = null,
+  timestamp = null,
+  rating = null,
+  upvotes = null,
+  className = "",
+  downvotes = null,
+  link = ""
+}) {
+  return (
+    <AnimOnHover translate={true} speed={0.3} scalar={5} className={className}>
+      <Link href={link}>
+        <a>
+          <div
+            className={
+              BACKGROUND_ATTR + "  h-[250px] clickupShadowSmall p-5 flex"
+            }
+          >
+            <div className="w-full  centerdat ">
+              <div>
+                <HeadingComponent size={5}>{title}</HeadingComponent>
+                <p>
+                  By <span className="customAccentText link">{username}</span>{" "}
+                </p>
+                {timestamp && ConverDateToDaysAgoString(timestamp)}
+              </div>
+              {content}
+
+              {rating && (
+                <div>
+                  <Rating
+                    readOnly
+                    name="hover-feedback"
+                    size="large"
+                    max={5}
+                    value={rating}
+                  />
+                </div>
+              )}
+            </div>
+          </div>
+        </a>
+      </Link>
+    </AnimOnHover>
   );
 }

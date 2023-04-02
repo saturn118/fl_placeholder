@@ -1,10 +1,14 @@
-import { Avatar, Badge } from "@mui/material";
+import { Avatar, Badge, Button } from "@mui/material";
 import Link from "next/link";
 import React from "react";
 import { BACKGROUND_ATTR, DATA_SERVER_IMAGE_ADDRESS } from "../../config/index";
-import { ConvertDateObjToSimple } from "../../helpers/api";
+import {
+  ConvertDateObjToSimple,
+  ConvertDateObjToYear
+} from "../../helpers/api";
 import LastFiveComponent from "../LastFiveComponent";
 import { UserRatingComponent } from "../UserRatingPopupComponent";
+import UnfoldMoreIcon from "@mui/icons-material/UnfoldMore";
 import UserStarRatingBreakdownComponent from "../UserStarRatingBreakdownComponent";
 import DecisionVoteWidget from "./DecisionVoteComponent2";
 
@@ -95,85 +99,90 @@ const BoutSingleFighterComponent = ({
     );
   }
 
+  let resultColour = "bg-gray-400";
+  if (!hideSpoilers) {
+    if (resultElement == "DRAW") {
+      resultColour = "bg-gray-400";
+    } else if (resultElement == "NC") {
+      resultColour = "bg-orange-400";
+    } else if (isWinner) {
+      resultColour = "bg-green-400";
+    } else {
+      resultColour = "bg-red-400";
+    }
+  }
+
+  let communityButtonElements = [
+    <UserStarRatingBreakdownComponent
+      entityType="bout"
+      boutId={bout.id}
+      voteData={voteData}
+      // label={ratingLabel}
+    />,
+    <UserRatingComponent
+      label={fighterData.name + " vs " + opponentInstance.name}
+      entityId={bout.id}
+      entityType="bout"
+      goToLink={"/bout/" + bout.id}
+    />,
+    decisionVoteElement
+  ];
+
   return (
     <div>
-      <div className={"flex m-2 w-10/12" + BACKGROUND_ATTR}>
-        {/* Start of user rating section */}
-        <div className="flexwrap w-2/12 p-3 rounded text-white customAccentBackground ...">
-          <div className="w-6/12 ag-red-500">
-            <UserStarRatingBreakdownComponent
-              boutId={bout.id}
-              voteData={voteData}
-              // label={ratingLabel}
-            />
-            <div className="ag-yellow-500">{decisionVoteElement}</div>
-          </div>
-          <div className="w-6/12 ag-blue-500">
-            <UserRatingComponent
-              label={fighterData.name + " vs " + opponentInstance.name}
-              entityId={bout.id}
-              entityType="bout"
-              goToLink={"/bout/" + bout.id}
-            />
-          </div>
-        </div>
-        {/* end of user rating section */}
-
+      <div className={"flex full" + BACKGROUND_ATTR}>
         {/* Start of left person */}
-        <div className="w-4/12 flex p-2">
-          <div className="ag-yellow-500 pl-3">
-            <Badge
-              invisible={hideSpoilers}
-              color={resultElement == "WIN" ? "success" : "error"}
-              overlap="circular"
-              badgeContent={resultElement}
-              anchorOrigin={{
-                vertical: "bottom",
-                horizontal: "left"
-              }}
-            >
-              <Avatar
-                // variant="rounded"
-                className={"customShadow " + winnerCircleColour}
-                src={DATA_SERVER_IMAGE_ADDRESS + opponentInstance.imageUrl}
-                sx={{ width: 75, height: 75 }}
-              />
-            </Badge>
+        <div className="w-8/12 flex">
+          <div
+            className={
+              resultColour +
+              " h-[100%] w-2/12 centerdat mr-2 font-bold text-white customShadow"
+            }
+          >
+            <p>{resultElement.slice(0, 1)}</p>
           </div>
           <div className="ag-blue-500 w-full  p-2">
             <Link href={"/person/" + opponentInstance.id}>
-              <a className="font-bold customAccentText link">
-                <h5 className="font-bold">{opponentInstance.name}</h5>
+              <a className="font-bold flex space-x-5 customAccentText link">
+                <h5 className="font-bold">{opponentInstance.name}</h5>{" "}
+                {titleElement}
               </a>
             </Link>
-            {opponentRecord && (
+
+            <div className="flex space-x-5 pt-2">
+              {opponentRecord && (
+                <LastFiveComponent record={opponentRecord.lastfive} />
+              )}
+
+              <div className="text-gray-400">
+                {ConvertDateObjToYear(bout.dateOfEvent)}
+              </div>
+            </div>
+            {/* {opponentRecord && (
               <p>
                 {opponentRecord.win}-{opponentRecord.loss}-{opponentRecord.draw}
                 --
                 {opponentRecord.streak}
               </p>
             )}
-            {opponentRecord && (
-              <LastFiveComponent record={opponentRecord.lastfive} />
-            )}
+            */}
           </div>
         </div>
         {/* end of left person */}
 
-        <div className="w-2/12">
-          <Link href={"/martialart/" + bout.martialArtId}>
-            <a>
-              <div className="customAccentText link">{bout.martialArt}</div>
-            </a>
-          </Link>
-          <div className="customAccentText link">{divisionName}</div>
-          {titleElement}
-
-          <div>{ConvertDateObjToSimple(bout.dateOfEvent)}</div>
+        <div className="w-2/12 pt-4">
+          <div>
+            <Link href={"/martialart/" + bout.martialArtId}>
+              <a>
+                <div className="customAccentText link">{bout.martialArt}</div>
+              </a>
+            </Link>
+            <div className="customAccentText link">{divisionName}</div>
+          </div>
         </div>
 
         {/* Start of Result */}
-        <div className="w-2/12 item-center">
+        <div className="w-3/12 item-center pt-4">
           {hideSpoilers == false ? (
             <div>
               <div className="font-bold">{bout.winCondition}</div>
@@ -185,24 +194,29 @@ const BoutSingleFighterComponent = ({
         </div>
         {/* End of result */}
 
+        {/* Start of user rating section */}
+        <div className="flex hide_on_small space-x-5 w-4/12 p-3 customAccentBackground rounded text-white  ...">
+          {communityButtonElements}
+        </div>
+        {/* end of user rating section */}
+        {/* End of Buttons */}
         {/* Start of buttons */}
-        <div className="m-3">
+        <div className="bg-green-100 float-right justify-right justify-end ">
           <div className="">
             <li>
               <Link href={"/bout/" + bout.id}>
                 <a>
-                  <button className="btn customAccentBackground  font-bold text-2xl">
-                    ...
-                  </button>
+                  <Button className="">
+                    <UnfoldMoreIcon fontSize="large" />
+                  </Button>
                 </a>
               </Link>
             </li>
           </div>
-
-          {/* <p>__bout__date__</p>
-          <p>__event__name__</p> */}
         </div>
-        {/* End of Buttons */}
+      </div>
+      <div className="flex hide_on_big spaceEven  bg-gray-300 rounded text-white  ...">
+        {communityButtonElements}
       </div>
     </div>
   );

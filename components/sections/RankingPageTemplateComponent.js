@@ -11,7 +11,10 @@ import AdvertComponent from "../AdvertComponent";
 import FlagComponent from "../FlagComponent";
 import { AnimOnHover } from "../utility/AnimationUtility";
 import HeadingComponent from "../utility/HeadingComponent";
-import { BodyColumnSectionComponent } from "./BodyHeaderSectionComponent";
+import {
+  BodyColumnSectionComponent,
+  BodyColumnResponsiveBottomComponent
+} from "./BodyHeaderSectionComponent";
 import { IsLoggedInLoginPrompt } from "config";
 
 export const RankingPageTemplateComponent = ({
@@ -19,6 +22,7 @@ export const RankingPageTemplateComponent = ({
   pageSubTitle = "",
   initialRankingData = null,
   promoId = null,
+  activityId = null,
   divisionId = null,
   divisionData = [],
   styleData = null
@@ -81,6 +85,10 @@ export const RankingPageTemplateComponent = ({
       if (triggerFresh) RefreshData();
     }
   }, [router]);
+
+  useEffect(() => {
+    if (activityId) setActivity(activityId);
+  }, []);
 
   const [divisionSelectorId, setDivisionSelectorId] = React.useState(
     divisionId
@@ -298,7 +306,7 @@ export const RankingPageTemplateComponent = ({
 
   return (
     <div>
-      <BodyColumnSectionComponent
+      <BodyColumnResponsiveBottomComponent
         twoSections={true}
         sideContent={
           <div className="px-10">
@@ -437,8 +445,8 @@ export const RankingPageTemplateComponent = ({
             </div>
           </div>
         }
-        mainContent={<div className="px-5">{bodyElement}</div>}
-      ></BodyColumnSectionComponent>
+        mainContent={<div className="">{bodyElement}</div>}
+      />
     </div>
   );
 };

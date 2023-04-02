@@ -18,6 +18,7 @@ export default function UserStarRatingBreakdownComponent({
   boutId = null, //The callback that's triggered when teh vote changes
   voteData = null,
   label = null,
+  entityType = "",
   goToLink
 }) {
   const [ratingValue, setRatingValue] = React.useState(0);
@@ -42,66 +43,35 @@ export default function UserStarRatingBreakdownComponent({
   }
 
   return (
-    <Stack>
-      <div
-        onClick={() => {
-          setOpen(true);
-        }}
-      >
+    <Stack className="hover:bg-green-400">
+      <Link href={"/" + entityType + "/" + boutId + "/review"}>
         <a>
-          {/* <button className="btn"> */}
-          <li>
-            <div>
-              <div>
-                <div className="flex">
-                  <Rating name="read-only" value={5} max={1} readOnly />
-                  <div className="p-1 text-center">
-                    <p
-                      className="font-bold"
-                      style={{ fontSize: "1.1rem", lineHeight: "0.8rem" }}
-                    >
-                      {serverRatingValue}{" "}
-                    </p>
+          <div>
+            <a>
+              {/* <button className="btn"> */}
+              <li>
+                <div>
+                  <div className="centerdat">
+                    <div className="flex">
+                      <Rating name="read-only" value={5} max={1} readOnly />
+                      <div className="p-1 text-center">
+                        <p
+                          className="font-bold"
+                          style={{ fontSize: "1.1rem", lineHeight: "0.8rem" }}
+                        >
+                          {serverRatingValue}
+                        </p>
+                      </div>
+                    </div>
+
+                    <p style={{ fontSize: "0.6rem" }}>{totalVotes} votes </p>
                   </div>
                 </div>
-
-                <p style={{ fontSize: "0.6rem" }}>{totalVotes} votes </p>
-              </div>
-            </div>
-          </li>
-        </a>
-      </div>
-
-      {open && (
-        <RatingPopupComponent
-          // selectedValue={selectedValue}
-          ratedLabel={label}
-          voteData={voteData}
-          open={open}
-          onClose={e => {
-            setOpen(false);
-          }}
-          goToLink={goToLink}
-        />
-      )}
-
-      <input type="checkbox" id="my-modal" className="modal-toggle" />
-      <div className="modal">
-        <div className="modal-box">
-          <h3 className="font-bold text-lg">
-            Congratulations random Internet user!
-          </h3>
-          <p className="py-4">
-            You've been selected for a chance to get one year of subscription to
-            use Wikipedia for free!
-          </p>
-          <div className="modal-action">
-            <label for="my-modal" className="btn">
-              Yay!
-            </label>
+              </li>
+            </a>
           </div>
-        </div>
-      </div>
+        </a>
+      </Link>
     </Stack>
   );
 }
@@ -114,7 +84,8 @@ function RatingBreakdown(label, value, percentage) {
       </div>
       <LinearProgress
         variant="determinate"
-        sx={{ width: 200, height: 8 }}
+        className="w-10/12"
+        sx={{ height: 8 }}
         value={percentage}
       />
       {/* <div className="w-3/5">
@@ -176,7 +147,7 @@ export function DisplayReviewBreakdownElements(
   }
 
   return (
-    <div className=" ">
+    <div className="w-full ">
       <div className="mb-1 tracking-wide px-4 py-4">
         <h2 className="text-gray-800 font-semibold mt-1">
           {serverRatingValue} out of 5

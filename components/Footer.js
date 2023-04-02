@@ -16,25 +16,29 @@ INSTAGRAM_URL, FACEBOOK_URL, TIKTOK_URL, TWITTER_URL, YOUTUBE_URL, REDDIT_URL;
 
 const Footer = () => {
   return (
-    <div className="bg-gray-900 pb-10">
-      <footer className="container flex justify-center w-full">
-        <div className="text-center space-y-1">
-          {GetLogoElement()}
-          {/* <SocialMediaLinksComponent /> */}
-          <div className="customAccentText">
-            <Link href="/faq">
-              <a className="link">Frequently Asked Questions</a>
-            </Link>
-          </div>{" "}
-          <div className="customAccentText">
-            <Link href="/terms">
-              <a className="link">Terms and conditions</a>
-            </Link>
+    <div className="bg-white footerBackground">
+      <div className="min-h-[210px]"></div>
+      <div className=" pb-10 w-full text-white customAccentBackground pt-5">
+        <footer className="  justify-center w-full">
+          <div className="text-center centerdat space-y-1">
+            {GetLogoElement(false, "text-white")}
+            <div className="w-3/12">
+              <SocialMediaLinksComponent colorAttribute="text-white" />
+            </div>
+            <div className="customAccentText">
+              <Link href="/faq">
+                <a className="text-white link">Frequently Asked Questions</a>
+              </Link>
+            </div>{" "}
+            <div className="customAccentText">
+              <Link href="/terms">
+                <a className="text-white link">Terms and conditions</a>
+              </Link>
+            </div>
+            <LanguageSelectorComponent />
           </div>
-          <LanguageSelectorComponent />
-        </div>
-      </footer>
-      {/* <div>
+        </footer>
+        {/* <div>
           {GetLogoElement()}
 
    
@@ -46,6 +50,7 @@ const Footer = () => {
           <span className="footer-title">Social</span>
         
         </div> */}
+      </div>
     </div>
   );
 };

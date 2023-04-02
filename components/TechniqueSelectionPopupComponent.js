@@ -72,7 +72,7 @@ export function TechniqueSelectionPopupComponent({
 
   function SelectionElement(poseName, poseImage, poseStats) {
     return (
-      <div className="grid w-5/12  place-items-center p-10">
+      <div className=" w-6/12  ">
         <Link href={"/position/" + positionData.id + "?role=" + poseName}>
           <a>
             <motion.div
@@ -84,7 +84,7 @@ export function TechniqueSelectionPopupComponent({
             >
               <Avatar
                 variant="rounded"
-                sx={{ width: 300, height: 300 }}
+                className="imgR"
                 src={DATA_SERVER_IMAGE_ADDRESS + poseImage}
               />
 
@@ -113,56 +113,34 @@ export function TechniqueSelectionPopupComponent({
       //fullWidth={true} // sets the dialog to take up the full width of the screen
       maxWidth="lg" // sets the maximum width of the dialog to "small"
       fullScreen={false} // enables full screen mode when the prop is true
-      PaperProps={{ style: { minHeight: "70vh", minWidth: "60vw" } }}
+      PaperProps={{ style: { minHeight: "70vh", minWidth: "80vw" } }}
     >
       <DialogContent
-        className="text-center justify-center w-full border-8 border-blue-600"
+        className="text-center justify-center w-full border-2 border-blue-600"
         style={{ alignItems: "center" }}
       >
-        <HeadingComponent textColor={"w-full text-center item-center"} size={3}>
+        <HeadingComponent
+          textColor={"w-full text-center customAccentText item-center"}
+          size={4}
+        >
           {positionData.name.toUpperCase()}
         </HeadingComponent>
-        <HeadingComponent textColor={"w-full text-center item-center"} size={4}>
-          Select a Position
+        <HeadingComponent textColor={"w-full text-center item-center"} size={5}>
+          SELECT POSITION
         </HeadingComponent>
 
-        <div className="w-full ">
-          <div className="flex w-full justify-center ">
-            {SelectionElement(
-              positionData.poseNameA,
-              positionData.imagePoseA,
-              poseAStats
-            )}
-            <div className="divider lg:divider-horizontal">OR</div>
-            {SelectionElement(
-              positionData.poseNameB,
-              positionData.imagePoseB,
-              poseBStats
-            )}
-          </div>
-          <div className="w-12/12">
-            {/* <DoubleBreakdownComponent
-              leftValue={5}
-              rightValue={2}
-              maxValue={10}
-            /> */}
-            {/* <DoubleBreakdownComponent
-              leftValue={5}
-              rightValue={2}
-              maxValue={10}
-            />
-            <DoubleBreakdownComponent
-              leftValue={5}
-              rightValue={2}
-              maxValue={10}
-            />
-
-            <DoubleBreakdownComponent
-              leftValue={5}
-              rightValue={2}
-              maxValue={10}
-            /> */}
-          </div>
+        <div className="flex_full_on_big space-x-2 w-full centerdat ">
+          {SelectionElement(
+            positionData.poseNameA,
+            positionData.imagePoseA,
+            poseAStats
+          )}
+          <div className="divider lg:divider-horizontal">OR</div>
+          {SelectionElement(
+            positionData.poseNameB,
+            positionData.imagePoseB,
+            poseBStats
+          )}
         </div>
       </DialogContent>
     </Dialog>

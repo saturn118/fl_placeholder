@@ -6,7 +6,13 @@ import MenuItem from "@mui/material/MenuItem";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useEffect } from "react";
-import { GetGlobalHideSpoilers, GetLinkedFighterId, GetNotificationCount, IsLoggedInLoginPrompt, SetGlobalHideSpoilers } from "../config";
+import {
+  GetGlobalHideSpoilers,
+  GetLinkedFighterId,
+  GetNotificationCount,
+  IsLoggedInLoginPrompt,
+  SetGlobalHideSpoilers
+} from "../config";
 
 const ProfileButtonComponent = () => {
   const router = useRouter();
@@ -59,19 +65,17 @@ const ProfileButtonComponent = () => {
 
   let labelToShow = "SIGN IN";
   if (label) {
-    labelToShow = label;
+    labelToShow = null; //label;
   } else {
     return (
       <button
         className="btn customAccentBackground"
         onClick={() => {
-          // CacheCurrentUrl(router);
-
           IsLoggedInLoginPrompt();
           //router.push("/account/login");
         }}
       >
-        sign in
+        {labelToShow}
       </button>
     );
   }
@@ -105,16 +109,15 @@ const ProfileButtonComponent = () => {
   return (
     <div>
       <Button
-        className="customAccentBackground text-white"
+        className=" customAccentBackground text-white hover:bg-blue-500"
         id="basic-button"
-        variant="outlined"
         aria-controls={open ? "basic-menu" : undefined}
         aria-haspopup="true"
         aria-expanded={open ? "true" : undefined}
         onClick={handleClick}
-        startIcon={<AccountCircleIcon sx={{ fontSize: 40 }} />}
       >
         {labelToShow}
+        {labelToShow == null && <AccountCircleIcon fontSize="large" />}
       </Button>
       <Menu
         id="basic-menu"
@@ -156,7 +159,7 @@ const ProfileButtonComponent = () => {
         </Link>
         {/* <Link href={"/"}> */}
 
-        <MenuItem>
+        {/* <MenuItem>
           <div className="form-control">
             <label className="label cursor-pointer">
               <span className="label-text">Hide Spoilers</span>
@@ -172,7 +175,7 @@ const ProfileButtonComponent = () => {
               />
             </label>
           </div>
-        </MenuItem>
+        </MenuItem> */}
         {/* </Link> */}
 
         {optionMenuElements}

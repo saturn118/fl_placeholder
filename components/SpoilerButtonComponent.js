@@ -1,7 +1,8 @@
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
-import { Tooltip } from "@mui/material";
+import { Tooltip, Button } from "@mui/material";
 import React from "react";
+import HeadingComponent from "./utility/HeadingComponent";
 
 const SpoilerButtonComponent = (spoilerChangedCallback, spoilerState) => {
   return (
@@ -11,15 +12,25 @@ const SpoilerButtonComponent = (spoilerChangedCallback, spoilerState) => {
         enterDelay={500}
         leaveDelay={200}
       >
-        <div className="text-white">
-          <li>Spoilers</li>
-          <li>
-            {spoilerState ? (
-              <VisibilityOffIcon className="event-fab-icon" />
-            ) : (
-              <VisibilityIcon className="event-fab-icon" />
-            )}
-          </li>
+        <div>
+          <HeadingComponent textColor={"text-center text-gray-300 "} size={6}>
+            SPOILERS
+          </HeadingComponent>
+          <Button>
+            <div>
+              {spoilerState ? (
+                <VisibilityOffIcon
+                  // fontSize="large"
+                  className=" text-white event-fab-icon"
+                />
+              ) : (
+                <VisibilityIcon
+                  // fontSize="large"
+                  className="text-white event-fab-icon"
+                />
+              )}
+            </div>
+          </Button>
         </div>
       </Tooltip>
     </div>

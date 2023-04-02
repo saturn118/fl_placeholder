@@ -2,27 +2,172 @@ import Button from "@mui/material/Button";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import React, { useState } from "react";
+import CloseIcon from "@mui/icons-material/Close";
+import SearchIcon from "@mui/icons-material/Search";
+import React, { useState, useEffect } from "react";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import MenuIcon from "@mui/icons-material/Menu";
 import "react-awesome-button/dist/styles.css";
 import {
   GetLogoElement,
   TriggerBadgeEarned,
   TriggerLoginPrompt,
   IsLoggedInLoginPrompt,
+  IsLoggedIn,
   GetUsername,
-  dev
+  BACKGROUND_ATTR,
+  dev,
+  IsSmallScreen
 } from "../config";
 import NotificationPollingComponent from "./NotificationPollingComponent";
 import ProfileButtonComponent from "./ProfileButtonComponent";
 import { AnimAppear, AnimAppearDirection } from "./utility/AnimationUtility";
 import HeadingComponent from "./utility/HeadingComponent";
-import { LinearProgress } from "@mui/material";
+import { LinearProgress, TextField, Autocomplete, Avatar } from "@mui/material";
+import { AddUserFeedPostAction } from "helpers/api";
+
+import Box from "@mui/material/Box";
+import Drawer from "@mui/material/Drawer";
+import List from "@mui/material/List";
+import Divider from "@mui/material/Divider";
+import ListItem from "@mui/material/ListItem";
+import ListItemButton from "@mui/material/ListItemButton";
+import ListItemIcon from "@mui/material/ListItemIcon";
+import ListItemText from "@mui/material/ListItemText";
+import InboxIcon from "@mui/icons-material/MoveToInbox";
+import MailIcon from "@mui/icons-material/Mail";
+
+import Accordion from "@mui/material/Accordion";
+import AccordionSummary from "@mui/material/AccordionSummary";
+import AccordionDetails from "@mui/material/AccordionDetails";
+import Typography from "@mui/material/Typography";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import DrawerComponent from "./DrawerComponent";
+import RecentlyViewedComponent from "./RecentlyViewedComponent";
+import { IndividualTag } from "./FightSearchPreviewTagsComponent";
+import SocialMediaLinksComponent from "./utility/SocialMediaLinksComponent";
+import AdvertComponent from "./AdvertComponent";
+
+const SearchDropdownComponent = ({ searchTrigger }) => {
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const [searchType, setSearchType] = useState(null);
+  const [searchTerm, setSearchTerm] = useState(null);
+  const searchBoxRef = React.useRef(null);
+  const suggestionBoxRef = React.useRef(null);
+  const dropDownRef = React.useRef(null);
+  const router = useRouter();
+  const handleSearchBoxClick = () => {
+    setShowSuggestions(true);
+  };
+
+  const handleDocumentClick = event => {
+    if (
+      searchBoxRef.current &&
+      !searchBoxRef.current.contains(event.target) &&
+      suggestionBoxRef.current &&
+      !suggestionBoxRef.current.contains(event.target) &&
+      dropDownRef.current &&
+      !dropDownRef.current.contains(event.target)
+    ) {
+      setSearchType(null);
+      setShowSuggestions(false);
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener("click", handleDocumentClick);
+    return () => {
+      document.removeEventListener("click", handleDocumentClick);
+    };
+  }, []);
+
+  return (
+    <div className="w-full">
+      <div className="flex bg-white rounded">
+        <select
+          className="customAccentBackground text-white rounded px-2"
+          onChange={e => {
+            console.log(e.target.value);
+
+            setSearchType(e.target.value);
+          }}
+          onClick={handleSearchBoxClick}
+          ref={dropDownRef}
+        >
+          {[
+            ["figher", "People"],
+            ["event", "Events"],
+            ["user", "Users"],
+            ["technique", "Techniques"],
+            ["promo", "Promoters"],
+            ["position", "Stances"],
+            ["martialart", "Martial Art"]
+          ].map(entry => {
+            return <option value={entry[0]}>{entry[1]}</option>;
+          })}
+        </select>
+        <input
+          className="w-full bg-white  rounded pl-3 border-none outline-none border-0 "
+          type="text"
+          onClick={handleSearchBoxClick}
+          ref={searchBoxRef}
+          placeholder={"Search fight legacy"}
+          onChange={e => {
+            setSearchTerm(e.target.value);
+            console.log(e.target.value);
+          }}
+          onKeyPress={event => {
+            if (event.key === "Enter") {
+              searchTrigger(router, searchTerm, searchType);
+
+              setShowSuggestions(false);
+            }
+          }}
+        />
+        <div className="">
+          <button>
+            <SearchIcon
+              fontSize="large"
+              color="info"
+              onClick={() => {
+                searchTrigger(router, searchTerm, searchType);
+
+                setShowSuggestions(false);
+              }}
+            />
+          </button>
+        </div>
+      </div>
+
+      {showSuggestions && (
+        <div
+          className={
+            BACKGROUND_ATTR +
+            ` mx-5 rounded-xl  border-r-10 rounded-xl primarybackground suggestion-box${
+              showSuggestions ? " show" : ""
+            }`
+          }
+          ref={suggestionBoxRef}
+        >
+          <div className="px-5 pb-5 ">
+            <RecentlyViewedComponent
+              displayFilter={null}
+              fuzzyRefine={true}
+              fuzzyTerm={searchTerm}
+            />
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
 
 const Header = () => {
   const router = useRouter();
-  const [searchTerm, setSearchTerm] = useState("");
-  const [searchType, setSearchType] = useState("fighter");
+  const [searchTerm, setSearchTerm] = useState(null);
+  const [searchType, setSearchType] = useState(null);
   const [searchBoxFocused, setSearchBoxFocused] = useState(false);
+  const [loggedIn, setLoggedIn] = useState(false);
 
   const searchInput = React.useRef(null);
 
@@ -41,152 +186,207 @@ const Header = () => {
     console.log(newType);
   };
 
+  useEffect(() => {}, [searchBoxFocused]);
+
+  useEffect(() => {
+    setLoggedIn(IsLoggedIn());
+  }, []);
+
   const HandleSearchChanged = e => {
     console.log(e);
     setSearchTerm(e.target.value);
     console.log(e.target.value);
   };
 
-  // const handleClick = e => {
-  //   console.log("Searching for " + searchTerm + " as type " + searchType);
-  //   if (searchTerm != "") {
-  //     const toSearch = searchTerm;
-  //     // setSearchTerm(null);
+  let searchBoxElement = (
+    <div className={searchBoxFocused == true ? "w-full" : "w-full"}>
+      <div className="form-control w-full">
+        <div className="flex  pt-1 ">
+          <input
+            type="text"
+            onChange={HandleSearchChanged}
+            value={searchTerm}
+            placeholder={"Search fight legacy"}
+            className={" min-h-[35px] max-h-[35px] w-10/12 "}
+            onFocus={e => {
+              console.log(e);
+              setSearchBoxFocused(true);
+            }}
+            onBlur={e => {
+              setSearchBoxFocused(false);
+            }}
+          />
+          <button
+            className=" w-2/12 btn customAccentBackground min-h-[35px] max-h-[35px]"
+            onClick={() => {
+              searchClickRedirect(router, searchTerm, searchType);
+              window.dispatchEvent(new Event("drawer_close"));
+            }}
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-6 w-6"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+              />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  );
 
-  //     if (searchType == "promotion") {
-  //       router.push("/search?promo=" + toSearch);
-  //     } else if (searchType == "fighter") {
-  //       router.push("/search?fighter=" + toSearch);
-  //     } else if (searchType == "user") {
-  //       router.push("/search?user=" + toSearch);
-  //     } else if (searchType == "technique") {
-  //       router.push("/search?technique=" + toSearch);
-  //     } else if (searchType == "position") {
-  //       router.push("/search?position=" + toSearch);
-  //     } else if (searchType == "style") {
-  //       router.push("/search?style=" + toSearch);
-  //     }
-  //   }
-  // };
+  function searchClickRedirect(router, sTerm, sType) {
+    console.log("Searching for " + sTerm + " as type " + sType);
+    if (sTerm != "") {
+      const toSearch = sTerm;
+      if (sType == "promotion") {
+        router.push("/search?promo=" + toSearch);
+      } else if (sType == "fighter") {
+        router.push("/search?fighter=" + toSearch);
+      } else if (sType == "user") {
+        router.push("/search?user=" + toSearch);
+      } else if (sType == "technique") {
+        router.push("/search?technique=" + toSearch);
+      } else if (sType == "position") {
+        router.push("/search?position=" + toSearch);
+      } else if (sType == "martialart") {
+        router.push("/search?martialart=" + toSearch);
+      } else {
+        router.push("/search?unknown=" + toSearch);
+      }
+    }
+  }
 
   if (!dev) {
     return (
-      <div className=" bg-gray-900 w-full ">
-        <div className="containerNavBar flex justify-center">
-          {GetLogoElement()}
-        </div>
+      <div className="bg-gray-900 w-full ">
+        <div className="container flex justify-center">{GetLogoElement()}</div>
       </div>
     );
   }
 
   return (
-    // fixedTopScreen
-    <div className=" bg-gray-900 w-full ">
-      <div className="containerNavBar flex">
-        <div className="flex w-3/12 mx-5">{GetLogoElement()}</div>
-        <div className=" w-9/12 mx-5">
-          {searchBoxFocused == false && (
-            <div className="flex space-x-2 justify-end w-full">
+    //
+    <div>
+      {/* //Used to buffer the fixed navbar to prevent things being placed behind it */}
+      <div
+        className={" w-full " + (IsSmallScreen() ? "min-h-[50px]" : "")}
+      ></div>
+      <div
+        className={
+          "bg-gray-900 w-full " + (IsSmallScreen() ? "fixedTopScreen" : " ")
+        }
+      >
+        <div className="">
+          <div className=" flex justify-between ">
+            <div className="hide_on_big">
               <MenuButtonGroup />
-
-              <NotificationPollingComponent />
-
-              <ProfileButtonComponent />
             </div>
-          )}
 
-          {/* <li>
-                <div className="form-control">
-                  <div className="input-group">
-                    <select
-                      className="select select-bordered"
-                      onChange={handleSearchTypeChanged}
-                    >
-                      <option value="fighter">Fighter</option>
-                      <option value="promotion">Promoter</option>
-                      <option value="position">Fight Position</option>
-                      <option value="technique">Fight Technique</option>
-                      <option value="style">Martial Arts</option>
-                      <option value="user">User</option>
-                    </select>
-                    <input
-                      type="text"
-                      placeholder="Search…"
-                      className="input input-bordered"
-                      onChange={HandleSearchChanged}
-                      onKeyPress={e => {
-                        if (e.key === "Enter") {
-                          handleClick();
-                        }
-                      }}
-                    />
-                    <button className="btn btn-square" onClick={handleClick}>
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="h-6 w-6"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        // stroke="currentColor"
-                      >
-                        <path
-                          // stroke-linecap="round"
-                          // stroke-linejoin="round"
-                          // stroke-width="2"
-                          d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                        />
-                      </svg>
-                    </button>
-                  </div>
+            <div className="flex  items-center pl-5">
+              <Link href="/">
+                <a>{GetLogoElement()}</a>
+              </Link>
+            </div>
+            <div
+              onClick={() => {
+                window.dispatchEvent(new Event("suggestion_open"));
+                setSearchBoxFocused(true);
+              }}
+              onFocus={e => {
+                console.log(e);
+                setSearchBoxFocused(true);
+              }}
+              onBlur={e => {
+                setSearchBoxFocused(false);
+              }}
+              className={
+                "hide_on_small pt-1  " +
+                (searchBoxFocused ? " w-4/12" : " w-4/12")
+              }
+            >
+              <SearchDropdownComponent searchTrigger={searchClickRedirect} />
+            </div>
+
+            <div className="hide_on_small flex justify-end">
+              <MenuButtonGroup />
+            </div>
+
+            <div className="">
+              <div className="flex">
+                <div className={"hide_on_small" + " flex "}>
+                  {loggedIn && <NotificationPollingComponent />}
+                  <ProfileButtonComponent />
                 </div>
-              </li> */}
 
-          <div
-            className={
-              "flex " + (searchBoxFocused == true ? "w-full" : "w-4/12")
+                <Button className={"hide_on_big"}>
+                  <SearchIcon
+                    fontSize="large"
+                    color="info"
+                    onClick={() => {
+                      window.dispatchEvent(new Event("drawer_open_search"));
+                    }}
+                  />
+                </Button>
+              </div>
+            </div>
+          </div>
+
+          <DrawerComponent
+            anchorName="right"
+            displayDone={false}
+            widthValue="100vw"
+            listerName={"drawer_open_search"}
+            onCloseLogic={() => {
+              setSearchBoxFocused(false);
+            }}
+            titleContent={
+              <HeadingComponent size={1} textColor="text-white ">
+                SEARCH
+              </HeadingComponent>
             }
           >
-            {/* <div className="form-control w-full">
-              <div className="input-group w-full pt-1 ">
-                <input
-                  type="text"
-                  placeholder={"Search " + COMPANY_NAME}
-                  className={
-                    "input input-bordered  w-10/12 min-h-[35px] max-h-[35px]"
-                  }
-                  onFocus={e => {
-                    console.log(e);
-                    setSearchBoxFocused(true);
-                  }}
-                  onBlur={e => {
-                    setSearchBoxFocused(false);
-                  }}
-                />
-                <button className="btn customAccentBackground min-h-[35px] max-h-[35px]">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-6 w-6"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
+            <div className="flexwrap pt-5">
+              {[
+                "fighter",
+                "event",
+                "promotion",
+                "technique",
+                "position",
+                "martialart",
+                "user"
+              ].map(entry => {
+                return (
+                  <div
+                    onClick={() => {
+                      setSearchType(entry);
+                    }}
                   >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                    />
-                  </svg>
-                </button>
-              </div>
-            </div> */}
-          </div>
+                    {IndividualTag(entry)}
+                  </div>
+                );
+              })}
+            </div>
+            <Divider className="my-3 px-5" />
+            {searchBoxElement}
+
+            <Divider className="my-3 px-5" />
+            <RecentlyViewedComponent
+              displayFilter={searchType}
+              fuzzyRefine={true}
+              fuzzyTerm={searchTerm}
+            />
+          </DrawerComponent>
         </div>
       </div>
-      {/* <LinearProgress
-        // variant="determinate"
-        sx={{ width: "100%", height: 3 }}
-        value={50}
-      /> */}
     </div>
   );
 };
@@ -197,554 +397,7 @@ function MenuButtonGroup() {
   let menuAttr = "p-5 py-10 space-x-5 flex w-full";
   let groupAttr = "w-4/12 border-r-2 border-gray-300";
 
-  const menuItems = [
-    {
-      label: "Athletes",
-      content: (
-        <div>
-          <div className={menuAttr}>
-            <div className={groupAttr}>
-              <p>Jon Jones</p>
-              <img
-                width={200}
-                src={
-                  "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwww.sportscasting.com%2Fwp-content%2Fuploads%2F2019%2F10%2FJon-Jones-press-confrence.jpg"
-                }
-              ></img>
-            </div>
-
-            <div className={groupAttr}>
-              <HeadingComponent size={3}>Athletes</HeadingComponent>
-              <p>Trending</p>
-              <p>Nearby Athletes</p>
-              <p>Most Popular</p>
-              <p>Upcoming Fighters</p>
-              <p>Hall of Fame</p>
-              <p></p>
-            </div>
-            <div className={groupAttr}>
-              <HeadingComponent size={3}>Referees</HeadingComponent>
-              <p>Nearby</p>
-              <p>Most Popular</p>
-              <p>Most Active 2022</p>
-            </div>
-            <div className={groupAttr}>
-              <HeadingComponent size={3}>Judges</HeadingComponent>
-              <p>Most Active 2022</p>
-              <p>Most Active All Time</p>
-              <p>Most Aligned Decisions with Community</p>
-              <p>Most Conflicting Decisions with Community</p>
-              <p>Judges with Fight Experience</p>
-              <p></p>
-              <p></p>
-            </div>
-          </div>
-        </div>
-      )
-    },
-
-    {
-      label: "Events",
-      content: (
-        <div className={menuAttr}>
-          <div className={groupAttr}>
-            <p>UFC 200</p>
-            <img
-              width={180}
-              src={
-                "https://cdn.mmaweekly.com/wp-content/uploads/2016/07/UFC-200-Tate-vs-Nunes-Fight-Poster.jpg"
-              }
-            ></img>
-          </div>
-
-          <div className={groupAttr}>
-            <HeadingComponent size={3}>Events</HeadingComponent>
-            <Link href={"/event"}>
-              <a className="hover:link">
-                <p>Upcoming Events</p>
-              </a>
-            </Link>
-            <Link href={"/event"}>
-              <a className="hover:link">
-                <p>Recent Events</p>
-              </a>
-            </Link>
-            <Link href={"/event"}>
-              <a className="hover:link">
-                <p>Nearby Events</p>
-              </a>
-            </Link>
-            <Link href={"/event/create"}>
-              <a className="hover:link">
-                <p>Create a new Event</p>
-              </a>
-            </Link>
-            <Link href={"/venue"}>
-              <a className="hover:link">
-                <p>Find An Event Venue</p>
-              </a>
-            </Link>
-            <Link href={"/venue"}>
-              <a className="hover:link">
-                <p>Create an event promotional poster</p>
-              </a>
-            </Link>
-            <Link href={"/list/directory/event"}>
-              <a className="hover:link">
-                <p>Community Event Lists</p>
-              </a>
-            </Link>
-          </div>
-
-          <div className={groupAttr}>
-            <HeadingComponent size={3}>Compete</HeadingComponent>
-            <p> My Events </p>
-            <p> Open Applications</p>
-            <Link href="/event/kickstart">
-              <a>
-                <p> Kickstart an Event</p>
-              </a>
-            </Link>
-          </div>
-          <div className={groupAttr}>
-            <HeadingComponent size={3}>Trending</HeadingComponent>
-            <p>Most Popular Events - 2022</p>
-            <p>Most Popular Events - All Time</p>
-          </div>
-        </div>
-      )
-    },
-    {
-      label: "Learn",
-      content: (
-        <div className={menuAttr}>
-          <div className={groupAttr}>
-            <HeadingComponent size={3}>Techiques</HeadingComponent>
-            <Link href="/library">
-              <a className="hover:link">
-                <p>Technique Library</p>
-              </a>
-            </Link>
-            <Link href="/library/courses">
-              <a className="hover:link">
-                <p>Courses</p>
-              </a>
-            </Link>
-            <Link href="/list/directory/technique">
-              <a className="hover:link">
-                <p>Community Technique Lists</p>
-              </a>
-            </Link>
-            <Link href="/library/recent">
-              <a className="hover:link">
-                <p>Recently Added Techniques</p>
-              </a>
-            </Link>
-            <Link href="/library/questions">
-              <a className="hover:link">
-                <p>Community Questions</p>
-              </a>
-            </Link>
-
-            <Link href="/trending/technique ">
-              <a className="hover:link">
-                <p>Trending Techniques</p>
-              </a>
-            </Link>
-          </div>
-
-          {/* <div className={groupAttr}>
-            <HeadingComponent size={3}>Courses</HeadingComponent>
-            <Link href="/library/course/1 ">
-              <a className="hover:link">
-                <p>Self Defense</p>
-              </a>
-            </Link>
-
-            <Link href="/library/course/4 ">
-              <a className="hover:link">
-                <p>Jujitsu</p>
-              </a>
-            </Link>
-
-            <Link href="/library/course/3 ">
-              <a className="hover:link">
-                <p>Wrestling</p>
-              </a>
-            </Link>
-
-            <Link href="/library/course/2 ">
-              <a className="hover:link">
-                <p>Judo</p>
-              </a>
-            </Link>
-
-            <Link href="/library/courses ">
-              <a className="hover:link">
-                <p>View All Courses</p>
-              </a>
-            </Link>
-          </div>
-
-          <div className={groupAttr}>
-            <HeadingComponent size={3}>Near Me</HeadingComponent>
-
-            <Link href="/trending/position  ">
-              <a className="hover:link">
-                <p>Introduction Lessons - TODO</p>
-              </a>
-            </Link>
-
-            <Link href="/trending/position  ">
-              <a className="hover:link">
-                <p>Gyms -TODO</p>
-              </a>
-            </Link>
-
-            <Link href="/trending/position  ">
-              <a className="hover:link">
-                <p>Instructors - TODO</p>
-              </a>
-            </Link>
-          </div>
-          <div className={groupAttr}>
-            <a className="link link-primary">
-              <img
-                width={250}
-                src={DATA_SERVER_IMAGE_ADDRESS + "/martialarts/root2.png"}
-              ></img>
-            </a>
-          </div> */}
-        </div>
-      )
-    },
-
-    // {
-    //   label: "Near Me",
-    //   content: (
-    //     <div className={menuAttr}>
-    //       <p>People</p>
-    //       <p>Find a training partner</p>
-    //       <p>Managers</p>
-    //       <p>Gym Finder</p>
-    //       <p>Stores</p>
-    //       <p>Events</p>
-    //       <p>Jobs</p>
-    //       <p>Available Venues</p>
-    //     </div>
-    //   )
-    // },
-
-    {
-      label: "Promoters",
-      content: (
-        <div className={menuAttr}>
-          <Link href="/promotion">
-            <a>Search</a>
-          </Link>
-        </div>
-      )
-    },
-
-    {
-      label: "Fights",
-      content: (
-        <div className={menuAttr}>
-          <div className={groupAttr}>
-            <Link href="/bout">
-              <a className="hover:link text-3xl">
-                <p> Search</p>
-              </a>
-            </Link>
-          </div>
-          <div className={groupAttr}>
-            <Link href="/bout/top">
-              <a className="hover:link">
-                <p>Highest Rated Fights</p>
-              </a>
-            </Link>
-            <Link href="/bout/decisions">
-              <a className="hover:link">
-                <p>Most Controversial Decisions</p>
-              </a>
-            </Link>
-            <Link href="/trending/bout">
-              <a className="hover:link">
-                <p>Trending Fights</p>
-              </a>
-            </Link>
-            <Link href="/list/directory/bout">
-              <a className="hover:link">
-                <p>Community Fight Lists</p>
-              </a>
-            </Link>
-          </div>
-          <div className={groupAttr}>
-            <a
-              className="hover:link"
-              onClick={() => {
-                if (IsLoggedInLoginPrompt("View your rated fight history")) {
-                  router.push("/user/" + GetUsername() + "/fight-rating");
-                }
-              }}
-            >
-              <p>My Rated Fights</p>
-            </a>
-
-            <a
-              className="hover:link"
-              onClick={() => {
-                if (
-                  IsLoggedInLoginPrompt(
-                    "View your fight result decision history"
-                  )
-                ) {
-                  router.push("/user/" + GetUsername() + "/fight-decision");
-                }
-              }}
-            >
-              <p>My Decision Vote History</p>
-            </a>
-          </div>
-        </div>
-      )
-    },
-
-    {
-      label: "Martial Arts",
-      content: (
-        <div className={menuAttr}>
-          <div className={groupAttr}>
-            <img
-              width={200}
-              src={
-                "https://img.grouponcdn.com/bynder/3CLPRFxg5TSn9YNLuWEiSNpQjU6Q/3C-2048x1229/v1/t440x300.jpg"
-              }
-            ></img>
-            <p>Which Martial Art is best for me?</p>
-          </div>
-          <div className={groupAttr}>
-            <HeadingComponent size={3}>Striking Type</HeadingComponent>
-            <p>Mixed Martial Arts</p>
-            <p>Boxing</p>
-            <p>Muay Thai</p>
-            <p>Kickboxing</p>
-            <p>Karate</p>
-            <Link href="/martialart?striking">
-              <a className="hover:link">
-                <p>View All</p>
-              </a>
-            </Link>
-          </div>
-
-          <div className={groupAttr}>
-            <HeadingComponent size={3}>Grappling Type</HeadingComponent>
-            <p>Judo</p>
-            <p>Jujitsu</p>
-            <p>Sambo</p>
-            <p>Wrestling</p>
-            <Link href="/martialart?grappling">
-              <a className="hover:link">
-                <p>View All</p>
-              </a>
-            </Link>
-          </div>
-
-          <div className={groupAttr}>
-            <HeadingComponent size={3}>Weapons Type</HeadingComponent>
-            <p>Fencing</p>
-            <p>Hema</p>
-            <p>Kendo</p>
-            <p>Kali</p>
-            <Link href="/martialart?weapons">
-              <a className="hover:link">
-                <p>View All</p>
-              </a>
-            </Link>
-          </div>
-        </div>
-      )
-    },
-    {
-      label: "Debug",
-      content: (
-        <div className="flex">
-          <div>
-            <li>
-              <Link href={"/technique/130"}>
-                <button className="btn ">Technique</button>
-              </Link>
-            </li>
-            <li>
-              <Link href={"/technique-type/1"}>
-                <button className="btn ">Technique Type</button>
-              </Link>
-            </li>
-            <li>
-              <div>
-                <Link href={"/person/312541"}>
-                  <button className="btn ">Fighter (jj)</button>
-                </Link>
-              </div>
-              <div>
-                <Link href={"/person/153832"}>
-                  <button className="btn ">Fighter (khabib)</button>
-                </Link>
-              </div>
-              <div>
-                <Link href={"/person/200410"}>
-                  <button className="btn ">Fighter (Herb)</button>
-                </Link>
-              </div>
-              <div>
-                <Link href={"/person/1103247"}>
-                  <button className="btn ">Judge (sal mato)</button>
-                </Link>
-              </div>
-
-              <div>
-                <Link href={"/person/204182"}>
-                  <button className="btn ">Fighter (Goddard)</button>
-                </Link>
-              </div>
-            </li>
-          </div>
-          <button
-            onClick={() => {
-              TriggerLoginPrompt();
-            }}
-          >
-            LOGIN_PROMPT
-          </button>
-          <button
-            onClick={() => {
-              TriggerBadgeEarned(
-                "Deez Nuts BADGE",
-                "Tickle deez nuts for 10 seconds",
-                100,
-                "NONE.JPG"
-              );
-
-              //TriggerLoginPrompt();
-            }}
-          >
-            BADGE_EARNED
-          </button>
-
-          <li>
-            <Link href={"/event/35062"}>
-              <button className="btn ">Event</button>
-            </Link>
-          </li>
-          <li>
-            <li>
-              <Link href={"/promotion/16"}>
-                <button className="btn ">Promotion</button>
-              </Link>
-            </li>
-            <li>
-              <Link href={"/promotion/16/tournament"}>
-                <button className="btn ">Promo Tournament</button>
-              </Link>
-            </li>
-            <li>
-              <Link href={"/promotion/16/tournament/1"}>
-                <button className="btn ">Tournament Individual</button>
-              </Link>
-            </li>
-          </li>
-          <div>
-            <li>
-              <Link href={"/bout/896485"}>
-                <button className="btn ">Bout</button>
-              </Link>
-              <Link href={"/bout/466354"}>
-                <button className="btn ">Bout 2</button>
-              </Link>
-            </li>
-          </div>
-          <li>
-            <Link href={"/position/36"}>
-              <button className="btn ">Position (standing)</button>
-            </Link>
-            <Link href={"/position/9"}>
-              <button className="btn ">Position (walled)</button>
-            </Link>
-            <Link href={"/position/13"}>
-              <button className="btn ">Position (cg)</button>
-            </Link>
-          </li>
-          <li>
-            <Link href={"/martialart/1"}>
-              <button className="btn ">Martial Art</button>
-            </Link>
-          </li>
-          <li>
-            <div>
-              <Link href={"/division/21"}>
-                <button className="btn ">Division</button>
-              </Link>
-            </div>
-            <div>
-              <Link href={"/promotion/16/division"}>
-                <button className="btn ">Division Directory</button>
-              </Link>
-            </div>
-          </li>
-          <li>
-            <Link href={"/faceoff"}>
-              <button className="btn ">Fighter Face Off</button>
-            </Link>
-          </li>
-          <li>
-            <Link href={"/promotion/16/bout"}>
-              <button className="btn ">Promotion Bout Search by Tags</button>
-            </Link>
-          </li>
-          <li>
-            <Link href={"/gym/1166232"}>
-              <button className="btn ">Gym</button>
-            </Link>
-          </li>
-          <li>
-            <div>
-              <Link href={"/trending/fighter"}>
-                <button className="btn ">pop fighter</button>
-              </Link>
-            </div>
-            <div>
-              <Link href={"/trending/event"}>
-                <button className="btn ">pop event</button>
-              </Link>
-            </div>
-            <div>
-              <Link href={"/trending/promotion"}>
-                <button className="btn ">pop promo</button>
-              </Link>
-            </div>
-            <div>
-              <Link href={"/trending/technique"}>
-                <button className="btn ">pop technique</button>
-              </Link>
-            </div>
-            <div>
-              <Link href={"/trending/bout"}>
-                <button className="btn ">pop Bouts</button>
-              </Link>
-            </div>
-
-            <div>
-              <Link href={"/trending/list"}>
-                <button className="btn ">pop List</button>
-              </Link>
-            </div>
-          </li>
-        </div>
-      )
-    }
-  ];
-
-  let menuButtonElements = menuItems.map((item, index) => (
+  let menuButtonElements = MENU_RAW_DATA.map((item, index) => (
     <motion.button
       whileHover={{
         scale: 1.05,
@@ -763,11 +416,21 @@ function MenuButtonGroup() {
     </motion.button>
   ));
 
+  let menuButtonElementsSmall = (
+    <div className="flex">
+      <MenuDrawerComponent />
+    </div>
+  );
+
   return (
     <div key={activeMenu}>
       <div className="menureddit" onMouseLeave={() => setActiveMenu(null)}>
-        <div className="z-10 menureddit space-x-5">{menuButtonElements}</div>
-
+        <div className={"hide_on_small justify-end flex"}>
+          {menuButtonElements}
+        </div>
+        <div className={"hide_on_big" + "  z-10 menureddit space-x-5"}>
+          {menuButtonElementsSmall}
+        </div>
         <AnimAppearDirection
           directionX={0}
           directionY={-30}
@@ -775,15 +438,23 @@ function MenuButtonGroup() {
           className="z-1 menu-contentreddit drop-shadow-2xl customAccentBackground text-white"
         >
           {activeMenu != null && (
-            <div>
-              <div
-                className="container"
-                onClick={() => {
-                  setActiveMenu(null);
-                }}
-              >
-                {menuItems[activeMenu].content}
-              </div>
+            <div
+              className="w-full"
+              onClick={() => {
+                setActiveMenu(null);
+              }}
+            >
+              {"custom" in MENU_RAW_DATA[activeMenu] && (
+                <div>{MENU_RAW_DATA[activeMenu].custom}</div>
+              )}
+
+              {MENU_RAW_DATA[activeMenu].buttons.map(entry => {
+                return (
+                  <Button className="text-white w-full link">
+                    <a>{entry.label}</a>
+                  </Button>
+                );
+              })}
             </div>
           )}
         </AnimAppearDirection>
@@ -792,4 +463,424 @@ function MenuButtonGroup() {
   );
 }
 
+function MenuDrawerComponent() {
+  const [activeMenuIndex, setActiveMenuIndex] = React.useState(null);
+  const [open, setOpen] = React.useState(false);
+
+  useEffect(() => {
+    if (!open) {
+      setActiveMenuIndex(null);
+    }
+  }, [open]);
+
+  const list = anchor => (
+    <Box
+      sx={{ width: anchor === "top" || anchor === "bottom" ? "auto" : 300 }}
+      role="presentation"
+      className=" py-0 my-0"
+    >
+      <List className="py-0 my-0">
+        <div className="customAccentBackground">
+          <button
+            onClick={() => {
+              setOpen(false);
+            }}
+            className="absolute top-2 right-2 "
+          >
+            <CloseIcon fontSize="large" className="text-white" />
+          </button>
+          <ProfileButtonComponent />
+        </div>
+
+        <Divider />
+
+        {MENU_RAW_DATA.map((entry, index) => {
+          return (
+            <ListItem key={entry.label} disablePadding className="w-full">
+              <MenuAccordian
+                iconElement={entry.icon}
+                title={entry.label}
+                buttonList={entry.buttons}
+                isOpen={index == activeMenuIndex}
+                CloseOnlyThisTrigger={() => {
+                  setActiveMenuIndex(9999999);
+                }}
+                onClickTrigger={() => {
+                  setOpen(false);
+                }}
+                onGroupClickTrigger={() => {
+                  setActiveMenuIndex(index);
+                }}
+              />
+              <Divider />
+            </ListItem>
+          );
+        })}
+
+        <ListItem disablePadding className="my-1 px-5 w-full">
+          <SocialMediaLinksComponent />
+        </ListItem>
+
+        <ListItem key={"feedback"} disablePadding className=" px-5 w-full">
+          <Button
+            className="clickupShadow w-full customAccentBackground text-white"
+            onClick={() => {
+              setOpen(false);
+              const event = new Event("feedback_prompt");
+              window.dispatchEvent(event);
+            }}
+          >
+            Feedback
+          </Button>
+        </ListItem>
+      </List>
+    </Box>
+  );
+
+  return (
+    <div>
+      {["left"].map(anchor => (
+        <React.Fragment key={anchor}>
+          <Button
+            onClick={() => {
+              setOpen(!open);
+            }}
+          >
+            <MenuIcon fontSize="large" />
+          </Button>
+          <Drawer
+            anchor={anchor}
+            open={open}
+            onClose={() => {
+              setOpen(false);
+            }}
+          >
+            {list(anchor)}
+          </Drawer>
+        </React.Fragment>
+      ))}
+    </div>
+  );
+}
+
+function MenuAccordian({
+  iconElement = null,
+  title = "SAMPLE TITLE",
+  buttonList = [],
+  onClickTrigger = null,
+  onGroupClickTrigger = null,
+  isOpen = false,
+  CloseOnlyThisTrigger = null
+}) {
+  return (
+    <Accordion expanded={isOpen} className="w-full border-0">
+      <AccordionSummary
+        onClick={() => {
+          if (isOpen) {
+            CloseOnlyThisTrigger();
+          } else onGroupClickTrigger();
+        }}
+        expandIcon={<ExpandMoreIcon className="customAccentText" />}
+        aria-controls="panel1a-content"
+        id="panel1a-header"
+        className="w-full border-0 "
+      >
+        {iconElement}{" "}
+        <Typography className={isOpen ? "customAccentText" : ""}>
+          {title}
+        </Typography>
+      </AccordionSummary>
+      <AccordionDetails className="bg-blue-100">
+        {buttonList.map(entry => {
+          return (
+            <div>
+              <Link href={entry.url}>
+                <a>
+                  <Button
+                    className="text-black font-bold text-left justify-left w-full"
+                    onClick={() => {
+                      onClickTrigger();
+                    }}
+                  >
+                    {entry.label}
+                  </Button>
+                </a>
+              </Link>
+              <Divider />
+            </div>
+          );
+        })}
+        {/* <Typography>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse
+            malesuada lacus ex, sit amet blandit leo lobortis eget.
+          </Typography> */}
+      </AccordionDetails>
+    </Accordion>
+  );
+}
+
 export default Header;
+
+const DEBUG_ENTRY = {
+  label: "Debug",
+  icon: null,
+  buttons: [
+    {
+      label: "Venue",
+      url: "venue/1"
+    },
+    {
+      label: "Gym",
+      url: "/gym/1166232 "
+    },
+    {
+      label: "Division: Newcomer",
+      url: "/division/14/newcomer"
+    },
+    {
+      label: "PROMO: Newcomer",
+      url: "/promotion/16/newcomer"
+    },
+    {
+      label: "PROMO: EVENT DIRECTORY",
+      url: "/promotion/16/events/1"
+    },
+    {
+      label: "PROMO: TOP FIGHTS",
+      url: "/promotion/16/favourite"
+    },
+    {
+      label: "PROMO: FIGHT TAG SEARCH",
+      url: "/promotion/16/bout"
+    },
+    {
+      label: "PROMO: FIGHT DECISION",
+      url: "/promotion/16/decision"
+    },
+    {
+      label: "PROMO: RANKING",
+      url: "/promotion/16/ranking"
+    },
+    {
+      label: "PROMO: RECORD",
+      url: "/promotion/16/record"
+    },
+    {
+      label: "PROMO: DIVISION DIRECTORY",
+      url: "/promotion/16/division"
+    },
+    {
+      label: "PROMO: CHAMPIONS",
+      url: "/promotion/16/champions"
+    },
+    {
+      label: "PROMO: MEDIA",
+      url: "/promotion/16/media"
+    },
+    {
+      label: "Forum Directory",
+      url: "/promotion/16/chat"
+    },
+    {
+      label: "Jon Jones",
+      url: "/person/312541"
+    },
+    {
+      label: "Event",
+      url: "/event/35062"
+    },
+
+    {
+      label: "UFC",
+      url: "/promotion/16"
+    },
+    {
+      label: "Division",
+      url: "/division/14"
+    },
+    {
+      label: "User Profile",
+      url: "/user/ekins2"
+    },
+    {
+      label: "Judge",
+      url: "/person/1103247"
+    },
+    {
+      label: "Referee",
+      url: "/person/200410"
+    },
+    {
+      label: "Bout",
+      url: "/bout/566157"
+    },
+    {
+      label: "stance",
+      url: "/position/15?role=bottom"
+    },
+    {
+      label: "Technique",
+      url: "/technique/130"
+    }
+  ]
+};
+const MENU_RAW_DATA = [
+  // DEBUG_ENTRY,
+  // {
+  //   label: "My Profile",
+
+  //   icon: null,
+  //   buttons: [
+  //     {
+  //       label: "My Home",
+  //       url: ""
+  //     },
+  //     {
+  //       label: "Notifications",
+  //       url: ""
+  //     },
+  //     {
+  //       label: "Account Settings",
+  //       url: ""
+  //     }
+  //   ]
+  // },
+  {
+    label: "Athletes",
+    icon: null,
+
+    buttons: [
+      {
+        label: "Trending",
+        url: ""
+      },
+      {
+        label: "Nearby Athletes",
+        url: ""
+      },
+      {
+        label: "Most Popular",
+        url: ""
+      },
+      {
+        label: "Upcoming Fighters",
+        url: ""
+      },
+      {
+        label: "Hall of Fame",
+        url: ""
+      }
+    ]
+  },
+
+  {
+    label: "Events",
+    icon: null,
+    buttons: [
+      {
+        label: "Recent Events",
+        url: "/event"
+      },
+      {
+        label: "Upcoming Events",
+        url: "/event"
+      },
+      {
+        label: "My Events",
+        url: ""
+      },
+      {
+        label: "Create an Event",
+        url: "/event"
+      },
+      {
+        label: "Trending Events 2022",
+        url: "/event"
+      },
+      {
+        label: "Trending Events - All Time",
+        url: "/event"
+      }
+    ]
+  },
+  {
+    label: "Techniques",
+    icon: null,
+    buttons: [
+      {
+        label: "Technique Library",
+        url: "/library"
+      },
+      {
+        label: "Courses",
+        url: "/library/courses"
+      },
+      {
+        label: "Community Technique Lists",
+        url: "/list/directory/technique"
+      },
+      {
+        label: "Recently Added Techniques",
+        url: "/library/recent"
+      },
+      {
+        label: "Community Questions",
+        url: "/library/questions"
+      },
+      {
+        label: "Trending Techniques",
+        url: "/trending/technique "
+      },
+      {
+        label: "",
+        url: ""
+      }
+    ]
+  },
+  // {
+  //   label: "Promoters",
+  //   icon: null,
+  //   buttons: [
+  //     {
+  //       label: "Search",
+  //       url: "/promotion"
+  //     }
+  //   ]
+  // },
+  {
+    label: "Fights",
+    icon: null,
+    buttons: [
+      {
+        label: "Martial Art Directory",
+        url: "/martialart"
+      },
+      {
+        label: "Highest Rated Fights",
+        url: "/bout/top"
+      },
+      {
+        label: "Most Controversial Decisions",
+        url: "/bout/decisions"
+      },
+      {
+        label: "Trending Fights",
+        url: "/trending/bout"
+      },
+      {
+        label: "Community Fight Lists",
+        url: "/list/directory/bout"
+      },
+
+      {
+        label: "My Rated Fights",
+        url: "/user/username/fight-rating"
+      },
+
+      {
+        label: "My Decision Vote History",
+        url: "/user/username/fight-decision"
+      }
+    ]
+  }
+];

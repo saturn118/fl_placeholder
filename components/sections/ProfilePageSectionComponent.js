@@ -1,17 +1,23 @@
 import LockIcon from "@mui/icons-material/Lock";
 import { Avatar, Tab, Tabs } from "@mui/material";
 import Link from "next/link";
+import { useMediaQuery } from "@mui/material";
 import { useRouter } from "next/router";
 import React, { useEffect } from "react";
-import { DATA_SERVER_IMAGE_ADDRESS, GetNotificationCount, IsLoggedInByUser } from "../../config";
+import {
+  DATA_SERVER_IMAGE_ADDRESS,
+  IsSmallScreen,
+  GetNotificationCount,
+  IsLoggedInByUser
+} from "../../config";
 import FlagComponent from "../FlagComponent";
 import FollowComponent from "../FollowComponent";
 import { AnimAppear } from "../utility/AnimationUtility";
 import HeadingComponent from "../utility/HeadingComponent";
-import { BodyColumnSectionComponent } from "./BodyHeaderSectionComponent";
-
-
-
+import {
+  BodyColumnSectionComponent,
+  BodyColumnResponsiveBottomComponent
+} from "./BodyHeaderSectionComponent";
 
 export const ProfilePageSectionComponent = ({
   userData,
@@ -36,47 +42,39 @@ export const ProfilePageSectionComponent = ({
   }, []);
 
   return (
-    <BodyColumnSectionComponent
-      twoSections={true}
+    <BodyColumnResponsiveBottomComponent
       sideContent={
-        <div className=" pr-5 border-r-2 border-gray-500">
-          <Avatar
-            // variant="rounded"
-            sx={{ width: 150, height: 150 }}
-            src={DATA_SERVER_IMAGE_ADDRESS + "fdsf.jpg"}
-          />
-
-          <HeadingComponent
-            size={2}
-            textColor={
-              "customAccentText justify-center text-center align-center"
-            }
-          >
-            {userData.data.username.toUpperCase()}
-          </HeadingComponent>
-          {FlagComponent(userData.data.country_code, 50)}
-
-          <div className="flex align-center justify-end items-center w-5/12">
-            {IsLoggedIn == false && (
-              <FollowComponent
-                followType="user"
-                followId={userData.data.username}
-                isFollowingInitial={false}
-              />
-            )}
-            {userData.data.fighterData && (
-              <Link href={"/person/" + userData.data.fighterData.id}>
-                <a>
-                  <button className="btn">Linked Profile</button>
-                </a>
-              </Link>
-            )}
+        <div className=" pr-5  border-r-2 border-gray-500">
+          <div className="centerdat">
+            <HeadingComponent
+              size={2}
+              textColor={
+                "customAccentText justify-center flex align-center items-center space-x-5 text-center align-center"
+              }
+            >
+              {userData.data.username.toUpperCase()}{" "}
+            </HeadingComponent>
+            {FlagComponent(userData.data.country_code, 30)}
+            <div className="w-full">
+              {IsLoggedIn == false && (
+                <FollowComponent
+                  followType="user"
+                  followId={userData.data.username}
+                  isFollowingInitial={false}
+                />
+              )}
+              {userData.data.fighterData && (
+                <Link href={"/person/" + userData.data.fighterData.id}>
+                  <a className="link customAccentText">Linked Profile</a>
+                </Link>
+              )}
+            </div>
           </div>
 
           <div className="text-white justify-left align-left text-left ">
             {/* {interestElements} */}
             <Tabs
-              orientation="vertical"
+              orientation={IsSmallScreen() ? "horizontal" : "vertical"} // Set orientation based on screen size
               variant="scrollable"
               scrollButtons="auto"
               aria-label="scrollable auto tabs example"
@@ -200,11 +198,11 @@ export const ProfilePageSectionComponent = ({
         </div>
       }
       mainContent={
-        <div className="w-10/12 p-10">
+        <div className="w-12/12 ">
           <AnimAppear>{pageContentElement}</AnimAppear>
         </div>
       }
-    ></BodyColumnSectionComponent>
+    ></BodyColumnResponsiveBottomComponent>
   );
 };
 

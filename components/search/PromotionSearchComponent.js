@@ -12,6 +12,8 @@ const PromotionSearchComponent = ({ searchData, searchTerm }) => {
   console.log("DEBUG SEARCH DATA");
   console.log(searchData);
 
+  if (searchData == null) return <></>;
+
   let searchResultElements = searchData.data.map(entry => {
     iKey += 1;
 

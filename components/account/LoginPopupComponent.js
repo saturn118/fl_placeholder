@@ -37,7 +37,7 @@ const LoginPopupComponent = props => {
         className="primaryBackground centerdat "
         style={{ alignItems: "center" }}
       >
-        <div className="w-8/12 space-y-4">
+        <div className="w-full  space-y-4">
           <button onClick={handleClose} className="absolute top-2 right-2 ">
             <CloseIcon fontSize="large" />
           </button>

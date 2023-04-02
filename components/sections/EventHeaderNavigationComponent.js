@@ -4,21 +4,22 @@ import React from "react";
 import { DATA_SERVER_IMAGE_ADDRESS } from "../../config";
 import { ConvertDateObjToSimple } from "../../helpers/api";
 import { PlaylistWidgetComponent } from "../PlaylistPopupComponent";
+import SpoilerButtonComponent from "@components/SpoilerButtonComponent";
 import PopularityComponent from "../PopularityComponent";
 import { UserRatingComponent } from "../UserRatingPopupComponent";
 import UserStarRatingBreakdownComponent from "../UserStarRatingBreakdownComponent";
 import { HeadingPairCustomComponent } from "../utility/HeadingPairComponent";
 import SocialMediaLinksComponent from "../utility/SocialMediaLinksComponent";
 import BodyHeaderSectionComponent from "./BodyHeaderSectionComponent";
-
-
-
-
+import HeadingComponent from "@components/utility/HeadingComponent";
+import AdvertComponent from "@components/AdvertComponent";
 
 export const EventHeaderNavigationComponent = ({
   eventData,
   promoData,
   voteData,
+  handSpoilerChanged = null,
+  hideSpoilers = false,
   pageId = "summary",
   children
 }) => {
@@ -69,9 +70,9 @@ export const EventHeaderNavigationComponent = ({
   let statElements = [];
   for (const [label, d] of Object.entries(statMap)) {
     statElements.push(
-      <div className="flex w-11/12 m-1 bg-gray-50 rounded p-2 customShadow ">
-        <div className="pl-3 w-4/12 font-bold">{d.label}</div>
-        <div className="w-8/12">{d.value}</div>
+      <div className="flex w-full m-1 bg-gray-50 rounded p-2 customShadow ">
+        <div className="pl-3 w-5/12 font-bold">{d.label}</div>
+        <div className="w-7/12">{d.value}</div>
       </div>
     );
   }
@@ -92,62 +93,92 @@ export const EventHeaderNavigationComponent = ({
       })
     : [];
 
+  let userHeaderButtonListElements = [
+    <div>
+      <PlaylistWidgetComponent entityId={eventData.id} entityType="event" />
+    </div>,
+
+    SpoilerButtonComponent(handSpoilerChanged, hideSpoilers),
+    <div className="text-white">
+      <HeadingComponent textColor={"text-center text-gray-300 "} size={6}>
+        RATING
+      </HeadingComponent>
+      <UserStarRatingBreakdownComponent
+        entityType="event"
+        boutId={eventData.id}
+        voteData={voteData ? voteData.eventvotes : null}
+        label={eventData.name}
+      />
+    </div>,
+    <div className="text-white">
+      <HeadingComponent textColor={"text-center text-gray-300 "} size={6}>
+        MY RATING
+      </HeadingComponent>
+      <UserRatingComponent
+        label={eventData.name}
+        entityId={eventData.id}
+        entityType="event"
+      />{" "}
+    </div>,
+    <div className="text-white">
+      <PopularityComponent
+        rankData={eventData.rankData}
+        entityType="event"
+        entityId={eventData.id}
+      />{" "}
+    </div>
+  ];
+
   return (
     <BodyHeaderSectionComponent>
-      {/* start of toolbar */}
-      <div className="flex items-start mb-4">
-        <div className="w-7/12">
-          <HeadingPairCustomComponent label1={eventData.name.toUpperCase()}>
-            <div className="flex space-x-2 ">{tagElements}</div>
-          </HeadingPairCustomComponent>
+      <div className="hide_on_big space-y-2 ">
+        <div className="centerdat space-y-2">
+          <HeadingComponent size={4} textColor="text-white">
+            {eventData.name.toUpperCase()}
+          </HeadingComponent>
+          <div className="flex space-x-2 ">{tagElements}</div>
+          <div className="w-5/12">
+            <Avatar
+              className="imgR customShadow rounded-xl"
+              src={DATA_SERVER_IMAGE_ADDRESS + eventData.imageUrl}
+            ></Avatar>
+          </div>
         </div>
-        <div className="flex w-5/12 justify-end space-x-4 ">
-          <div>
-            <PlaylistWidgetComponent
-              entityId={eventData.id}
-              entityType="event"
-            />
+        <div className="spaceEven">{userHeaderButtonListElements}</div>
+
+        <div>{statElements}</div>
+      </div>
+
+      <div className="hide_on_small">
+        {/* start of toolbar */}
+        <div className="flex items-start mb-4">
+          <div className="w-6/12">
+            <HeadingPairCustomComponent label1={eventData.name.toUpperCase()}>
+              <div className="flex space-x-2 ">{tagElements}</div>
+            </HeadingPairCustomComponent>
           </div>
 
-          {/* {SpoilerButtonComponent(handSpoilerChanged, hideSpoilers)} */}
-
-          <div className="text-white">
-            <UserStarRatingBreakdownComponent
-              boutId={eventData.id}
-              voteData={voteData ? voteData.eventvotes : null}
-              label={eventData.name}
-            />
-          </div>
-          <div className="text-white">
-            <UserRatingComponent
-              label={eventData.name}
-              entityId={eventData.id}
-              entityType="event"
-            />{" "}
-          </div>
-          <div className="text-white">
-            <PopularityComponent
-              rankData={eventData.rankData}
-              entityType="event"
-              entityId={eventData.id}
-            />{" "}
+          <div className="flex w-6/12 justify-end space-x-8 ">
+            {userHeaderButtonListElements}
           </div>
         </div>
-      </div>
-      {/* End of toolbar */}
-      <div className="flex  mb-10">
-        <div className="w-3/12">
-          <Avatar
-            className="customShadow rounded-xl PageHeaderMainImage"
-            src={DATA_SERVER_IMAGE_ADDRESS + eventData.imageUrl}
-          ></Avatar>
+        {/* End of toolbar */}
+        <div className="flex  mb-10">
+          <div className="w-3/12">
+            <Avatar
+              className="customShadow rounded-xl PageHeaderMainImage"
+              src={DATA_SERVER_IMAGE_ADDRESS + eventData.imageUrl}
+            ></Avatar>
+          </div>
+          <div className="w-5/12">{statElements}</div>
+          <div className="w-4/12 bg-yellow-100">
+            <div className="">
+              {/* Avert here */}
+              <AdvertComponent />
+            </div>
+          </div>
         </div>
-        <div className="w-5/12">{statElements}</div>
-        <div className="w-4/12 bg-yellow-100">
-          <div className="">{/* Avert here */}</div>
-        </div>
-      </div>
-      <div className="space-x-5 pl-5 mb-10">
+        {/* <div className="space-x-5 pl-5 mb-10">
         <Link href={"/event/" + eventData.id}>
           <a>
             <button
@@ -208,9 +239,10 @@ export const EventHeaderNavigationComponent = ({
             </button>
           </a>
         </Link>
-      </div>
+      </div> */}
 
-      {children}
+        {children}
+      </div>
     </BodyHeaderSectionComponent>
   );
 };

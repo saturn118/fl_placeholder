@@ -4,10 +4,7 @@ import React from "react";
 import { DATA_SERVER_IMAGE_ADDRESS } from "../../config";
 import HeadingPairComponent from "../utility/HeadingPairComponent";
 import BodyHeaderSectionComponent from "./BodyHeaderSectionComponent";
-
-
-
-
+import HeadingComponent from "@components/utility/HeadingComponent";
 
 export const DivisionHeaderNavigationComponent = ({
   promotionData,
@@ -23,7 +20,9 @@ export const DivisionHeaderNavigationComponent = ({
     ["Rankings", "/ranking", true],
     ["Records", "/record", true],
     ["Best Fights", "/favourite", false],
-    ["Close Decisions", "/decision", false]
+    ["Close Decisions", "/decision", false],
+    ["Newcomers", "/newcomer", false],
+    ["Grades", "/grades", false]
   ];
   let nav2elements = navData.map(entry => {
     let currentHighlight = "";
@@ -69,25 +68,46 @@ export const DivisionHeaderNavigationComponent = ({
   return (
     <BodyHeaderSectionComponent>
       {subTitle && (
-        <div className="flex">
-          <div className="w-1/12 mr-4">
-            <Avatar
-              variant="rounded"
-              className="customShadow rounded-xl"
-              src={DATA_SERVER_IMAGE_ADDRESS + promotionData.imageUrl}
-              sx={{ width: 100, height: 100 }}
-            ></Avatar>
+        <div>
+          <div className="hide_on_small flex">
+            <div className="w-1/12 mr-4 ">
+              <Avatar
+                variant="rounded"
+                className="customShadow rounded-xl"
+                src={DATA_SERVER_IMAGE_ADDRESS + promotionData.imageUrl}
+                sx={{ width: 100, height: 100 }}
+              ></Avatar>
+            </div>
+            <HeadingPairComponent
+              label1={subTitle.toUpperCase()}
+              label2={
+                divisionData.name.toUpperCase() +
+                " " +
+                divisionData.weightValue +
+                " LBS"
+              }
+              targetLink={"/promotion/" + promotionData.id}
+            ></HeadingPairComponent>
           </div>
-          <HeadingPairComponent
-            label1={subTitle.toUpperCase()}
-            label2={
-              divisionData.name.toUpperCase() +
-              " " +
-              divisionData.weightValue +
-              " LBS"
-            }
-            targetLink={"/promotion/" + promotionData.id}
-          ></HeadingPairComponent>
+
+          {/* Roster search
+          NAME
+          NATIONALITY
+          MARTIAL Avatart
+          martial art ranking
+          active/inactive */}
+
+          <div className="hide_on_big centerdat">
+            <HeadingComponent size={3} textColor="text-white">
+              {subTitle.toUpperCase()}
+            </HeadingComponent>
+            <HeadingComponent size={5} textColor={"customAccentText"}>
+              {divisionData.name.toUpperCase() +
+                " " +
+                divisionData.weightValue +
+                " LBS"}
+            </HeadingComponent>
+          </div>
         </div>
       )}
 

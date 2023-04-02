@@ -6,9 +6,10 @@ import { styled } from "@mui/material/styles";
 import { useRouter } from "next/router";
 import React, { useEffect } from "react";
 import { LoginRedirectCheck } from "../config";
-import { AddReviewUpvoteAction, GetReviewCurrentUserVoteAction } from "../helpers/api";
-
-
+import {
+  AddReviewUpvoteAction,
+  GetReviewCurrentUserVoteAction
+} from "../helpers/api";
 
 const Item = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(0),

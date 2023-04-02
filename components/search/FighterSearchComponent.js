@@ -31,18 +31,24 @@ const FighterSearchComponent = ({ searchData, searchTerm }) => {
     return (
       <Link href={"/person/" + entry.id}>
         <a>
-          <div className={"w-10/12 mt-3 bg-gray-50 rounded"}>
+          <div className={"w-full mt-3 bg-gray-50 rounded"}>
             <div className="flex">
-              <div className="w-1/12">
+              <div className="w-2/12 max-h-[100px]">
                 <Avatar
                   variant="rounded"
-                  sx={{ width: 50, height: 50 }}
+                  className="imgR"
+                  // sx={{ width: 90, height: 90 }}
                   src={DATA_SERVER_IMAGE_ADDRESS + entry.imageUrl}
                 />
               </div>
-              <p className="w-5/12 font-bold link pl-5 customAccentText ">
-                {name}
-              </p>
+              <div className="pl-3 w-7/12">
+                <p className="w-full font-bold link pl-5 customAccentText ">
+                  {name}
+                </p>
+                <div className="w-full flex mt-2 space-x-2">
+                  {activityTagElements}
+                </div>
+              </div>
               <div className="w-1/12">
                 <div className="justify-center">
                   {FlagComponent(entry.nationalityCountryCode, 35)}
@@ -51,15 +57,13 @@ const FighterSearchComponent = ({ searchData, searchTerm }) => {
               <p className="w-2/12">
                 {entry.yearStart}-{entry.yearEnd}
               </p>
-
-              <div className="w-3/12 flex space-x-1">{activityTagElements}</div>
             </div>
           </div>
         </a>
       </Link>
     );
   });
-  return <div className="p-5">{searchResultElements}</div>;
+  return <div className="p-1">{searchResultElements}</div>;
 };
 
 export default FighterSearchComponent;

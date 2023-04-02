@@ -4,7 +4,10 @@ import React from "react";
 import { BACKGROUND_ATTR } from "../../config";
 import FlagComponent from "../FlagComponent";
 import HeadingComponent from "../utility/HeadingComponent";
-import { BodyColumnSectionComponent } from "./BodyHeaderSectionComponent";
+import {
+  BodyColumnSectionComponent,
+  BodyColumnResponsiveBottomComponent
+} from "./BodyHeaderSectionComponent";
 import PromotionHeaderNavigationComponent from "./PromotionHeaderNavigationComponent";
 
 const PromotionChampionsSectionComponent = ({
@@ -46,7 +49,8 @@ const PromotionChampionsSectionComponent = ({
         promotionData={promoData}
         subTitle={"Champions"}
       />
-      <BodyColumnSectionComponent
+
+      <BodyColumnResponsiveBottomComponent
         sideContent={
           <div className="p-5">
             <HeadingComponent size={3}>Champions Annual</HeadingComponent>
@@ -80,8 +84,8 @@ const PromotionChampionsSectionComponent = ({
             </button>
           </div>
         }
-        mainContent={<div className="p-10 space-y-2">{championElements}</div>}
-      ></BodyColumnSectionComponent>
+        mainContent={<div className=" space-y-2">{championElements}</div>}
+      />
     </div>
   );
 };

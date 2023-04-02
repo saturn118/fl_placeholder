@@ -2,7 +2,7 @@ import CommentIcon from "@mui/icons-material/Comment";
 import Link from "next/link";
 import React, { useRef, useState, useEffect } from "react";
 import CloseIcon from "@mui/icons-material/Close";
-import { Dialog, DialogContent, Grow } from "@mui/material";
+import { Dialog, DialogContent, Grow, Drawer } from "@mui/material";
 import {
   browserName,
   browserVersion,
@@ -12,6 +12,7 @@ import {
 import HeadingComponent from "./utility/HeadingComponent";
 import {
   DATA_SERVER_IMAGE_ADDRESS,
+  IsSmallScreen,
   INSTAGRAM_URL,
   FACEBOOK_URL,
   YOUTUBE_URL,
@@ -21,8 +22,12 @@ import { COMPANY_NAME } from "config";
 import { AddFeedbackAction } from "helpers/api";
 import { GetUsername } from "config";
 import { IsLoggedInLoginPrompt } from "config";
+import DrawerComponent from "./DrawerComponent";
 
-const FeedbackPopupContentComponent = ({ handleClose = null }) => {
+const FeedbackPopupContentComponent = ({
+  displayTitle = true,
+  handleClose = null
+}) => {
   const [comment, setComment] = useState(null);
   const [feedbackType, setFeedbackType] = useState(null);
   const [maxCharacters, setMaxCharacters] = useState(500);
@@ -89,12 +94,17 @@ const FeedbackPopupContentComponent = ({ handleClose = null }) => {
   }
 
   return (
-    <div className="space-y-5 py-5">
-      <HeadingComponent size={4}>FEEDBACK</HeadingComponent>
+    <div className="space-y-1 py-5">
+      {displayTitle && <HeadingComponent size={4}>FEEDBACK</HeadingComponent>}
 
       <div>
         <p>Suggest a features and report website problems.</p>
       </div>
+
+      <div>
+        <p>Is this about the current page?</p>
+      </div>
+
       <div>
         <textarea
           className="w-full textarea textarea-info"
@@ -124,7 +134,7 @@ const FeedbackPopupContentComponent = ({ handleClose = null }) => {
         </a>
       </Link>
       <button
-        className="btn customAccentBackground text-white w-full"
+        className="clickupShadow w-full customAccentBackground text-white py-2"
         onClick={handleSubmitFeedback}
         variant="contained"
       >
@@ -139,11 +149,16 @@ const ShareFeedbackButtonComponent = () => {
   const handleClose = () => {
     setOpen(false);
   };
+  const smallscreen = IsSmallScreen();
 
   useEffect(() => {
     window.addEventListener("feedback_prompt", event => {
       if (open == false) {
-        setOpen(true);
+        if (smallscreen) {
+          window.dispatchEvent(new Event("drawer_open"));
+        } else {
+          setOpen(true);
+        }
       }
     });
   }, []);
@@ -159,21 +174,49 @@ const ShareFeedbackButtonComponent = () => {
       >
         <CommentIcon /> FEEDBACK
       </button>
-      <Dialog
-        onClose={handleClose}
-        open={open}
-        fullWidth={true}
-        TransitionComponent={Grow}
-      >
-        <DialogContent className=" centerdat " style={{ alignItems: "center" }}>
-          <div className="w-8/12 space-y-4">
-            <button onClick={handleClose} className="absolute top-2 right-2 ">
-              <CloseIcon fontSize="large" />
-            </button>
-            <FeedbackPopupContentComponent handleClose={handleClose} />
+
+      <div className="hide_on_small">
+        <Dialog
+          onClose={handleClose}
+          open={open}
+          fullWidth={true}
+          TransitionComponent={Grow}
+        >
+          <DialogContent
+            className=" centerdat "
+            style={{ alignItems: "center" }}
+          >
+            <div className="w-12/12 space-y-4">
+              <button onClick={handleClose} className="absolute top-2 right-2 ">
+                <CloseIcon fontSize="large" />
+              </button>
+              <FeedbackPopupContentComponent handleClose={handleClose} />
+            </div>
+          </DialogContent>
+        </Dialog>
+      </div>
+
+      <div className="hide_on_big">
+        <DrawerComponent
+          widthValue={"100vw"}
+          anchorName="right"
+          displayDone={false}
+          listerName={"drawer_open"}
+          onCloseLogic={handleClose}
+          titleContent={
+            <HeadingComponent size={3} textColor="text-white ">
+              FEEDBACK
+            </HeadingComponent>
+          }
+        >
+          <div className="pr-5">
+            <FeedbackPopupContentComponent
+              displayTitle={false}
+              handleClose={handleClose}
+            />
           </div>
-        </DialogContent>
-      </Dialog>
+        </DrawerComponent>
+      </div>
     </div>
   );
 };

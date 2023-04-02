@@ -8,7 +8,8 @@ import {
   GetUsername,
   IsLoggedIn,
   IsLoggedInLoginPrompt,
-  NOTIFICATION_FREQUENCY
+  NOTIFICATION_FREQUENCY,
+  BACKGROUND_ATTR
 } from "../config";
 import {
   ConverDateToDaysAgoString,
@@ -21,18 +22,12 @@ const NotificationPollingComponent = ({ audio = true }) => {
   const router = useRouter();
   const [data, setData] = useState(null);
   const [notificationData, setNotificationData] = useState(null);
+  const [hasChecked, setHasChecked] = useState(false);
   const [username, setUsername] = useState(null);
   const audioElement = useRef(null);
 
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-
-  const handleLogout = () => {
-    setAnchorEl(null);
-  };
 
   const playAudio = () => {
     if (audio) audioElement.current.play();
@@ -49,6 +44,7 @@ const NotificationPollingComponent = ({ audio = true }) => {
   function RefreshNotificationData() {
     GetAccountNotificationsAction(null, 5).then(data => {
       setNotificationData(data.notifications);
+      setHasChecked(true);
     });
   }
 
@@ -94,7 +90,7 @@ const NotificationPollingComponent = ({ audio = true }) => {
     notificationElements = notificationData.map(entry => {
       return (
         <button
-          className="my-2 w-full border-2 hover:bg-gray-200"
+          className={BACKGROUND_ATTR + " px-5 py-1 w-full hover:bg-gray-200 "}
           onClick={() => {
             MarkNotificationsAsRead([entry.id]).then(data => {
               router.push(entry.targetUrl);
@@ -118,6 +114,8 @@ const NotificationPollingComponent = ({ audio = true }) => {
         </button>
       );
     });
+  } else if (hasChecked) {
+    notificationElements = <p>You dont have any notifications</p>;
   }
 
   return (
@@ -135,14 +133,14 @@ const NotificationPollingComponent = ({ audio = true }) => {
       >
         <Button
           id="basic-button"
-          variant="outlined"
+          // variant="outlined"
           aria-controls={open ? "basic-menu2" : undefined}
           aria-haspopup="true"
           aria-expanded={open ? "true" : undefined}
           onClick={handleClick}
-          className="text-white mx-2"
+          className="text-white"
         >
-          <NotificationsIcon size="large" />
+          <NotificationsIcon fontSize="large" />
         </Button>
       </Badge>
 
@@ -160,11 +158,11 @@ const NotificationPollingComponent = ({ audio = true }) => {
         MenuListProps={{
           "aria-labelledby": "basic-button"
         }}
-        PaperProps={{ style: { minWidth: "30vw" } }}
+        PaperProps={{ style: { width: "40vw" } }}
       >
-        <div className="p-5">
-          <div className="flex space-x-10">
-            <HeadingComponent showBar={false} showArrow={false} size={4}>
+        <div className="p-5 space-y-5">
+          <div className="spaceBetween border-b-2">
+            <HeadingComponent showBar={false} showArrow={false} size={6}>
               NOTIFICATIONS
             </HeadingComponent>
 
@@ -173,41 +171,11 @@ const NotificationPollingComponent = ({ audio = true }) => {
             </Link>
           </div>
 
-          <div className="space-y-2 ">{notificationElements}</div>
+          <div className=" ">{notificationElements}</div>
         </div>
       </Menu>
     </div>
   );
 };
-
-// const ProfileButtonComponent = () => {
-//   return (
-//     <div>
-//       <Button
-//         className="customAccentBackground text-white"
-//         id="basic-button"
-//         variant="outlined"
-//         aria-controls={open ? "basic-menu" : undefined}
-//         aria-haspopup="true"
-//         aria-expanded={open ? "true" : undefined}
-//         onClick={handleClick}
-//         startIcon={<AccountCircleIcon sx={{ fontSize: 40 }} />}
-//       >
-//         {labelToShow}
-//       </Button>
-//       <Menu
-//         id="basic-menu"
-//         anchorEl={anchorEl}
-//         open={open}
-//         onClose={e => {
-//           setAnchorEl(null);
-//         }}
-//         MenuListProps={{
-//           "aria-labelledby": "basic-button"
-//         }}
-//       ></Menu>
-//     </div>
-//   );
-// };
 
 export default NotificationPollingComponent;

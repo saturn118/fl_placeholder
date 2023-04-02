@@ -8,8 +8,6 @@ import React, { useEffect } from "react";
 import { RequestNewLibraryEntryAction } from "../helpers/api";
 import HeadingComponent from "./utility/HeadingComponent";
 
-
-
 export const ImageMissingEntryWidgetComponent = ({
   entityType,
   entityId,

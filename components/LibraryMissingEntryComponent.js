@@ -7,8 +7,6 @@ import React, { useEffect } from "react";
 import { RequestNewLibraryEntryAction } from "../helpers/api";
 import HeadingComponent from "./utility/HeadingComponent";
 
-
-
 export const LibraryMissingEntryWidgetComponent = ({
   entityType,
   buttonColorAttribute = "",
@@ -28,7 +26,7 @@ export const LibraryMissingEntryWidgetComponent = ({
       >
         <button
           className={
-            "btn customShadow m-1 w-full h-full" + " " + buttonColorAttribute
+            "btn customShadow  w-full h-full" + " " + buttonColorAttribute
           }
           onClick={e => {
             setPopupOpenState(true);

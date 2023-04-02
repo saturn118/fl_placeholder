@@ -1,8 +1,13 @@
 import StarIcon from "@mui/icons-material/Star";
+import StarBorderIcon from "@mui/icons-material/StarBorder";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import { IsLoggedIn, IsLoggedInLoginPrompt } from "../config";
-import { AccountFollowUpdateAction, AccountIsFollowingEntityAction } from "../helpers/api";
+import {
+  AccountFollowUpdateAction,
+  AccountIsFollowingEntityAction
+} from "../helpers/api";
+import HeadingComponent from "./utility/HeadingComponent";
 
 export default function FollowComponent({
   followType = null,
@@ -52,8 +57,25 @@ export default function FollowComponent({
     );
   }
 
-  let followString = following ? "Following" : "Follow";
-  <StarIcon sx={{ color: "#ffeb3b" }} />;
+  let followString = following ? (
+    <StarIcon sx={{ color: "#ffeb3b" }} />
+  ) : (
+    <StarBorderIcon sx={{ color: "#ffeb3b" }} />
+  );
+
+  return (
+    <div>
+      <HeadingComponent textColor={"text-center text-gray-300 "} size={6}>
+        FOLLOW
+      </HeadingComponent>
+      <button
+        className="btn rounded customAccentBackground"
+        onClick={handleFollowChanged}
+      >
+        {followString}
+      </button>
+    </div>
+  );
 
   return (
     <button

@@ -5,11 +5,11 @@ import React from "react";
 const UserSearchComponent = ({ searchData, searchTerm }) => {
   let iKey = 0;
   const router = useRouter();
-  if (searchData.users.length == 1) {
-    router.push("user/" + searchData.users[0].username);
+  if (searchData.data.length == 1) {
+    router.push("user/" + searchData.data[0].username);
   }
 
-  let searchResultElements = searchData.users.map(entry => {
+  let searchResultElements = searchData.data.map(entry => {
     iKey += 1;
     return (
       <li key={iKey}>

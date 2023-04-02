@@ -15,7 +15,10 @@ import {
 import BoutPreviewComponent from "../search/BoutSearchPreviewComponent";
 import HeadingComponent from "../utility/HeadingComponent";
 import YearSelectorComponent from "../YearSelectorComponent";
-import { BodyColumnSectionComponent } from "./BodyHeaderSectionComponent";
+import {
+  BodyColumnSectionComponent,
+  BodyColumnResponsiveBottomComponent
+} from "./BodyHeaderSectionComponent";
 
 export const BoutSearchSectionComponent = ({
   styleData = [],
@@ -200,7 +203,7 @@ export const BoutSearchSectionComponent = ({
   });
 
   return (
-    <BodyColumnSectionComponent
+    <BodyColumnResponsiveBottomComponent
       twoSections={false}
       sideRContent={
         <div>
@@ -436,7 +439,7 @@ export const BoutSearchSectionComponent = ({
           </div>
         </div>
       }
-    ></BodyColumnSectionComponent>
+    />
   );
 };
 

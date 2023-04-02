@@ -1,10 +1,13 @@
 import { Avatar, Button, Dialog, DialogContent } from "@mui/material";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
-import { DATA_SERVER_IMAGE_ADDRESS, IsLoggedInLoginPrompt } from "../../config/index";
-import { AddBoutDecisionVoteAction } from "../../helpers/api";
+import {
+  DATA_SERVER_IMAGE_ADDRESS,
+  IsLoggedInLoginPrompt
+} from "../../config/index";
+import { AddBoutDecisionVoteAction, ExtractSurname } from "../../helpers/api";
 import HeadingComponent from "../utility/HeadingComponent";
-
+import { AnimOnHover } from "@components/utility/AnimationUtility";
 
 const DecisionVoteWidget = ({
   bout,
@@ -128,20 +131,20 @@ function DecisionPopupComponent(props) {
       fullWidth={true}
     >
       <DialogContent style={{ alignItems: "center" }}>
-        <div className="text-align-center justify-center">
-          <HeadingComponent size={3} showBar={true}>
-            Community Decision
+        <div className="centerdat">
+          <HeadingComponent size={3} showBar={false}>
+            WHO WON?
           </HeadingComponent>
         </div>
 
-        <div className="flex justify-center">
-          <div className="w-3/12">
+        <div className="flex w-full justify-center">
+          <div className="w-4/12">
             <Avatar
               variant="rounded"
               src={DATA_SERVER_IMAGE_ADDRESS + fighterA.imageUrl}
-              sx={{ width: 125, height: 125 }}
+              sx={{ width: 180, height: 180 }}
             />
-            <p>{fighterA.name}</p>
+            <p>{ExtractSurname(fighterA.name)}</p>
             <p>
               {fighterAVotes == 0
                 ? 0
@@ -158,17 +161,17 @@ function DecisionPopupComponent(props) {
             </button>
           </div>
 
-          <div className="w-3/12">
+          <div className="w-4/12">
             <HeadingComponent size={4}>VS</HeadingComponent>
             {totalVotes} Votes
           </div>
-          <div className="w-3/12">
+          <div className="w-4/12">
             <Avatar
               variant="rounded"
               src={DATA_SERVER_IMAGE_ADDRESS + fighterB.imageUrl}
-              sx={{ width: 125, height: 125 }}
+              sx={{ width: 180, height: 180 }}
             />
-            <p>{fighterB.name} </p>
+            <p>{ExtractSurname(fighterB.name)}</p>
 
             <p>
               {fighterBVotes == 0
@@ -187,14 +190,21 @@ function DecisionPopupComponent(props) {
           </div>
           <button className={"btn "}>Draw (todo)</button>
         </div>
-        <button
-          className="btn btn-primary w-full m-1"
-          onClick={() => {
-            handleClose();
-          }}
+
+        <AnimOnHover
+          translate={true}
+          speed={0.05}
+          scalar={5}
+          className="btn w-10/12 mt-3 customAccentBackground clickupShadow logoFont text-xl"
         >
-          DONE
-        </button>
+          <button
+            onClick={() => {
+              handleClose();
+            }}
+          >
+            SUBMIT VOTE
+          </button>
+        </AnimOnHover>
       </DialogContent>
     </Dialog>
   );

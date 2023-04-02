@@ -1,7 +1,8 @@
-import AddIcon from "@mui/icons-material/Add";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
+import CloseIcon from "@mui/icons-material/Close";
 import BookmarkAddIcon from "@mui/icons-material/BookmarkAdd";
 import PlaylistAddCheckIcon from "@mui/icons-material/PlaylistAddCheck";
+import AddIcon from "@mui/icons-material/Add";
 import { DialogContent, Grid, Tooltip } from "@mui/material";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
@@ -11,8 +12,7 @@ import React, { useEffect, useState } from "react";
 import { GetUsername, LoginRedirectCheck } from "../config";
 import { GetPlaylistAction, UpdatePlaylistEntryAction } from "../helpers/api";
 import HeadingComponent from "./utility/HeadingComponent";
-
-
+import { PopupDrawerConditionalComponent } from "./UserRatingPopupComponent";
 
 export const PlaylistWidgetComponent = ({
   entityId = null,
@@ -33,11 +33,16 @@ export const PlaylistWidgetComponent = ({
           <a
             className="text-white"
             onClick={e => {
-              setPlaylistOpenState(true);
+              window.dispatchEvent(new Event("balls"));
+              // setPlaylistOpenState(true);
             }}
           >
-            <p>Add to List</p>
-            <BookmarkAddIcon />
+            <HeadingComponent textColor={"text-center text-gray-300 "} size={6}>
+              PLAYLIST
+            </HeadingComponent>
+            <Button>
+              <AddIcon className="text-white" fontSize="large" />
+            </Button>
           </a>
         </div>
       </Tooltip>
@@ -149,66 +154,60 @@ const PlaylistPopupComponent = props => {
   }
 
   return (
-    <Dialog onClose={handleClose} open={open} maxWidth="sm" fullWidth={true}>
-      <DialogContent className="primaryBackground">
-        <Grid container xs={12}>
-          <Grid item xs={3}></Grid>
-          <Grid item xs={9} className="text-white">
-            <HeadingComponent size={2} showBar={true}>
-              Add {parentName} to a list
+    <PopupDrawerConditionalComponent
+      title={"ADD TO PLAYLIST"}
+      eventName="balls"
+      content={
+        <div>
+          <Grid item xs={9} className=" centerdat">
+            <HeadingComponent size={3} showBar={false}>
+              <span>
+                ADD <span className="customAccentText">{parentName} </span> TO A
+                LIST
+              </span>
             </HeadingComponent>
 
             <h4>Create lists of {parentType}s to share with the community</h4>
           </Grid>
-        </Grid>
 
-        <div>
-          <Button
-            className="btn width100"
-            onClick={e => {
-              LoginRedirectCheck(router);
-              router.push("/user/" + GetUsername());
-            }}
-          >
-            View My Lists <ArrowForwardIosIcon />
-          </Button>
+          <div>
+            <Button
+              className="btn width100"
+              onClick={e => {
+                LoginRedirectCheck(router);
+                router.push("/user/" + GetUsername());
+              }}
+            >
+              View My Lists <ArrowForwardIosIcon />
+            </Button>
 
-          <Button
-            className="btn width100"
-            onClick={e => {
-              LoginRedirectCheck(router);
-              router.push("/user/" + GetUsername());
-            }}
-          >
-            View All Community Lists <ArrowForwardIosIcon />
-          </Button>
+            <Button
+              className="btn width100"
+              onClick={e => {
+                LoginRedirectCheck(router);
+                router.push("/user/" + GetUsername());
+              }}
+            >
+              View All Community Lists <ArrowForwardIosIcon />
+            </Button>
+          </div>
+
+          <div className="flex">
+            <Button
+              className="btn width100 alignLeft"
+              onClick={e => {
+                LoginRedirectCheck(router);
+                router.push("/list/create");
+              }}
+            >
+              Create New List <ArrowForwardIosIcon />
+            </Button>
+          </div>
+
+          {playlistElemenets}
         </div>
-
-        <div className="flex">
-          <Button
-            className="btn width100 alignLeft"
-            onClick={e => {
-              LoginRedirectCheck(router);
-              router.push("/list/create");
-            }}
-          >
-            Create New List <ArrowForwardIosIcon />
-          </Button>
-        </div>
-
-        {playlistElemenets}
-
-        {/* <a
-          onClick={() => {
-            if (!LoginRedirectCheck(router)) {
-              router.push("/user/" + GetUsername() + "/playlists");
-            }
-          }}
-        >
-          <button className="btn"> View Playlists</button>
-        </a> */}
-      </DialogContent>
-    </Dialog>
+      }
+    />
   );
 };
 

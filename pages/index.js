@@ -1,9 +1,25 @@
 import BoutCompactComponent from "@components/Bouts/BoutCompactComponent";
 import FlagComponent from "@components/FlagComponent";
 import Meta from "@components/Meta";
+import PlaylistPlayIcon from "@mui/icons-material/PlaylistPlay";
 import NewsFeedComponent from "@components/NewsFeedComponent";
+import LeaderboardIcon from "@mui/icons-material/Leaderboard";
+import SportsMartialArtsIcon from "@mui/icons-material/SportsMartialArts";
+import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
+import WhatshotIcon from "@mui/icons-material/Whatshot";
+import SportsKabaddiIcon from "@mui/icons-material/SportsKabaddi";
+import ListIcon from "@mui/icons-material/List";
+import OndemandVideoIcon from "@mui/icons-material/OndemandVideo";
+import Box from "@mui/material/Box";
+import Drawer from "@mui/material/Drawer";
+import List from "@mui/material/List";
+import Divider from "@mui/material/Divider";
+import ListItem from "@mui/material/ListItem";
 import OnHoverMenuComponent from "@components/OnHoverMenuComponent";
-import { BodyColumnMainSectionComponent } from "@components/sections/BodyHeaderSectionComponent";
+import {
+  BodyColumnMainSectionComponent,
+  BodyColumnResponsiveBottomComponent
+} from "@components/sections/BodyHeaderSectionComponent";
 import SlideshowComponent from "@components/sections/SlideshowComponent";
 import HeadingComponent from "@components/utility/HeadingComponent";
 import { Avatar, Chip } from "@mui/material";
@@ -16,9 +32,12 @@ import {
 } from "../config";
 import {
   ConverDateToDaysAgoString,
-  FollowedFighterActivityFeedAction
+  FollowedFighterActivityFeedAction,
+  accountGetFollowingAction,
+  GetPlaylistAction
 } from "../helpers/api";
 import LandingComponent from "@components/3d/LandingComponent";
+import AdvertComponent from "@components/AdvertComponent";
 
 //Home page of the website
 
@@ -32,30 +51,43 @@ export default function Home({
 }) {
   const [loggedIn, setLoggedIn] = useState(false);
   const [followedFighterFeed, setFollowedFighterFeed] = useState([]);
-
+  const [followingData, setFollowingData] = useState([]);
+  const [playlistData, setPlaylistData] = useState([]);
   useEffect(() => {
-    setLoggedIn(IsLoggedIn());
+    let ln = IsLoggedIn();
 
-    if (loggedIn) {
+    if (ln) {
       FollowedFighterActivityFeedAction().then(data => {
         console.log("Followed Fighter Feed Debug");
         console.log(data);
         setFollowedFighterFeed(data.feed);
       });
+
+      GetPlaylistAction().then(data => {
+        console.log("danny Retriving playlists");
+        console.log(data);
+        setPlaylistData(data.data.playlists);
+      });
+
+      console.log("Following debug pre ");
+      accountGetFollowingAction("fighter").then(data => {
+        console.log("Following data debug");
+        console.log(data);
+        console.log(data.data);
+        setFollowingData(data.data.data);
+      });
     }
+
+    setLoggedIn(ln);
   }, []);
 
   if (loggedIn == false)
     return <LandingComponent landingData={landingData} statsData={statsData} />;
 
-  // if (!loggedIn) {
-  //   return <p>Original Landing page</p>;
-  // }
-
   let followedUpcomingFightElements = followedFighterFeed.map(entry => {
     return (
-      <div>
-        <OnHoverMenuComponent
+      <div className="">
+        {/* <OnHoverMenuComponent
           anchorVerticalCustom="center"
           anchorHorizontalCustom="right"
           popupContent={
@@ -63,22 +95,20 @@ export default function Home({
               <BoutCompactComponent bout={entry.postTypeData} />
             </div>
           }
-        >
-          <Link href="/fdfd">
-            <a>
-              <div className="space-x-3 flex">
-                <p className="w-5/12 customAccentText hover:link">
-                  {entry.name}
-                </p>
-                <Chip
+        > */}
+        <Link href="/fdfd">
+          <a>
+            <div className="spaceBetween text-gray-600  rounded hover:bg-blue-500 hover:text-white hover:rounded-md">
+              <p className="w-5/12 ">{entry.name}</p>
+              {/* <Chip
                   className="w-3/12"
                   label={entry.postTypeData.activityName}
-                />
-                <p>{ConverDateToDaysAgoString(entry.postTypeTimestamp)}</p>
-              </div>
-            </a>
-          </Link>
-        </OnHoverMenuComponent>
+                /> */}
+              <p>{ConverDateToDaysAgoString(entry.postTypeTimestamp)}</p>
+            </div>
+          </a>
+        </Link>
+        {/* </OnHoverMenuComponent> */}
       </div>
     );
   });
@@ -166,8 +196,8 @@ export default function Home({
   // });
   let eventLocalElements = featuredData.events.map(entry => {
     return (
-      <div className="border-b-2 border-blue-500 text-black">
-        <OnHoverMenuComponent
+      <div className="text-gray-700">
+        {/* <OnHoverMenuComponent
           anchorVerticalCustom="center"
           anchorHorizontalCustom="right"
           popupContent={
@@ -180,37 +210,176 @@ export default function Home({
               {FlagComponent(entry.countryCode)}
             </div>
           }
-        >
-          <Link href={"/event/" + entry.id}>
-            <a>
-              <div className="flex">
-                <p className="w-9/12">{entry.name}</p>
-                <p>{ConverDateToDaysAgoString(entry.dateOfEvent)}</p>
-              </div>
-            </a>
-          </Link>
-        </OnHoverMenuComponent>
+        > */}
+        <Link href={"/event/" + entry.id}>
+          <a>
+            <div className="flex  rounded  rounded hover:bg-blue-500 hover:text-white hover:rounded-md">
+              <p className="w-9/12 truncate pr-2">{entry.name}</p>
+              <p>{ConverDateToDaysAgoString(entry.dateOfEvent)}</p>
+            </div>
+          </a>
+        </Link>
+        {/* </OnHoverMenuComponent> */}
       </div>
     );
   });
 
+  function SidebarEntry(entyName, imageUrl = null, optionalIcon = null) {
+    let showImage = optionalIcon ? false : true;
+
+    return (
+      <button className="w-full">
+        <ListItem
+          disablePadding
+          className="flex pl-2 space-x-5 w-full py-1 hover:bg-blue-500 hover:text-white hover:rounded-md"
+        >
+          {optionalIcon}
+          {showImage && (
+            <Avatar
+              variant="rounded"
+              src={imageUrl}
+              sx={{ width: 30, height: 30 }}
+            />
+          )}
+          <p className="">{entyName}</p>
+        </ListItem>
+      </button>
+    );
+  }
+
   return (
-    <div>
+    <div className="centerX pt-5">
       <Meta />
 
-      <BodyColumnMainSectionComponent
+      <BodyColumnResponsiveBottomComponent
+        flip={true}
         mainContent={
-          <div className="w-full px-5 space-y-2 justify-center">
-            <div className="w-12/12 text-white">
+          <div className="w-full flex px-5 centerX space-y-2 ">
+            {/* <div className="w-full  text-white justify-end">
               <div className="flex w-full space-x-1 ">{eventElements}</div>
+            </div> */}
+
+            <div className="w-3/12 pr-10 ">
+              <List>
+                <ListItem disablePadding className=" w-full">
+                  <HeadingComponent textColor={"customAccentText"} size={6}>
+                    EXPLORE
+                  </HeadingComponent>
+                </ListItem>
+                <div>
+                  {[
+                    ["Records", "/records", <EmojiEventsIcon />],
+                    ["Techniques", "/library", <SportsKabaddiIcon />],
+                    ["Trending", "/trending/fighter", <WhatshotIcon />],
+                    ["Rankings", "/rankings", <LeaderboardIcon />],
+                    ["Martial Arts", "/", <SportsMartialArtsIcon />]
+                  ].map(entry => {
+                    return (
+                      <Link href={entry[1]}>
+                        <a>{SidebarEntry(entry[0], null, entry[2])}</a>
+                      </Link>
+                    );
+                  })}
+                </div>
+
+                <Divider className="my-3" />
+                <ListItem disablePadding className=" w-full">
+                  <HeadingComponent
+                    textColor={"customAccentText"}
+                    size={6}
+                    showArrow={true}
+                    showArrowText={false}
+                  >
+                    PLAYLISTS
+                  </HeadingComponent>
+                </ListItem>
+                <div>
+                  {[["Watchlist", <OndemandVideoIcon />]].map(entry => {
+                    return SidebarEntry(entry[0], null, entry[1]);
+                  })}
+                  {playlistData.map(entry => {
+                    return (
+                      <Link href={"/list/" + entry.playlistId}>
+                        <a>
+                          {SidebarEntry(
+                            entry.playlistName,
+                            null,
+                            <PlaylistPlayIcon />
+                          )}
+                        </a>
+                      </Link>
+                    );
+                  })}
+                </div>
+
+                <Divider className="my-3" />
+                <ListItem disablePadding className=" w-full ">
+                  <HeadingComponent
+                    showArrow={true}
+                    showArrowText={false}
+                    textColor={"customAccentText"}
+                    size={6}
+                  >
+                    FOLLOWING
+                  </HeadingComponent>
+                </ListItem>
+                <div>
+                  {followingData.map(entry => {
+                    return (
+                      <Link href={"/person/" + entry.followId}>
+                        <a>
+                          {SidebarEntry(
+                            entry.name,
+                            DATA_SERVER_IMAGE_ADDRESS + entry.imageUrl
+                          )}
+                        </a>
+                      </Link>
+                    );
+                  })}
+                </div>
+              </List>
             </div>
 
-            <NewsFeedComponent displayFilters={true} showReplies={true} />
+            <div className="w-9/12 centerX ">
+              <NewsFeedComponent displayFilters={true} showReplies={true} />
+            </div>
           </div>
         }
         sideContent={
-          <div className="w-full px-10 space-y-10">
-            <div className="w-full text-white bg-gray-300">
+          <div className="hide_on_small w-full space-y-3 pr-3">
+            <div className="w-full text-white  rounded-xl">
+              <HeadingComponent
+                textColor={" w-6/12  customAccentText "}
+                size={6}
+                showArrow={true}
+                showArrowText={false}
+              >
+                {"EVENT SCHEDULE".toUpperCase()}
+              </HeadingComponent>
+              <div className="w-full border-t-2 space-y-1 border-gray-200">
+                {eventLocalElements}
+              </div>
+            </div>
+            <AdvertComponent height2="200" />
+
+            <div className="w-full ">
+              <div className=" ">
+                <HeadingComponent
+                  textColor={" w-6/12  customAccentText "}
+                  size={6}
+                  showArrowText={false}
+                  showArrow={true}
+                >
+                  {"FIGHT SCHEDULE".toUpperCase()}
+                </HeadingComponent>
+              </div>
+              <div className="w-full border-t-2 space-y-1 pt-3 border-gray-200 text-black">
+                {followedUpcomingFightElements}
+              </div>
+            </div>
+            <AdvertComponent height2="200" />
+
+            {/* <div className="w-full text-white bg-gray-300">
               <HeadingComponent
                 textColor={" w-full customAccentBackground text-white"}
                 size={3}
@@ -220,33 +389,10 @@ export default function Home({
               <div className="w-full border-t-2 space-y-5 pt-3 border-blue-500 text-black">
                 {trendingPeopleElements}
               </div>
-            </div>
-            <div className="w-full text-white bg-gray-300">
-              <HeadingComponent
-                textColor={" w-full customAccentBackground text-white"}
-                size={3}
-              >
-                Upcoming Events
-              </HeadingComponent>
-              <div className="w-full border-t-2 space-y-5 pt-3 border-blue-500">
-                {eventLocalElements}
-              </div>
-            </div>
-            <div className="w-full text-white bg-gray-300">
-              <div className="flex customAccentBackground w-full ">
-                <HeadingComponent textColor={" text-white"} size={3}>
-                  Upcoming Fights
-                </HeadingComponent>
-
-                <button className="btn ml-10">View All</button>
-              </div>
-              <div className="w-full border-t-2 space-y-5 pt-3 border-blue-500 text-black">
-                {followedUpcomingFightElements}
-              </div>
-            </div>
+            </div> */}
           </div>
         }
-      ></BodyColumnMainSectionComponent>
+      />
 
       <div className="pt-10 pb-10">
         {/* <div className="mt-3 flex w-12/12 ">
@@ -278,17 +424,32 @@ export default function Home({
 }
 
 export async function getStaticProps({ params }) {
-  //const res = await fetch(DATA_SERVER_ADDRESS + "api/stats/landing-page");
-  const statsData = statsCached;
-  const landingData = landingDataCached;
+  const res = await fetch(DATA_SERVER_ADDRESS + "api/stats/landing-page");
+  const statsData = await res.json();
 
-  const featuredData = null;
+  const landingRequest = await fetch(
+    DATA_SERVER_ADDRESS + "landing-page-content"
+  );
+  const landingData = await landingRequest.json();
 
-  const trendingPeopleData = null;
+  const featuredRequest = await fetch(DATA_SERVER_ADDRESS + "events/featured");
+  const featuredData = await featuredRequest.json();
 
-  const trendingTechniqueData = null;
+  const trendingPeopleRequest = await fetch(
+    DATA_SERVER_ADDRESS + `popularity/fighter`
+  );
+  const trendingPeopleData = await trendingPeopleRequest.json();
 
-  const favouriteBoutsData = null;
+  const trendingTechniqueRequest = await fetch(
+    DATA_SERVER_ADDRESS + `popularity/technique`
+  );
+  const trendingTechniqueData = await trendingTechniqueRequest.json();
+
+  const favouriteBoutsRequest = await fetch(
+    DATA_SERVER_ADDRESS + "activity/0/community-bout-favourite"
+  );
+  const favouriteBoutsData = await favouriteBoutsRequest.json();
+
   return {
     props: {
       statsData,
@@ -300,185 +461,3 @@ export async function getStaticProps({ params }) {
     }
   };
 }
-
-const statsCached = {
-    "stats": [
-        [
-            "martial arts",
-            "58"
-        ],
-        [
-            "profiles",
-            "1.1M"
-        ],
-        [
-            "fights",
-            "3.2M"
-        ],
-        [
-            "years of records",
-            "122"
-        ],
-        [
-            "events",
-            "725.7K"
-        ],
-        [
-            "techniques",
-            "294"
-        ]
-    ]
-}
-
-const landingDataCached = {
-    "activities": [
-        {
-            "id": 38,
-            "imageUrl": "martialarts/style_images/vale_tudo.jpg",
-            "name": "vale tudo"
-        },
-        {
-            "id": 13,
-            "imageUrl": "martialarts/style_images/savate.jpg",
-            "name": "savate"
-        },
-        {
-            "id": 16,
-            "imageUrl": "martialarts/style_images/silat.jpg",
-            "name": "silat"
-        },
-        {
-            "id": 18,
-            "imageUrl": "martialarts/style_images/kalari.jpg",
-            "name": "kalari"
-        },
-        {
-            "id": 2,
-            "imageUrl": "martialarts/style_images/grappling.jpg",
-            "name": "grappling"
-        },
-        {
-            "id": 4,
-            "imageUrl": "martialarts/style_images/judo.jpg",
-            "name": "judo"
-        },
-        {
-            "id": 6,
-            "imageUrl": "martialarts/style_images/combat_sambo.jpg",
-            "name": "combat sambo"
-        },
-        {
-            "id": 7,
-            "imageUrl": "martialarts/style_images/sumo.jpg",
-            "name": "sumo"
-        },
-        {
-            "id": 10,
-            "imageUrl": "martialarts/style_images/freestyle_wrestling.jpg",
-            "name": "freestyle wrestling"
-        },
-        {
-            "id": 12,
-            "imageUrl": "martialarts/style_images/folk_wrestling.jpg",
-            "name": "folk wrestling"
-        }
-    ],
-    "fighters": [
-        {
-            "id": 312541,
-            "imageUrl": "/www.tapology.com/pages/fighter_images/275_____default_____Jones-Jon-UFCV2-1.jpg",
-            "name": "Jon Jones"
-        },
-        {
-            "id": 292105,
-            "imageUrl": "/www.tapology.com/pages/fighter_images/74841_____default_____Angela-Lee.jpg",
-            "name": "Angela Lee"
-        },
-        {
-            "id": 292104,
-            "imageUrl": null,
-            "name": "Shiloh Torres-Umi"
-        },
-        {
-            "id": 292109,
-            "imageUrl": null,
-            "name": "Stu Jones"
-        }
-    ],
-    "positions": [
-        {
-            "id": 14,
-            "imageUrl": "martialarts\\position_images\\technical_mount.jpg",
-            "name": "technical mount"
-        },
-        {
-            "id": 15,
-            "imageUrl": "martialarts\\position_images\\closed_guard.jpg",
-            "name": "closed guard"
-        },
-        {
-            "id": 16,
-            "imageUrl": "martialarts\\position_images\\closed_guard_standing.jpg",
-            "name": "closed guard standing"
-        },
-        {
-            "id": 17,
-            "imageUrl": "martialarts\\position_images\\50-50.jpg",
-            "name": "50-50"
-        }
-    ],
-    "promoters": [
-        {
-            "id": 16,
-            "imageUrl": "www.tapology.com\\pages\\promotion_images\\UFC-Ultimate-Fighting-Championship-logo.jpg",
-            "name": "Ultimate Fighting Championship"
-        },
-        {
-            "id": 127,
-            "imageUrl": "www.tapology.com\\pages\\promotion_images\\28279558_1729633990393182_2700289092087194737_n.png",
-            "name": "ONE Championship"
-        },
-        {
-            "id": 128,
-            "imageUrl": "www.tapology.com\\pages\\promotion_images\\Caged_Steel-logo.png",
-            "name": "Caged Steel"
-        },
-        {
-            "id": 129,
-            "imageUrl": "www.tapology.com\\pages\\promotion_images\\Fight-King-MMA-promoter-logo.jpg",
-            "name": "Fight King"
-        }
-    ],
-    "tournamentTypes": {
-        "1": {
-            "imageUrl": "/single-elimination.svg",
-            "name": "single elimination",
-            "type": "tournament"
-        },
-        "2": {
-            "imageUrl": "/double-elimination.svg",
-            "name": "double elimination",
-            "type": "tournament"
-        },
-        "3": {
-            "imageUrl": "/round-robin.svg",
-            "name": "round robin",
-            "type": "tournament"
-        },
-        "4": {
-            "imageUrl": "/double-elimination.svg",
-            "name": "triple elimination",
-            "type": "tournament"
-        },
-        "5": {
-            "imageUrl": "/individual-bouts.svg",
-            "name": "1 vs 1",
-            "type": "single"
-        },
-        "6": {
-            "imageUrl": "/individual-bouts.svg",
-            "name": "best of 3",
-            "type": "single"
-        }
-    }
-};

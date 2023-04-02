@@ -45,13 +45,15 @@ export const MediaSectionComponent = ({
   }
 
   return (
-    <ElementSetSummaryComponent
-      title="IMAGES"
-      description="Photos from the top fight moments"
-      tiles={<div className="flex space-x-5">{mediaElements}</div>}
-      overrideTiles={true}
-      link={"/" + entityType + "/" + entityId + "/media"}
-    />
+    <div>
+      <ElementSetSummaryComponent
+        title="IMAGES"
+        description="Photos from the top fight moments"
+        tiles={<div className="flex space-x-5">{mediaElements}</div>}
+        overrideTiles={true}
+        link={"/" + entityType + "/" + entityId + "/media"}
+      />
+    </div>
   );
 };
 
