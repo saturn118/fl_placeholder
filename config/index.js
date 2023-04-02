@@ -1,23 +1,24 @@
 import Link from "next/link";
+import FavoriteIcon from "@mui/icons-material/Favorite";
+import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+import { useMediaQuery } from "@mui/material";
+import HeadingComponent from "@components/utility/HeadingComponent";
 
 //Dynamically find out whether we're working in development mode or it's deployed
 //useful for code that requires absolute addresses
 export const dev = process.env.NODE_ENV !== "production";
-export const LOCAL_SERVER_ADDRESS = dev
-  ? "http://localhost:3000"
-  : "https//fightlegacy.com";
-
 export const BACKGROUND_ATTR =
   " bg-gray-50 rounded  border-solid border-2 border-gray-300 drop-shadow-md hover:drop-shadow-xl ";
 
-export const DATA_SERVER_ADDRESS = dev ? "http://127.0.0.1:5000/" : "/";
+export const DATA_SERVER_ADDRESS = dev ? "http://localhost:5000/" : "/";
 export const DATA_SERVER_IMAGE_ADDRESS = dev
   ? DATA_SERVER_ADDRESS + "media/"
   : "/";
 export const TECHNIQUE_LIBRARY_NAME = "Fight Library";
 export const TECHNIQUE_LIBRARY_URL_PREFIX = "learn/";
 export const COMPANY_NAME = "Fight Legacy";
-export const WEBSITE_NAME = COMPANY_NAME + ".com";
+export const WEBSITE_NAME = "fightlegacy" + ".com";
+export const WEBSITE_NAME_CANNONICAL = "http://www." + WEBSITE_NAME;
 export const VIDEO_PROGRESS_INTERVAL = 5;
 export const NOTIFICATION_FREQUENCY = 30000;
 export const ADVERT_URL =
@@ -72,22 +73,36 @@ export function RestoreCachedUrl() {
   return localStorage.getItem("last_url");
 }
 
-export function GetLogoElement() {
+export function GetLogoElement(pro = false, singleColor = null) {
+  let primaryColor = "text-white";
+  let secondaryColor = "customAccentText";
+
+  if (singleColor) {
+    primaryColor = singleColor;
+    secondaryColor = singleColor;
+  }
+
   return (
-    <a>
-      <Link href="/">
-        <a>
-          <div className="pt-1 ">
-            <span className="font-bold text-3xl customAccentText logoFont ">
-              FIGHT{" "}
-            </span>
-            <span className="font-bold text-3xl text-white 	logoFont">
-              LEGACY{" "}
-            </span>
-          </div>
-        </a>
-      </Link>
-    </a>
+    <HeadingComponent size={3} textColor="flex">
+      {" "}
+      <span className={"logo_first_word " + primaryColor}>FIGHT </span>
+      <span className={"logo_second_word " + secondaryColor}>LEGACY </span>
+      {pro && <span className={"logo_first_word" + primaryColor}>PRO </span>}
+    </HeadingComponent>
+  );
+
+  return (
+    <Link href="/">
+      <a>
+        <div className="logoFont font-xl logoFontSize logo_container">
+          <span className={"logo_first_word " + primaryColor}>FIGHT </span>
+          <span className={"logo_second_word " + secondaryColor}>LEGACY </span>
+          {pro && (
+            <span className={"logo_first_word" + primaryColor}>PRO </span>
+          )}
+        </div>
+      </a>
+    </Link>
   );
 }
 
@@ -172,10 +187,28 @@ export function GetCurrentYear() {
   return "" + new Date().getFullYear();
 }
 
+export function GetHeartIcon(isLiked, size = "") {
+  return isLiked ? (
+    <FavoriteIcon fontSize={size} color="error" />
+  ) : (
+    <FavoriteBorderIcon fontSize={size} />
+  );
+}
+
 //Social Media Links
-export const INSTAGRAM_URL = "http://www.instagram.com/opponent.app";
-export const FACEBOOK_URL = "http://www.facebook.com/FightLegacy";
-export const TIKTOK_URL = "http://www.tiktok.com/opponentapp";
-export const TWITTER_URL = "http://www.twitter.com/opponentapp";
-export const YOUTUBE_URL = "http://www.youtube.com/@FightLegacy";
-export const REDDIT_URL = "http://www.reddit.com/r/FightLegacy";
+export const INSTAGRAM_USERNAME = "opponent.app";
+export const INSTAGRAM_URL = "http://www.instagram.com/" + INSTAGRAM_USERNAME;
+export const FACEBOOK_USERNAME = "FightLegacy";
+export const FACEBOOK_URL = "http://www.facebook.com/" + FACEBOOK_USERNAME;
+export const TIKTOK_USERNAME = "opponentapp";
+export const TIKTOK_URL = "http://www.tiktok.com/" + TIKTOK_USERNAME;
+export const TWITTER_USERNAME = "opponentapp";
+export const TWITTER_URL = "http://www.twitter.com/" + TWITTER_USERNAME;
+export const YOUTUBE_USERNAME = "@FightLegacy";
+export const YOUTUBE_URL = "http://www.youtube.com/" + YOUTUBE_USERNAME;
+export const REDDIT_USERNAME = "FightLegacy";
+export const REDDIT_URL = "http://www.reddit.com/r/" + REDDIT_USERNAME;
+
+export function IsSmallScreen() {
+  return useMediaQuery("(max-width: 700px)"); // Determine screen size
+}
